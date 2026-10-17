@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#101f37">
+    <meta name="description" content="Quizjet, Telegram'da farklı dillerde oynayabileceğin eğlenceli bir bilgi yarışması botu.">
+    <meta property="og:title" content="Quizjet — Bilgi yarışması cebinde">
+    <meta property="og:description" content="Telegram'da quiz keyfi, 18 dilde.">
+    <meta property="og:image" content="assets/logo.png">
+    <title>Quizjet — Bilgi yarışması cebinde</title>
+    <link rel="icon" type="image/png" href="assets/logo.png">
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="navigation page-width" aria-label="Özellikler" data-aria-copy="navFeatures">
+        <a class="brand" href="#top">
+          <img src="assets/logo.png" alt="" width="44" height="44">
+          <span>quizjet</span>
+        </a>
+        <div class="nav-links">
+          <a href="#features" data-copy="navFeatures">Özellikler</a>
+          <a href="#languages" data-copy="navLanguages">Diller</a>
+        </div>
+        <div class="nav-actions">
+          <label class="language-picker">
+            <span class="sr-only" data-copy="languageLabel">Site dili</span>
+            <span class="picker-icon" aria-hidden="true">◎</span>
+            <select id="language-picker"></select>
+          </label>
+          <a class="button button-small button-light" href="https://t.me/quizjetbot" target="_blank" rel="noopener noreferrer" data-copy="navStart">Bota git <span aria-hidden="true">↗</span></a>
+        </div>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <div class="hero-orb orb-one" aria-hidden="true"></div>
+        <div class="hero-orb orb-two" aria-hidden="true"></div>
+        <div class="hero-grid page-width">
+          <div class="hero-copy">
+            <span class="eyebrow"><span class="eyebrow-dot"></span><span data-copy="eyebrow">Telegram'da çok dilli quiz</span></span>
+            <h1 data-copy="heroTitle">Merakını ortaya çıkar.<br><span>Quizjet'le oyna.</span></h1>
+            <p class="hero-lead" data-copy="heroLead">Quizjet, Telegram'da farklı dillerde oynayabileceğin eğlenceli bilgi yarışması botu. Sohbetinden ayrılmadan hemen başla.</p>
+            <div class="hero-actions">
+              <a class="button button-primary" href="https://t.me/quizjetbot" target="_blank" rel="noopener noreferrer"><span data-copy="playNow">Quizjet'i Telegram'da aç</span><span class="button-arrow" aria-hidden="true">↗</span></a>
+              <a class="text-link" href="#features"><span data-copy="discover">Daha fazlasını keşfet</span><span aria-hidden="true">↓</span></a>
+            </div>
+            <div class="hero-proof">
+              <div class="avatar-stack" aria-hidden="true"><span>Q</span><span>?</span><span>✦</span></div>
+              <p><strong id="language-count">18</strong> <span data-copy="languageProof">dilde quiz keyfi</span></p>
+            </div>
+          </div>
+          <div class="hero-art" aria-hidden="true">
+            <div class="art-spark spark-a" aria-hidden="true">✦</div>
+            <div class="art-spark spark-b" aria-hidden="true">✳</div>
+            <div class="art-card">
+              <div class="art-card-top"><span class="bot-avatar"><img src="assets/logo.png" alt="" width="46" height="46"></span><span class="online-dot"></span><span class="bot-caption">QUIZJET BOT</span><span class="more-dots">•••</span></div>
+              <div class="chat-bubble chat-question"><span class="chat-label" data-copy="previewLabel">SIRADAKİ SORU</span><span data-copy="previewQuestion">Yeni bir şey öğrenmeye hazır mısın?</span></div>
+              <div class="chat-bubble chat-answer"><span class="answer-mark" aria-hidden="true">✓</span><span data-copy="previewAnswer">Hadi başlayalım!</span></div>
+              <div class="art-footer"><span class="footer-spark" aria-hidden="true">✦</span><span data-copy="previewFooter">Bilgiye giden yol burada başlar</span></div>
+            </div>
+            <div class="floating-pill pill-language"><span aria-hidden="true">🌍</span><span id="floating-language">18 dil</span></div>
+            <div class="floating-pill pill-telegram"><span class="telegram-mark" aria-hidden="true">➤</span><span>Telegram</span></div>
+          </div>
+        </div>
+        <a class="hero-scroll" href="#features" aria-label="Daha fazlasını keşfet" data-aria-copy="discover"><span></span></a>
+      </section>
+
+      <section class="features section page-width" id="features">
+        <div class="section-heading">
+          <span class="section-kicker" data-copy="featuresKicker">KÜÇÜK BİR BOT, BÜYÜK MERAK</span>
+          <h2 data-copy="featuresTitle">Quiz keyfine başlamak çok kolay.</h2>
+          <p data-copy="featuresLead">Ekstra uygulama yok, karmaşık kurulum yok. Quizjet zaten kullandığın Telegram'da.</p>
+        </div>
+        <div class="feature-grid">
+          <article class="feature-card feature-blue">
+            <span class="feature-icon" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M24 5 28.5 18 42 22.5 28.5 27 24 40 19.5 27 6 22.5 19.5 18 24 5Z"/><path d="m39 34 2 5 5 2-5 2-2 5-2-5-5-2 5-2 2-5Z"/></svg></span>
+            <h3 data-copy="featureOneTitle">Merakını besle</h3>
+            <p data-copy="featureOneBody">Farklı konularda sorularla kendini sına, her oyunda yeni şeyler keşfet.</p>
+            <span class="card-number">01</span>
+          </article>
+          <article class="feature-card feature-violet">
+            <span class="feature-icon" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M7 12h34v24H7z"/><path d="M14 19h20M14 25h13M14 31h8"/><path d="m35 29 3 3 5-6"/></svg></span>
+            <h3 data-copy="featureTwoTitle">Kendi dilinde oyna</h3>
+            <p data-copy="featureTwoBody">Türkçeden Oʻzbekçeye 18 desteklenen dil arasından seçimini yap.</p>
+            <span class="card-number">02</span>
+          </article>
+          <article class="feature-card feature-orange">
+            <span class="feature-icon" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M14 8h20a4 4 0 0 1 4 4v24a4 4 0 0 1-4 4H14a4 4 0 0 1-4-4V12a4 4 0 0 1 4-4Z"/><path d="M19 14h10M21 34h6"/><path d="m17 24 4 4 10-11"/></svg></span>
+            <h3 data-copy="featureThreeTitle">Hemen başla</h3>
+            <p data-copy="featureThreeBody">Telegram'da Quizjet botunu aç; uzun kayıtlar olmadan quiz'e geç.</p>
+            <span class="card-number">03</span>
+          </article>
+        </div>
+      </section>
+
+      <section class="how-section">
+        <div class="how-grid page-width">
+          <div class="how-copy">
+            <span class="section-kicker" data-copy="howKicker">ÜÇ ADIMDA</span>
+            <h2 data-copy="howTitle">Hazırsan, ilk soruna çok yakınsın.</h2>
+            <p data-copy="howLead">Quizjet'i Telegram'da bul, dilini seç ve merakını takip et.</p>
+            <a class="button button-dark" href="https://t.me/quizjetbot" target="_blank" rel="noopener noreferrer"><span data-copy="howCta">Quizjet'i keşfet</span><span class="button-arrow" aria-hidden="true">↗</span></a>
+          </div>
+          <ol class="steps-list">
+            <li><span class="step-index">01</span><div><h3 data-copy="stepOneTitle">Botu aç</h3><p data-copy="stepOneBody">Telegram'daki Quizjet botuna git ve sohbete katıl.</p></div><span class="step-symbol" aria-hidden="true">↗</span></li>
+            <li><span class="step-index">02</span><div><h3 data-copy="stepTwoTitle">Dilini seç</h3><p data-copy="stepTwoBody">Sana en uygun desteklenen dili belirle.</p></div><span class="step-symbol" aria-hidden="true">◎</span></li>
+            <li><span class="step-index">03</span><div><h3 data-copy="stepThreeTitle">Quiz'e başla</h3><p data-copy="stepThreeBody">Soruları yanıtla, bildiklerini keşfet ve keyfini çıkar.</p></div><span class="step-symbol" aria-hidden="true">✦</span></li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="languages-section section page-width" id="languages">
+        <div class="section-heading">
+          <span class="section-kicker" data-copy="languageKicker">DİLİNİ SEÇ</span>
+          <h2 data-copy="languageTitle">Quizjet senin dilini konuşuyor.</h2>
+          <p data-copy="languageLead">Şu anda desteklenen 18 dilden birinde oyna. Dil seçenekleri zamanla genişleyebilir.</p>
+        </div>
+        <div class="language-grid" id="language-grid" aria-label="Desteklenen diller"></div>
+      </section>
+
+      <section class="closing-section page-width">
+        <div class="closing-card">
+          <div class="closing-decoration" aria-hidden="true">✦</div>
+          <span class="closing-kicker" data-copy="closingKicker">BİLGİYE BİR MESAJ KADAR YAKINSIN</span>
+          <h2 data-copy="closingTitle">Hazır mısın? İlk quiz'in seni bekliyor.</h2>
+          <p data-copy="closingLead">Telegram'da Quizjet'i aç ve kendi dilinde oynamaya başla.</p>
+          <a class="button button-white" href="https://t.me/quizjetbot" target="_blank" rel="noopener noreferrer"><span data-copy="closingCta">Telegram'da Quizjet'i aç</span><span class="button-arrow" aria-hidden="true">↗</span></a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner page-width">
+        <a class="brand footer-brand" href="#top"><img src="assets/logo.png" alt="" width="36" height="36"><span>quizjet</span></a>
+        <p data-copy="footerText">Merakın için küçük bir mola. Quizjet bağımsız bir Telegram quiz botudur.</p>
+        <a class="footer-telegram" href="https://t.me/quizjetbot" target="_blank" rel="noopener noreferrer"><span data-copy="footerLink">Telegram'da bul</span><span aria-hidden="true">↗</span></a>
+      </div>
+    </footer>
+  </body>
+</html>
