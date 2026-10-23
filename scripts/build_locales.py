@@ -122,18 +122,22 @@ def language_menu(locale: dict[str, object], locales: list[dict[str, object]]) -
     copy = locale["copy"]
     code = locale["code"]
     current_name = html.escape(str(locale["name"]))
+    current_code = html.escape(str(code).upper())
     summary = (
         f'<details class="language-menu"><summary aria-label="{html.escape(copy["languageLabel"], quote=True)}">'
-        f'<span aria-hidden="true">{locale["flag"]}</span><span>{current_name}</span>'
+        f'<span class="language-code" aria-hidden="true" dir="ltr">{current_code}</span><span>{current_name}</span>'
         '<span class="language-menu-chevron" aria-hidden="true">⌄</span></summary>'
     )
     links = []
     for item in locales:
         active = ' aria-current="page"' if item["code"] == code else ""
         href = f'/{item["route"]}/' if item["route"] else "/"
+        display_code = html.escape(str(item["code"]).upper())
+        selected = '<span class="language-current" aria-hidden="true">✓</span>' if active else ""
         links.append(
             f'<a href="{href}" lang="{html.escape(item["code"], quote=True)}"{active}>'
-            f'<span aria-hidden="true">{item["flag"]}</span><span>{html.escape(item["name"])}</span></a>'
+            f'<span class="language-code" aria-hidden="true" dir="ltr">{display_code}</span>'
+            f'<span class="language-name">{html.escape(item["name"])}</span>{selected}</a>'
         )
     return (
         summary
@@ -244,11 +248,30 @@ def sitemap_content(locales: list[dict[str, object]]) -> str:
     return ET.tostring(urlset, encoding="utf-8", xml_declaration=True).decode("utf-8") + "\n"
 
 
+def legacy_redirect_page(target: str) -> str:
+    return (
+        '<!doctype html>\n'
+        '<html lang="en">\n'
+        '  <head>\n'
+        '    <meta charset="utf-8">\n'
+        '    <meta name="robots" content="noindex">\n'
+        f'    <link rel="canonical" href="{BASE_URL}/">\n'
+        f'    <meta http-equiv="refresh" content="0;url={target}">\n'
+        '    <title>Quizjet page moved</title>\n'
+        '  </head>\n'
+        '  <body>\n'
+        f'    <p>This page has moved. <a href="{target}">Continue to Quizjet</a>.</p>\n'
+        '  </body>\n'
+        '</html>\n'
+    )
+
+
 def outputs(template: str, locales: list[dict[str, object]]) -> dict[Path, str]:
     generated = {}
     for locale in locales:
         target = ROOT / locale["route"] / "index.html" if locale["route"] else ROOT / "index.html"
         generated[target] = render_page(template, locale, locales)
+    generated[ROOT / "en" / "index.html"] = legacy_redirect_page("/")
     generated[ROOT / "sitemap.xml"] = sitemap_content(locales)
     return generated
 
@@ -261,8 +284,10 @@ def main() -> int:
     try:
         template = TEMPLATE_PATH.read_text(encoding="utf-8")
         locales = json.loads(LOCALES_PATH.read_text(encoding="utf-8"))
-        if not locales or locales[0]["code"] != "tr" or locales[0]["route"] != "":
-            raise ValueError("The locale catalog must start with Turkish at the root URL")
+        if not any(locale["code"] == "en" and locale["route"] == "" for locale in locales):
+            raise ValueError("English must own the root URL")
+        if not any(locale["code"] == "tr" and locale["route"] == "tr" for locale in locales):
+            raise ValueError("Turkish must use the /tr/ route")
         if len({locale["route"] for locale in locales}) != len(locales):
             raise ValueError("Locale routes must be unique")
 

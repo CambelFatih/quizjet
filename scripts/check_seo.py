@@ -91,7 +91,7 @@ def fail(errors: list[str], path: Path, message: str) -> None:
 def expected_route(path: Path) -> tuple[str, str]:
     relative = path.relative_to(ROOT)
     if relative == Path("index.html"):
-        return "/", "tr"
+        return "/", "en"
     route = relative.parent.as_posix().strip("/").lower()
     locale = LOCALE_BY_ROUTE.get(route)
     return "/" + route + "/", locale["code"] if locale else route
@@ -124,15 +124,33 @@ def internal_target(url: str) -> tuple[Path | None, str]:
 
 def check() -> list[str]:
     errors: list[str] = []
+    if LOCALE_BY_ROUTE.get("", {}).get("code") != "en":
+        errors.append("Locale catalog must assign the root URL to English")
+    if LOCALE_BY_ROUTE.get("tr", {}).get("code") != "tr":
+        errors.append("Locale catalog must assign Turkish to /tr/")
     pages = sorted(ROOT.rglob("index.html"))
     if not pages:
         return ["No index.html pages found"]
+
+    legacy_redirect = ROOT / "en" / "index.html"
+    if not legacy_redirect.is_file():
+        errors.append("en/index.html: missing redirect from the previous English URL")
 
     parsers: dict[Path, PageParser] = {}
     routes: dict[str, tuple[str, Path]] = {}
     all_hreflang: dict[Path, dict[str, str]] = {}
 
     for path in pages:
+        if path.resolve() == legacy_redirect.resolve():
+            redirect_html = path.read_text(encoding="utf-8")
+            if 'http-equiv="refresh" content="0;url=/"' not in redirect_html:
+                fail(errors, path, "previous English URL must immediately redirect to the English root")
+            if '<meta name="robots" content="noindex">' not in redirect_html:
+                fail(errors, path, "legacy redirect must not be indexed as a duplicate page")
+            if f'<link rel="canonical" href="{BASE_URL}/">' not in redirect_html:
+                fail(errors, path, "legacy English URL must point to the new canonical root")
+            continue
+
         parser = PageParser()
         parser.feed(path.read_text(encoding="utf-8"))
         parsers[path] = parser
@@ -192,6 +210,23 @@ def check() -> list[str]:
         css_version = hashlib.sha256((ROOT / "styles.css").read_bytes()).hexdigest()[:12]
         if stylesheets != [f"/styles.css?v={css_version}"]:
             fail(errors, path, "stylesheet URL must be versioned against the current CSS content")
+        page_html = path.read_text(encoding="utf-8")
+        current_locale = LOCALE_BY_ROUTE["" if route == "/" else route.strip("/")]
+        for locale in LOCALES:
+            display_code = str(locale["code"]).upper()
+            expected_label = (
+                f'<span class="language-code" aria-hidden="true" dir="ltr">{display_code}</span>'
+                f'<span class="language-name">{locale["name"]}</span>'
+            )
+            if expected_label not in page_html:
+                fail(errors, path, f"language menu must show the {display_code} language code and native name")
+        if page_html.count('aria-current="page"') != 1 or (
+            '<span class="language-current" aria-hidden="true">✓</span>' not in page_html
+        ):
+            fail(errors, path, "language menu must mark exactly the current language with a check")
+        current_code = str(current_locale["code"]).upper()
+        if f'<span class="language-code" aria-hidden="true" dir="ltr">{current_code}</span>' not in page_html:
+            fail(errors, path, "language selector summary must show the current language code")
 
     expected_alternates = {locale["code"]: BASE_URL + (f'/{locale["route"]}/' if locale["route"] else "/")
                            for locale in LOCALES}
@@ -202,9 +237,9 @@ def check() -> list[str]:
     for path, alternates in all_hreflang.items():
         if alternates != expected_alternates:
             fail(errors, path, f"hreflang set must match all published language pages: {expected_alternates!r}")
-    if len({parser.title.strip() for parser in parsers.values()}) != len(pages):
+    if len({parser.title.strip() for parser in parsers.values()}) != len(parsers):
         errors.append("Every language page must have a unique title")
-    if len({parser.meta.get("description", [""])[0] for parser in parsers.values()}) != len(pages):
+    if len({parser.meta.get("description", [""])[0] for parser in parsers.values()}) != len(parsers):
         errors.append("Every language page must have a unique meta description")
 
     page_by_path = {path.resolve(): parser for path, parser in parsers.items()}
