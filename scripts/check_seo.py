@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import sys
 import xml.etree.ElementTree as ET
@@ -187,6 +188,10 @@ def check() -> list[str]:
                 fail(errors, path, f"invalid JSON-LD: {exc}")
         if "script.js" in parser.resources:
             fail(errors, path, "localized pages must not depend on client-side translation")
+        stylesheets = [href for rel, _, href, in_head in parser.links if "stylesheet" in rel.split() and in_head]
+        css_version = hashlib.sha256((ROOT / "styles.css").read_bytes()).hexdigest()[:12]
+        if stylesheets != [f"/styles.css?v={css_version}"]:
+            fail(errors, path, "stylesheet URL must be versioned against the current CSS content")
 
     expected_alternates = {locale["code"]: BASE_URL + (f'/{locale["route"]}/' if locale["route"] else "/")
                            for locale in LOCALES}

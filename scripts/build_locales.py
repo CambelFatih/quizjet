@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import html
 import json
 import re
@@ -221,6 +222,13 @@ def render_page(template: str, locale: dict[str, object], locales: list[dict[str
     page = re.sub(r'\s*<script src="script\.js" defer></script>', "", page)
     if route:
         page = re.sub(r'((?:href|src)=")(assets/|styles\.css)', r"\1/\2", page)
+    css_version = hashlib.sha256((ROOT / "styles.css").read_bytes()).hexdigest()[:12]
+    page = re.sub(
+        r'(<link rel="stylesheet" href=")/?styles\.css(?:\?v=[^"]*)?(")',
+        rf'\1/styles.css?v={css_version}\2',
+        page,
+        count=1,
+    )
     return page
 
 
