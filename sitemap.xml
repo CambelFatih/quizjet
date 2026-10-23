@@ -1,27 +1,57 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9">
+<?xml version='1.0' encoding='utf-8'?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://quizjet.app/</loc>
-    <lastmod>2026-10-20</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://quizjet.app/ca/</loc>
   </url>
   <url>
     <loc>https://quizjet.app/en/</loc>
-    <lastmod>2026-10-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://quizjet.app/ru/</loc>
-    <lastmod>2026-10-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://quizjet.app/de/</loc>
-    <lastmod>2026-10-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://quizjet.app/it/</loc>
+  </url>
+  <url>
+    <loc>https://quizjet.app/ms/</loc>
+  </url>
+  <url>
+    <loc>https://quizjet.app/pl/</loc>
+  </url>
+  <url>
+    <loc>https://quizjet.app/ru/</loc>
+  </url>
+  <url>
+    <loc>https://quizjet.app/uk/</loc>
+  </url>
+  <url>
+    <loc>https://quizjet.app/ar/</loc>
+  </url>
+  <url>
+    <loc>https://quizjet.app/nl/</loc>
+  </url>
+  <url>
+    <loc>https://quizjet.app/fr/</loc>
+  </url>
+  <url>
+    <loc>https://quizjet.app/id/</loc>
+  </url>
+  <url>
+    <loc>https://quizjet.app/ko/</loc>
+  </url>
+  <url>
+    <loc>https://quizjet.app/fa/</loc>
+  </url>
+  <url>
+    <loc>https://quizjet.app/pt-br/</loc>
+  </url>
+  <url>
+    <loc>https://quizjet.app/es/</loc>
+  </url>
+  <url>
+    <loc>https://quizjet.app/uz/</loc>
   </url>
 </urlset>
