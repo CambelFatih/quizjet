@@ -53,7 +53,10 @@
       "footerPrivacy": "Privacy",
       "footerTerms": "Terms",
       "footerSupport": "Support",
-      "navDiscover": "Discover"
+      "navDiscover": "Discover",
+      "browseQuizzes": "Browse quizzes",
+      "discoverBandTitle": "Ready-made quizzes: {count}",
+      "discoverBandBody": "Browse public quizzes made by the community and start any of them in a private chat or in your Telegram group."
     }
   },
   {
@@ -110,7 +113,10 @@
       "footerPrivacy": "Gizlilik",
       "footerTerms": "Kullanım şartları",
       "footerSupport": "Destek",
-      "navDiscover": "Keşfet"
+      "navDiscover": "Keşfet",
+      "browseQuizzes": "Quiz'lere göz at",
+      "discoverBandTitle": "Hazır quiz'ler: {count}",
+      "discoverBandBody": "Topluluğun hazırladığı herkese açık quiz'lere göz at; özel sohbette ya da Telegram grubunda başlat."
     }
   },
   {
@@ -167,7 +173,10 @@
       "footerPrivacy": "Privadesa",
       "footerTerms": "Condicions",
       "footerSupport": "Suport",
-      "navDiscover": "Descobreix"
+      "navDiscover": "Descobreix",
+      "browseQuizzes": "Explora els qüestionaris",
+      "discoverBandTitle": "Qüestionaris preparats: {count}",
+      "discoverBandBody": "Explora els qüestionaris públics fets per la comunitat i inicia'n qualsevol en un xat privat o al teu grup de Telegram."
     }
   },
   {
@@ -224,7 +233,10 @@
       "footerPrivacy": "Datenschutz",
       "footerTerms": "Nutzungsbedingungen",
       "footerSupport": "Support",
-      "navDiscover": "Entdecken"
+      "navDiscover": "Entdecken",
+      "browseQuizzes": "Quizze durchstöbern",
+      "discoverBandTitle": "Fertige Quizze: {count}",
+      "discoverBandBody": "Stöbere in öffentlichen Quizzen der Community und starte eines davon im privaten Chat oder in deiner Telegram-Gruppe."
     }
   },
   {
@@ -281,7 +293,10 @@
       "footerPrivacy": "Privacy",
       "footerTerms": "Termini",
       "footerSupport": "Assistenza",
-      "navDiscover": "Scopri"
+      "navDiscover": "Scopri",
+      "browseQuizzes": "Sfoglia i quiz",
+      "discoverBandTitle": "Quiz pronti: {count}",
+      "discoverBandBody": "Sfoglia i quiz pubblici creati dalla community e avviane uno in chat privata o nel tuo gruppo Telegram."
     }
   },
   {
@@ -338,7 +353,10 @@
       "footerPrivacy": "Privasi",
       "footerTerms": "Terma",
       "footerSupport": "Sokongan",
-      "navDiscover": "Teroka"
+      "navDiscover": "Teroka",
+      "browseQuizzes": "Layari kuiz",
+      "discoverBandTitle": "Kuiz sedia ada: {count}",
+      "discoverBandBody": "Layari kuiz awam yang dibuat komuniti dan mulakan mana-mana dalam sembang peribadi atau kumpulan Telegram anda."
     }
   },
   {
@@ -395,7 +413,10 @@
       "footerPrivacy": "Prywatność",
       "footerTerms": "Regulamin",
       "footerSupport": "Pomoc",
-      "navDiscover": "Odkrywaj"
+      "navDiscover": "Odkrywaj",
+      "browseQuizzes": "Przeglądaj quizy",
+      "discoverBandTitle": "Gotowe quizy: {count}",
+      "discoverBandBody": "Przeglądaj publiczne quizy stworzone przez społeczność i uruchom dowolny na czacie prywatnym lub w swojej grupie na Telegramie."
     }
   },
   {
@@ -452,7 +473,10 @@
       "footerPrivacy": "Конфиденциальность",
       "footerTerms": "Условия",
       "footerSupport": "Поддержка",
-      "navDiscover": "Каталог"
+      "navDiscover": "Каталог",
+      "browseQuizzes": "Смотреть квизы",
+      "discoverBandTitle": "Готовые квизы: {count}",
+      "discoverBandBody": "Смотри публичные квизы сообщества и запускай любой в личном чате или в своей группе Telegram."
     }
   },
   {
@@ -509,7 +533,10 @@
       "footerPrivacy": "Конфіденційність",
       "footerTerms": "Умови",
       "footerSupport": "Підтримка",
-      "navDiscover": "Каталог"
+      "navDiscover": "Каталог",
+      "browseQuizzes": "Переглянути вікторини",
+      "discoverBandTitle": "Готові вікторини: {count}",
+      "discoverBandBody": "Переглядай публічні вікторини спільноти та запускай будь-яку в особистому чаті або у своїй групі Telegram."
     }
   },
   {
@@ -566,7 +593,10 @@
       "footerPrivacy": "الخصوصية",
       "footerTerms": "الشروط",
       "footerSupport": "الدعم",
-      "navDiscover": "اكتشف"
+      "navDiscover": "اكتشف",
+      "browseQuizzes": "تصفّح الاختبارات",
+      "discoverBandTitle": "اختبارات جاهزة: {count}",
+      "discoverBandBody": "تصفّح الاختبارات العامة التي أنشأها المجتمع وابدأ أيًّا منها في محادثة خاصة أو في مجموعتك على تيليجرام."
     }
   },
   {
@@ -623,7 +653,10 @@
       "footerPrivacy": "Privacy",
       "footerTerms": "Voorwaarden",
       "footerSupport": "Support",
-      "navDiscover": "Ontdek"
+      "navDiscover": "Ontdek",
+      "browseQuizzes": "Bekijk quizzen",
+      "discoverBandTitle": "Kant-en-klare quizzen: {count}",
+      "discoverBandBody": "Bekijk openbare quizzen van de community en start er een in een privéchat of in je Telegram-groep."
     }
   },
   {
@@ -680,7 +713,10 @@
       "footerPrivacy": "Confidentialité",
       "footerTerms": "Conditions",
       "footerSupport": "Assistance",
-      "navDiscover": "Découvrir"
+      "navDiscover": "Découvrir",
+      "browseQuizzes": "Parcourir les quiz",
+      "discoverBandTitle": "Quiz prêts à jouer : {count}",
+      "discoverBandBody": "Parcours les quiz publics créés par la communauté et lance-en un en discussion privée ou dans ton groupe Telegram."
     }
   },
   {
@@ -737,7 +773,10 @@
       "footerPrivacy": "Privasi",
       "footerTerms": "Ketentuan",
       "footerSupport": "Dukungan",
-      "navDiscover": "Jelajahi"
+      "navDiscover": "Jelajahi",
+      "browseQuizzes": "Jelajahi kuis",
+      "discoverBandTitle": "Kuis siap pakai: {count}",
+      "discoverBandBody": "Jelajahi kuis publik buatan komunitas dan mulai salah satunya di obrolan pribadi atau grup Telegram-mu."
     }
   },
   {
@@ -794,7 +833,10 @@
       "footerPrivacy": "개인정보 처리방침",
       "footerTerms": "이용약관",
       "footerSupport": "지원",
-      "navDiscover": "둘러보기"
+      "navDiscover": "둘러보기",
+      "browseQuizzes": "퀴즈 둘러보기",
+      "discoverBandTitle": "준비된 퀴즈: {count}",
+      "discoverBandBody": "커뮤니티가 만든 공개 퀴즈를 둘러보고, 개인 채팅이나 텔레그램 그룹에서 바로 시작해 보세요."
     }
   },
   {
@@ -851,7 +893,10 @@
       "footerPrivacy": "حریم خصوصی",
       "footerTerms": "شرایط استفاده",
       "footerSupport": "پشتیبانی",
-      "navDiscover": "کشف کنید"
+      "navDiscover": "کشف کنید",
+      "browseQuizzes": "مرور آزمون‌ها",
+      "discoverBandTitle": "آزمون‌های آماده: {count}",
+      "discoverBandBody": "آزمون‌های عمومی ساخته‌شده توسط جامعه را مرور کن و هرکدام را در گفت‌وگوی خصوصی یا گروه تلگرامت شروع کن."
     }
   },
   {
@@ -908,7 +953,10 @@
       "footerPrivacy": "Privacidade",
       "footerTerms": "Termos",
       "footerSupport": "Suporte",
-      "navDiscover": "Descobrir"
+      "navDiscover": "Descobrir",
+      "browseQuizzes": "Ver quizzes",
+      "discoverBandTitle": "Quizzes prontos: {count}",
+      "discoverBandBody": "Veja os quizzes públicos criados pela comunidade e inicie qualquer um no chat privado ou no seu grupo do Telegram."
     }
   },
   {
@@ -965,7 +1013,10 @@
       "footerPrivacy": "Privacidad",
       "footerTerms": "Términos",
       "footerSupport": "Soporte",
-      "navDiscover": "Descubrir"
+      "navDiscover": "Descubrir",
+      "browseQuizzes": "Explorar quizzes",
+      "discoverBandTitle": "Quizzes listos: {count}",
+      "discoverBandBody": "Explora los quizzes públicos creados por la comunidad e inicia cualquiera en un chat privado o en tu grupo de Telegram."
     }
   },
   {
@@ -1022,7 +1073,10 @@
       "footerPrivacy": "Maxfiylik",
       "footerTerms": "Shartlar",
       "footerSupport": "Yordam",
-      "navDiscover": "Kashf qilish"
+      "navDiscover": "Kashf qilish",
+      "browseQuizzes": "Viktorinalarni ko‘rish",
+      "discoverBandTitle": "Tayyor viktorinalar: {count}",
+      "discoverBandBody": "Hamjamiyat yaratgan ochiq viktorinalarni ko‘ring va istalganini shaxsiy chatda yoki Telegram guruhingizda boshlang."
     }
   }
 ]

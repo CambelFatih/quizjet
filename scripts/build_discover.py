@@ -248,6 +248,24 @@ def sitemap(extra_paths: list[str]) -> str:
     return ET.tostring(urlset, encoding="utf-8", xml_declaration=True).decode("utf-8") + "\n"
 
 
+BAND_RE = re.compile(r'[ \t]*<section class="discover-band[^"]*" id="discover-band">.*?</section>\n\n?', re.DOTALL)
+
+
+def apply_band(out: Path, count: int | None) -> None:
+    """Fill the landing pages' catalog band with the real quiz count, or drop it.
+
+    The committed pages carry the band with a {count} placeholder (translated per language). Only
+    this build knows the catalog size, so it is filled here; without a catalog the band is removed
+    rather than shown with a placeholder or an invented number.
+    """
+    for page in out.rglob("index.html"):
+        text = page.read_text(encoding="utf-8")
+        if 'id="discover-band"' not in text:
+            continue
+        text = BAND_RE.sub("", text) if count is None else text.replace("{count}", str(count))
+        write(page, text)
+
+
 def publishable(path: Path) -> bool:
     parts = path.relative_to(ROOT).parts
     return parts[0] != "scripts" and not any(part.startswith((".", "_")) for part in parts)
@@ -270,11 +288,13 @@ def build(out: Path, export: Path | None) -> str:
             shutil.copy2(path, target)
 
     if export is None:
+        apply_band(out, None)
         write(out / "kesfet" / "index.html", render_placeholder())
         return "Built without the Discover catalog (no export given)."
 
     bot, items, skipped = load_catalog(export)
     generated = str(json.loads(export.read_text(encoding="utf-8")).get("generatedAtUtc") or "")
+    apply_band(out, len(items))
     write(out / "kesfet" / "index.html", render_catalog(items))
     for item in items:
         write(out / "q" / str(item["key"]) / "index.html", render_quiz(item, bot))

@@ -186,6 +186,12 @@ button, select { font: inherit; }
 .quiz-list small, .quiz-facts, .quiz-note { color: var(--muted); font-size: 13px; line-height: 1.6; }
 .quiz-description { color: #3a4a62; font-size: 17px; line-height: 1.65; overflow-wrap: anywhere; }
 .quiz-actions { display: flex; flex-wrap: wrap; gap: 12px; margin: 22px 0 12px; }
+.discover-band { padding-block: 8px 56px; }
+.discover-band-inner { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 26px 30px; border: 1px solid var(--line); border-radius: 18px; background: var(--page); }
+.discover-band h2 { margin: 0 0 6px; font-family: Manrope, "DM Sans", sans-serif; font-size: clamp(22px, 3vw, 28px); letter-spacing: -.03em; }
+.discover-band p { margin: 0; max-width: 560px; color: var(--muted); font-size: 15px; line-height: 1.6; }
+.discover-band .button { flex: none; }
+@media (max-width: 640px) { .discover-band-inner { flex-direction: column; align-items: flex-start; padding: 22px 20px; } }
 
 [dir="rtl"] .hero h1, [dir="rtl"] .hero-lead, [dir="rtl"] .section-heading, [dir="rtl"] .how-copy, [dir="rtl"] .steps-list { text-align: start; }
 [dir="rtl"] .hero-proof, [dir="rtl"] .hero-actions, [dir="rtl"] .feature-card, [dir="rtl"] .steps-list li { direction: rtl; }
@@ -260,3 +266,4 @@ button, select { font: inherit; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
 }
+[dir="rtl"] .discover-band .button-arrow, [dir="rtl"] .hero-actions .text-link span[aria-hidden] { display: inline-block; transform: scaleX(-1); }
