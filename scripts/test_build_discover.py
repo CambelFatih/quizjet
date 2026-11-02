@@ -69,11 +69,22 @@ def run() -> None:
             data = json.loads((out / "discover.json").read_text(encoding="utf-8"))
             assert data["count"] == 2 and data["items"][0]["startGroup"].endswith("?startgroup=good_key-1")
 
+            # the landing band shows the real count, in every language, with no placeholder left
+            for landing in ("index.html", "tr/index.html", "ar/index.html"):
+                html_text = (out / landing).read_text(encoding="utf-8")
+                assert 'id="discover-band"' in html_text and "{count}" not in html_text, landing
+            assert "Ready-made quizzes: 2" in (out / "index.html").read_text(encoding="utf-8")
+            assert "Hazır quiz&#x27;ler: 2" in (out / "tr" / "index.html").read_text(encoding="utf-8") or "Hazır quiz'ler: 2" in (out / "tr" / "index.html").read_text(encoding="utf-8")
+
             # no export: placeholder page, not indexed, sitemap untouched
             bare = tmp_path / "bare"
             bd.build(bare, None)
             placeholder = (bare / "kesfet" / "index.html").read_text(encoding="utf-8")
             assert '<meta name="robots" content="noindex">' in placeholder
+            for landing in ("index.html", "tr/index.html"):
+                bare_html = (bare / landing).read_text(encoding="utf-8")
+                assert 'id="discover-band"' not in bare_html and "{count}" not in bare_html, "band is removed without a catalog"
+                assert 'href="/kesfet/"' in bare_html, "hero and menu links stay"
             assert "kesfet" not in (bare / "sitemap.xml").read_text(encoding="utf-8")
 
             # a truncated export is refused
