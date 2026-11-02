@@ -52,7 +52,8 @@
       "countLabel": "{count} languages",
       "footerPrivacy": "Privacy",
       "footerTerms": "Terms",
-      "footerSupport": "Support"
+      "footerSupport": "Support",
+      "navDiscover": "Discover"
     }
   },
   {
@@ -108,7 +109,8 @@
       "countLabel": "{count} dil",
       "footerPrivacy": "Gizlilik",
       "footerTerms": "Kullanım şartları",
-      "footerSupport": "Destek"
+      "footerSupport": "Destek",
+      "navDiscover": "Keşfet"
     }
   },
   {
@@ -164,7 +166,8 @@
       "countLabel": "{count} idiomes",
       "footerPrivacy": "Privadesa",
       "footerTerms": "Condicions",
-      "footerSupport": "Suport"
+      "footerSupport": "Suport",
+      "navDiscover": "Descobreix"
     }
   },
   {
@@ -220,7 +223,8 @@
       "countLabel": "{count} Sprachen",
       "footerPrivacy": "Datenschutz",
       "footerTerms": "Nutzungsbedingungen",
-      "footerSupport": "Support"
+      "footerSupport": "Support",
+      "navDiscover": "Entdecken"
     }
   },
   {
@@ -276,7 +280,8 @@
       "countLabel": "{count} lingue",
       "footerPrivacy": "Privacy",
       "footerTerms": "Termini",
-      "footerSupport": "Assistenza"
+      "footerSupport": "Assistenza",
+      "navDiscover": "Scopri"
     }
   },
   {
@@ -332,7 +337,8 @@
       "countLabel": "{count} bahasa",
       "footerPrivacy": "Privasi",
       "footerTerms": "Terma",
-      "footerSupport": "Sokongan"
+      "footerSupport": "Sokongan",
+      "navDiscover": "Teroka"
     }
   },
   {
@@ -388,7 +394,8 @@
       "countLabel": "{count} języków",
       "footerPrivacy": "Prywatność",
       "footerTerms": "Regulamin",
-      "footerSupport": "Pomoc"
+      "footerSupport": "Pomoc",
+      "navDiscover": "Odkrywaj"
     }
   },
   {
@@ -444,7 +451,8 @@
       "countLabel": "{count} языков",
       "footerPrivacy": "Конфиденциальность",
       "footerTerms": "Условия",
-      "footerSupport": "Поддержка"
+      "footerSupport": "Поддержка",
+      "navDiscover": "Каталог"
     }
   },
   {
@@ -500,7 +508,8 @@
       "countLabel": "{count} мов",
       "footerPrivacy": "Конфіденційність",
       "footerTerms": "Умови",
-      "footerSupport": "Підтримка"
+      "footerSupport": "Підтримка",
+      "navDiscover": "Каталог"
     }
   },
   {
@@ -556,7 +565,8 @@
       "countLabel": "{count} لغة",
       "footerPrivacy": "الخصوصية",
       "footerTerms": "الشروط",
-      "footerSupport": "الدعم"
+      "footerSupport": "الدعم",
+      "navDiscover": "اكتشف"
     }
   },
   {
@@ -612,7 +622,8 @@
       "countLabel": "{count} talen",
       "footerPrivacy": "Privacy",
       "footerTerms": "Voorwaarden",
-      "footerSupport": "Support"
+      "footerSupport": "Support",
+      "navDiscover": "Ontdek"
     }
   },
   {
@@ -668,7 +679,8 @@
       "countLabel": "{count} langues",
       "footerPrivacy": "Confidentialité",
       "footerTerms": "Conditions",
-      "footerSupport": "Assistance"
+      "footerSupport": "Assistance",
+      "navDiscover": "Découvrir"
     }
   },
   {
@@ -724,7 +736,8 @@
       "countLabel": "{count} bahasa",
       "footerPrivacy": "Privasi",
       "footerTerms": "Ketentuan",
-      "footerSupport": "Dukungan"
+      "footerSupport": "Dukungan",
+      "navDiscover": "Jelajahi"
     }
   },
   {
@@ -780,7 +793,8 @@
       "countLabel": "{count}개 언어",
       "footerPrivacy": "개인정보 처리방침",
       "footerTerms": "이용약관",
-      "footerSupport": "지원"
+      "footerSupport": "지원",
+      "navDiscover": "둘러보기"
     }
   },
   {
@@ -836,7 +850,8 @@
       "countLabel": "{count} زبان",
       "footerPrivacy": "حریم خصوصی",
       "footerTerms": "شرایط استفاده",
-      "footerSupport": "پشتیبانی"
+      "footerSupport": "پشتیبانی",
+      "navDiscover": "کشف کنید"
     }
   },
   {
@@ -892,7 +907,8 @@
       "countLabel": "{count} idiomas",
       "footerPrivacy": "Privacidade",
       "footerTerms": "Termos",
-      "footerSupport": "Suporte"
+      "footerSupport": "Suporte",
+      "navDiscover": "Descobrir"
     }
   },
   {
@@ -948,7 +964,8 @@
       "countLabel": "{count} idiomas",
       "footerPrivacy": "Privacidad",
       "footerTerms": "Términos",
-      "footerSupport": "Soporte"
+      "footerSupport": "Soporte",
+      "navDiscover": "Descubrir"
     }
   },
   {
@@ -1004,7 +1021,8 @@
       "countLabel": "{count} til",
       "footerPrivacy": "Maxfiylik",
       "footerTerms": "Shartlar",
-      "footerSupport": "Yordam"
+      "footerSupport": "Yordam",
+      "navDiscover": "Kashf qilish"
     }
   }
 ]

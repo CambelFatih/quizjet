@@ -171,6 +171,21 @@ button, select { font: inherit; }
 .legal-updated { margin: 0; color: var(--muted); font-size: 13px; }
 .legal-switch a { color: #d6deeb; font-size: 13px; font-weight: 700; }
 .legal-switch a:hover { color: #fff; }
+.discover { max-width: 860px; padding-block: 36px 64px; }
+.discover h1 { margin: 6px 0 12px; font-family: Manrope, "DM Sans", sans-serif; font-size: clamp(28px, 4vw, 40px); line-height: 1.2; letter-spacing: -.03em; overflow-wrap: anywhere; }
+.discover-lead { margin: 0 0 22px; color: var(--muted); font-size: 16px; line-height: 1.6; }
+.discover-lead a, .quiz-back a, .quiz-report a { color: var(--blue); text-decoration: underline; text-underline-offset: 2px; }
+.discover-search { width: 100%; min-height: 48px; padding: 0 16px; border: 1px solid var(--line); border-radius: 12px; color: var(--ink); background: var(--page); font: inherit; font-size: 15px; }
+.discover-search:focus-visible { outline: 3px solid #8ec0f3; outline-offset: 2px; }
+.discover-count, .discover-empty { margin: 12px 0; color: var(--muted); font-size: 13px; }
+.quiz-list { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
+.quiz-list a { display: grid; gap: 4px; padding: 14px 16px; border: 1px solid var(--line); border-radius: 14px; background: #fff; transition: border-color .2s, box-shadow .2s; }
+.quiz-list a:hover, .quiz-list a:focus-visible { border-color: #b9d6f3; box-shadow: 0 8px 22px #14243b12; }
+.quiz-list strong { font-size: 16px; overflow-wrap: anywhere; }
+.quiz-list span { color: #3a4a62; font-size: 14px; line-height: 1.5; overflow-wrap: anywhere; }
+.quiz-list small, .quiz-facts, .quiz-note { color: var(--muted); font-size: 13px; line-height: 1.6; }
+.quiz-description { color: #3a4a62; font-size: 17px; line-height: 1.65; overflow-wrap: anywhere; }
+.quiz-actions { display: flex; flex-wrap: wrap; gap: 12px; margin: 22px 0 12px; }
 
 [dir="rtl"] .hero h1, [dir="rtl"] .hero-lead, [dir="rtl"] .section-heading, [dir="rtl"] .how-copy, [dir="rtl"] .steps-list { text-align: start; }
 [dir="rtl"] .hero-proof, [dir="rtl"] .hero-actions, [dir="rtl"] .feature-card, [dir="rtl"] .steps-list li { direction: rtl; }
