@@ -207,7 +207,7 @@ def check() -> list[str]:
         if "script.js" in parser.resources:
             fail(errors, path, "localized pages must not depend on client-side translation")
         stylesheets = [href for rel, _, href, in_head in parser.links if "stylesheet" in rel.split() and in_head]
-        css_version = hashlib.sha256((ROOT / "styles.css").read_bytes()).hexdigest()[:12]
+        css_version = hashlib.sha256((ROOT / "styles.css").read_bytes().replace(b"\r\n", b"\n")).hexdigest()[:12]
         if stylesheets != [f"/styles.css?v={css_version}"]:
             fail(errors, path, "stylesheet URL must be versioned against the current CSS content")
         page_html = path.read_text(encoding="utf-8")
@@ -297,6 +297,35 @@ def check() -> list[str]:
     except OSError as exc:
         errors.append(f"CNAME: {exc}")
 
+    errors.extend(check_legal_pages())
+    return errors
+
+
+def check_legal_pages() -> list[str]:
+    """Legal pages are not language landing pages, so they get their own, smaller rule set."""
+    errors: list[str] = []
+    meta = json.loads((ROOT / "_data" / "legal.json").read_text(encoding="utf-8"))
+    for code, language in meta["languages"].items():
+        for page in meta["pages"]:
+            path = (ROOT / language["route"] if language["route"] else ROOT) / f"{page}.html"
+            if not path.is_file():
+                errors.append(f"{path.relative_to(ROOT).as_posix()}: missing legal page")
+                continue
+            parser = PageParser()
+            parser.feed(path.read_text(encoding="utf-8"))
+            url = f"{BASE_URL}/{language['route'] + '/' if language['route'] else ''}{page}.html"
+            if parser.lang != code:
+                fail(errors, path, f"html lang must be {code!r}, got {parser.lang!r}")
+            if not parser.title.strip() or parser.h1_count != 1:
+                fail(errors, path, "legal page needs a title and exactly one h1")
+            if [href for rel, _, href, in_head in parser.links if "canonical" in rel.split() and in_head] != [url]:
+                fail(errors, path, f"canonical must be exactly {url!r}")
+            for href in parser.anchors + parser.resources:
+                target, issue = internal_target(urljoin(url, href))
+                if issue:
+                    fail(errors, path, f"invalid local reference {href!r}: {issue}")
+                elif target is not None and not target.is_file():
+                    fail(errors, path, f"local reference does not exist: {href!r}")
     return errors
 
 

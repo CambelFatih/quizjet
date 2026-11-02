@@ -14,6 +14,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 TEMPLATE_PATH = ROOT / "_includes" / "index.template.html"
 LOCALES_PATH = ROOT / "_data" / "locales.json"
+LEGAL_META_PATH = ROOT / "_data" / "legal.json"
+LEGAL_DIR = ROOT / "_legal"
 BASE_URL = "https://quizjet.app"
 SITEMAP_NAMESPACE = "http://www.sitemaps.org/schemas/sitemap/0.9"
 VOID_ELEMENTS = {
@@ -160,7 +162,87 @@ def language_grid(locales: list[dict[str, object]]) -> str:
     return "\n          ".join(chips)
 
 
-def render_page(template: str, locale: dict[str, object], locales: list[dict[str, object]]) -> str:
+def stylesheet_version() -> str:
+    # Line endings are normalised so a Windows checkout (CRLF) and Linux CI (LF) agree on the hash.
+    css = (ROOT / "styles.css").read_bytes().replace(b"\r\n", b"\n")
+    return hashlib.sha256(css).hexdigest()[:12]
+
+
+def legal_url(route: str, page: str) -> str:
+    return f"{BASE_URL}/{route + '/' if route else ''}{page}.html"
+
+
+def render_legal_page(meta: dict[str, object], code: str, page: str, body: str) -> str:
+    language = meta["languages"][code]
+    route = language["route"]
+    info = language["pages"][page]
+    home = f"/{route}/" if route else "/"
+    title = f'{info["title"]} — QuizJet'
+    alternates = "".join(
+        f'    <link rel="alternate" hreflang="{other}" href="{legal_url(data["route"], page)}">\n'
+        for other, data in meta["languages"].items()
+    )
+    alternates += f'    <link rel="alternate" hreflang="x-default" href="{legal_url("", page)}">\n'
+    switch = "".join(
+        f'<a href="{legal_url(data["route"], page).removeprefix(BASE_URL)}" lang="{other}" hreflang="{other}">{other.upper()}</a>'
+        for other, data in meta["languages"].items() if other != code
+    )
+    links = ""
+    for name in meta["pages"]:
+        current = ' aria-current="page"' if name == page else ""
+        links += (
+            f'<a href="{legal_url(route, name).removeprefix(BASE_URL)}"{current}>'
+            f'{html.escape(language["nav"][name])}</a>'
+        )
+    return (
+        "<!doctype html>\n"
+        f'<html lang="{code}" dir="ltr">\n'
+        "  <head>\n"
+        '    <meta charset="utf-8">\n'
+        '    <meta name="viewport" content="width=device-width, initial-scale=1">\n'
+        '    <meta name="theme-color" content="#101f37">\n'
+        f"    <title>{html.escape(title)}</title>\n"
+        f'    <meta name="description" content="{html.escape(info["description"], quote=True)}">\n'
+        f'    <link rel="canonical" href="{legal_url(route, page)}">\n'
+        f"{alternates}"
+        '    <link rel="icon" type="image/png" href="/assets/logo.png">\n'
+        f'    <link rel="stylesheet" href="/styles.css?v={stylesheet_version()}">\n'
+        "  </head>\n"
+        "  <body>\n"
+        '    <header class="site-header">\n'
+        '      <nav class="navigation page-width">\n'
+        f'        <a class="brand" href="{home}"><img src="/assets/logo.png" alt="" width="44" height="44"><span>quizjet</span></a>\n'
+        f'        <div class="nav-actions legal-switch">{switch}</div>\n'
+        "      </nav>\n"
+        "    </header>\n"
+        '    <main class="legal page-width">\n'
+        f'      <p class="legal-updated">{html.escape(language["updatedLabel"])}: '
+        f'<time datetime="{meta["updated"]}">{meta["updated"]}</time></p>\n'
+        f"{body.rstrip()}\n"
+        "    </main>\n"
+        '    <footer class="site-footer">\n'
+        '      <div class="footer-inner page-width">\n'
+        f'        <a class="brand footer-brand" href="{home}"><img src="/assets/logo.png" alt="" width="36" height="36"><span>quizjet</span></a>\n'
+        f'        <nav class="footer-legal">{links}</nav>\n'
+        "      </div>\n"
+        "    </footer>\n"
+        "  </body>\n"
+        "</html>\n"
+    )
+
+
+def legal_outputs(meta: dict[str, object]) -> dict[Path, str]:
+    generated = {}
+    for code, language in meta["languages"].items():
+        route = language["route"]
+        for page in meta["pages"]:
+            body = (LEGAL_DIR / code / f"{page}.html").read_text(encoding="utf-8")
+            target = (ROOT / route if route else ROOT) / f"{page}.html"
+            generated[target] = render_legal_page(meta, code, page, body)
+    return generated
+
+
+def render_page(template: str, locale: dict[str, object], locales: list[dict[str, object]], legal_routes: set[str]) -> str:
     copy = locale["copy"]
     code = locale["code"]
     route = locale["route"]
@@ -226,7 +308,9 @@ def render_page(template: str, locale: dict[str, object], locales: list[dict[str
     page = re.sub(r'\s*<script src="script\.js" defer></script>', "", page)
     if route:
         page = re.sub(r'((?:href|src)=")(assets/|styles\.css)', r"\1/\2", page)
-    css_version = hashlib.sha256((ROOT / "styles.css").read_bytes()).hexdigest()[:12]
+    if route in legal_routes:
+        page = re.sub(r'href="/(privacy|terms|support)\.html"', rf'href="/{route}/\1.html"', page)
+    css_version = stylesheet_version()
     page = re.sub(
         r'(<link rel="stylesheet" href=")/?styles\.css(?:\?v=[^"]*)?(")',
         rf'\1/styles.css?v={css_version}\2',
@@ -266,13 +350,15 @@ def legacy_redirect_page(target: str) -> str:
     )
 
 
-def outputs(template: str, locales: list[dict[str, object]]) -> dict[Path, str]:
+def outputs(template: str, locales: list[dict[str, object]], legal_meta: dict[str, object]) -> dict[Path, str]:
+    legal_routes = {language["route"] for language in legal_meta["languages"].values() if language["route"]}
     generated = {}
     for locale in locales:
         target = ROOT / locale["route"] / "index.html" if locale["route"] else ROOT / "index.html"
-        generated[target] = render_page(template, locale, locales)
+        generated[target] = render_page(template, locale, locales, legal_routes)
     generated[ROOT / "en" / "index.html"] = legacy_redirect_page("/")
     generated[ROOT / "sitemap.xml"] = sitemap_content(locales)
+    generated.update(legal_outputs(legal_meta))
     return generated
 
 
@@ -295,13 +381,14 @@ def main() -> int:
         if any(set(locale["copy"]) != expected_keys for locale in locales):
             raise ValueError("Every locale must provide the same translated fields")
 
-        generated = outputs(template, locales)
+        legal_meta = json.loads(LEGAL_META_PATH.read_text(encoding="utf-8"))
+        generated = outputs(template, locales, legal_meta)
         errors = []
-        generated_paths = set(generated)
+        index_pages = {path for path in generated if path.name == "index.html"}
         current_pages = set(ROOT.glob("*/index.html")) | {ROOT / "index.html"}
-        if args.check and current_pages != generated_paths - {ROOT / "sitemap.xml"}:
-            missing = sorted(path.relative_to(ROOT).as_posix() for path in generated_paths - current_pages - {ROOT / "sitemap.xml"})
-            stale = sorted(path.relative_to(ROOT).as_posix() for path in current_pages - generated_paths)
+        if args.check and current_pages != index_pages:
+            missing = sorted(path.relative_to(ROOT).as_posix() for path in index_pages - current_pages)
+            stale = sorted(path.relative_to(ROOT).as_posix() for path in current_pages - index_pages)
             if missing:
                 errors.append(f"Missing generated pages: {', '.join(missing)}")
             if stale:

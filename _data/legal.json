@@ -1,0 +1,44 @@
+{
+  "updated": "2026-11-02",
+  "pages": ["privacy", "terms", "support"],
+  "languages": {
+    "en": {
+      "route": "",
+      "updatedLabel": "Last updated",
+      "nav": { "privacy": "Privacy", "terms": "Terms", "support": "Support" },
+      "pages": {
+        "privacy": {
+          "title": "Privacy Policy",
+          "description": "What data the QuizJet Telegram bot, its Mini App and quizjet.app process, who receives it, how long it is kept and how to make a request."
+        },
+        "terms": {
+          "title": "Terms of Service",
+          "description": "The rules for using the QuizJet Telegram bot and quizjet.app: your content, acceptable use, AI-generated quizzes, Premium and refunds."
+        },
+        "support": {
+          "title": "Support",
+          "description": "How to contact QuizJet support about payments and refunds, reporting a quiz, your data or using the Telegram bot."
+        }
+      }
+    },
+    "tr": {
+      "route": "tr",
+      "updatedLabel": "Son güncelleme",
+      "nav": { "privacy": "Gizlilik", "terms": "Kullanım şartları", "support": "Destek" },
+      "pages": {
+        "privacy": {
+          "title": "Gizlilik Politikası",
+          "description": "QuizJet Telegram botunun, Mini App'in ve quizjet.app'in hangi verileri işlediği, kimlerle paylaştığı, ne kadar sakladığı ve nasıl talepte bulunabileceğiniz."
+        },
+        "terms": {
+          "title": "Kullanım Şartları",
+          "description": "QuizJet Telegram botunu ve quizjet.app'i kullanma kuralları: içeriğiniz, kabul edilebilir kullanım, AI ile üretilen quiz'ler, Premium ve iadeler."
+        },
+        "support": {
+          "title": "Destek",
+          "description": "Ödeme ve iade, quiz bildirme, verileriniz ya da Telegram botunun kullanımı için QuizJet desteğine nasıl ulaşılır."
+        }
+      }
+    }
+  }
+}
