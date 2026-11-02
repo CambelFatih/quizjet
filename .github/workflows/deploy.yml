@@ -1,0 +1,69 @@
+name: Build and deploy site
+
+# Publishes the committed static pages plus the public Discover catalog to GitHub Pages.
+# Runs once a day so the catalog follows the bot, on every push to main, and on demand
+# (Actions → "Build and deploy site" → Run workflow) for an urgent removal.
+#
+# Requires: Settings → Pages → Source = "GitHub Actions".
+# Optional: secret QUIZJET_EXPORT_TOKEN (same value as the bot's MiniApp__DiscoverExportToken).
+# Without the secret the site is published with a "coming soon" /kesfet/ page; with it, a failed
+# catalog fetch stops the run and the last good deployment stays online.
+
+on:
+  schedule:
+    - cron: "41 2 * * *" # 02:41 UTC = 05:41 Türkiye, off the busy top of the hour
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Check static pages
+        run: |
+          python scripts/build_locales.py --check
+          python scripts/check_seo.py
+          python scripts/test_build_discover.py
+
+      - name: Fetch Discover catalog
+        env:
+          TOKEN: ${{ secrets.QUIZJET_EXPORT_TOKEN }}
+        run: |
+          if [ -z "$TOKEN" ]; then
+            echo "::notice::QUIZJET_EXPORT_TOKEN is not set; publishing without the Discover catalog."
+            exit 0
+          fi
+          curl -fsS --retry 3 --retry-all-errors --max-time 120 \
+            -H "X-Export-Token: $TOKEN" \
+            https://api.quizjet.app/public/discover/export -o "$RUNNER_TEMP/export.json"
+
+      - name: Build site
+        run: |
+          args=(--out "$RUNNER_TEMP/site")
+          if [ -f "$RUNNER_TEMP/export.json" ]; then args+=(--export "$RUNNER_TEMP/export.json"); fi
+          python scripts/build_discover.py "${args[@]}"
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: ${{ runner.temp }}/site
+
+      - id: deploy
+        uses: actions/deploy-pages@v4

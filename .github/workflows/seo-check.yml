@@ -22,3 +22,4 @@ jobs:
         run: |
           python scripts/build_locales.py --check
           python scripts/check_seo.py
+          python scripts/test_build_discover.py

@@ -12,6 +12,9 @@ from urllib.parse import unquote, urljoin, urlsplit
 ROOT = Path(__file__).resolve().parents[1]
 BASE_URL = "https://quizjet.app"
 SITEMAP_NAMESPACE = "http://www.sitemaps.org/schemas/sitemap/0.9"
+# Routes that exist only in the deployed artifact (scripts/build_discover.py builds them from the
+# bot's Discover export), so they cannot be checked against files in the repository.
+GENERATED_PREFIXES = ("/kesfet/", "/q/")
 LOCALES = json.loads((ROOT / "_data" / "locales.json").read_text(encoding="utf-8"))
 LOCALE_BY_ROUTE = {locale["route"]: locale for locale in LOCALES}
 
@@ -257,6 +260,8 @@ def check() -> list[str]:
                 fail(errors, path, f"invalid local reference {href!r}: {issue}")
             elif target is not None:
                 if not target.is_file():
+                    if urlsplit(target_url).path.startswith(GENERATED_PREFIXES):
+                        continue
                     fail(errors, path, f"local reference does not exist: {href!r}")
                 elif urlsplit(target_url).fragment and target.resolve() in page_by_path:
                     fragment = urlsplit(target_url).fragment
