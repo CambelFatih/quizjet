@@ -120,7 +120,8 @@ def replace_meta(html_text: str, attribute: str, name: str, value: str) -> str:
     return updated
 
 
-def language_menu(locale: dict[str, object], locales: list[dict[str, object]]) -> str:
+def language_menu(locale: dict[str, object], locales: list[dict[str, object]], suffix: str = "") -> str:
+    """Language switcher; ``suffix`` keeps the visitor on the same page in the other language (e.g. "kesfet/")."""
     copy = locale["copy"]
     code = locale["code"]
     current_name = html.escape(str(locale["name"]))
@@ -133,7 +134,7 @@ def language_menu(locale: dict[str, object], locales: list[dict[str, object]]) -
     links = []
     for item in locales:
         active = ' aria-current="page"' if item["code"] == code else ""
-        href = f'/{item["route"]}/' if item["route"] else "/"
+        href = (f'/{item["route"]}/' if item["route"] else "/") + suffix
         display_code = html.escape(str(item["code"]).upper())
         selected = '<span class="language-current" aria-hidden="true">✓</span>' if active else ""
         links.append(
@@ -308,6 +309,9 @@ def render_page(template: str, locale: dict[str, object], locales: list[dict[str
     page = re.sub(r'\s*<script src="script\.js" defer></script>', "", page)
     if route:
         page = re.sub(r'((?:href|src)=")(assets/|styles\.css)', r"\1/\2", page)
+    if route:
+        # Discover pages exist in every language; keep the visitor in the language they chose.
+        page = page.replace('href="/kesfet/"', f'href="/{route}/kesfet/"')
     if route in legal_routes:
         page = re.sub(r'href="/(privacy|terms|support)\.html"', rf'href="/{route}/\1.html"', page)
     css_version = stylesheet_version()

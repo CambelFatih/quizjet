@@ -38,7 +38,7 @@ def run() -> None:
             out = tmp_path / "site"
 
             message = bd.build(out, export)
-            assert "2 quizzes" in message and "Skipped 1" in message, message
+            assert "2 quizzes in 18 languages" in message and "Skipped 1" in message, message
 
             # static pages are copied, private build inputs are not
             assert (out / "index.html").is_file() and (out / "tr" / "privacy.html").is_file()
@@ -54,12 +54,12 @@ def run() -> None:
             quiz = (out / "q" / "good_key-1" / "index.html").read_text(encoding="utf-8")
             assert "https://t.me/QuizJetBot?start=good_key-1" in quiz
             assert "https://t.me/QuizJetBot?startgroup=good_key-1" in quiz
-            assert "1 question · made with AI · 3 plays · 12 players" in quiz
+            assert "Questions: 1 · Made with AI · Plays: 3 · Players: 12" in quiz
             assert '<link rel="canonical" href="https://quizjet.app/q/good_key-1/">' in quiz
 
             injected = (out / "q" / "no_desc" / "index.html").read_text(encoding="utf-8")
             assert "</script><script>alert(1)" not in injected, "JSON-LD must not break out of its script tag"
-            assert 'content="A 7-question quiz you can play on Telegram with QuizJet."' in injected, "fallback description"
+            assert 'content="A quiz you can play on Telegram with QuizJet. Questions: 7."' in injected, "fallback description"
             assert not (out / "q" / "blocked1").exists() and not any("bad key" in str(p) for p in out.rglob("*"))
 
             sitemap = (out / "sitemap.xml").read_text(encoding="utf-8")
@@ -68,6 +68,27 @@ def run() -> None:
 
             data = json.loads((out / "discover.json").read_text(encoding="utf-8"))
             assert data["count"] == 2 and data["items"][0]["startGroup"].endswith("?startgroup=good_key-1")
+
+            # every Discover page exists in all 18 languages and keeps the visitor in theirs
+            tr_catalog = (out / "tr" / "kesfet" / "index.html").read_text(encoding="utf-8")
+            assert '<html lang="tr" dir="ltr">' in tr_catalog and "<h1>Quiz&#x27;leri keşfet</h1>" in tr_catalog
+            assert 'href="/tr/q/good_key-1/"' in tr_catalog and 'href="/q/good_key-1/"' not in tr_catalog
+            assert 'href="/de/kesfet/"' in tr_catalog, "language menu switches to the same page in another language"
+            assert tr_catalog.count('rel="alternate" hreflang=') == 19, "18 languages + x-default"
+            tr_quiz = (out / "tr" / "q" / "good_key-1" / "index.html").read_text(encoding="utf-8")
+            assert 'href="/tr/kesfet/"' in tr_quiz and "Özel sohbette başlat" in tr_quiz
+            assert "Soru: 1 · AI ile hazırlandı · Oynanma: 3 · Oyuncu: 12" in tr_quiz
+            assert 'href="/tr/privacy.html"' in tr_quiz, "Turkish keeps its own legal pages"
+            assert '<bdi dir="ltr">@QuizJetBot</bdi>' in tr_quiz and "{bot}" not in tr_quiz
+            de_quiz = (out / "de" / "q" / "good_key-1" / "index.html").read_text(encoding="utf-8")
+            assert 'href="/privacy.html"' in de_quiz and 'href="/de/privacy.html"' not in de_quiz, "legal pages stay EN/TR"
+            ar_quiz = (out / "ar" / "q" / "good_key-1" / "index.html").read_text(encoding="utf-8")
+            assert '<html lang="ar" dir="rtl">' in ar_quiz and "→ " in ar_quiz, "RTL back arrow points right"
+            assert sum(1 for _ in out.rglob("q/good_key-1/index.html")) == 18
+            landing_tr = (out / "tr" / "index.html").read_text(encoding="utf-8")
+            assert 'href="/tr/kesfet/"' in landing_tr and 'href="/kesfet/"' not in landing_tr
+            assert sitemap.count("<loc>") == 18 + 18 * (1 + 2), "landing + per language: catalog + 2 quizzes"
+            assert "https://quizjet.app/tr/q/good_key-1/" in sitemap
 
             # the landing band shows the real count, in every language, with no placeholder left
             for landing in ("index.html", "tr/index.html", "ar/index.html"):
@@ -80,11 +101,12 @@ def run() -> None:
             bare = tmp_path / "bare"
             bd.build(bare, None)
             placeholder = (bare / "kesfet" / "index.html").read_text(encoding="utf-8")
+            assert (bare / "uz" / "kesfet" / "index.html").is_file(), "placeholder exists in every language"
             assert '<meta name="robots" content="noindex">' in placeholder
             for landing in ("index.html", "tr/index.html"):
                 bare_html = (bare / landing).read_text(encoding="utf-8")
                 assert 'id="discover-band"' not in bare_html and "{count}" not in bare_html, "band is removed without a catalog"
-                assert 'href="/kesfet/"' in bare_html, "hero and menu links stay"
+                assert ('href="/tr/kesfet/"' if landing.startswith("tr/") else 'href="/kesfet/"') in bare_html, "hero and menu links stay, in the page's language"
             assert "kesfet" not in (bare / "sitemap.xml").read_text(encoding="utf-8")
 
             # a truncated export is refused

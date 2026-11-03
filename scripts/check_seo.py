@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 import sys
 import xml.etree.ElementTree as ET
 from html.parser import HTMLParser
@@ -14,7 +15,8 @@ BASE_URL = "https://quizjet.app"
 SITEMAP_NAMESPACE = "http://www.sitemaps.org/schemas/sitemap/0.9"
 # Routes that exist only in the deployed artifact (scripts/build_discover.py builds them from the
 # bot's Discover export), so they cannot be checked against files in the repository.
-GENERATED_PREFIXES = ("/kesfet/", "/q/")
+# One copy per language: /kesfet/ and /q/<key>/ for English, /<route>/kesfet/ and /<route>/q/<key>/ otherwise.
+GENERATED_ROUTE_RE = re.compile(r"^/(?:[a-z]{2}(?:-[a-z]{2})?/)?(?:kesfet|q)/")
 LOCALES = json.loads((ROOT / "_data" / "locales.json").read_text(encoding="utf-8"))
 LOCALE_BY_ROUTE = {locale["route"]: locale for locale in LOCALES}
 
@@ -260,7 +262,7 @@ def check() -> list[str]:
                 fail(errors, path, f"invalid local reference {href!r}: {issue}")
             elif target is not None:
                 if not target.is_file():
-                    if urlsplit(target_url).path.startswith(GENERATED_PREFIXES):
+                    if GENERATED_ROUTE_RE.match(urlsplit(target_url).path):
                         continue
                     fail(errors, path, f"local reference does not exist: {href!r}")
                 elif urlsplit(target_url).fragment and target.resolve() in page_by_path:
