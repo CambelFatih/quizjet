@@ -48,7 +48,7 @@ button, select { font: inherit; }
 .button { min-height: 52px; display: inline-flex; align-items: center; justify-content: center; gap: 14px; padding: 0 22px; border-radius: 12px; font-size: 14px; font-weight: 700; transition: transform .2s, box-shadow .2s, background .2s; }
 .button:hover { transform: translateY(-2px); }
 .button-small { min-height: 40px; padding: 0 15px; border-radius: 9px; font-size: 12px; }
-.button-light { color: var(--ink); background: #fff; }
+.button-light { color: #14243b; background: #fff; }
 .button-light:hover { background: #eaf2ff; }
 .button-primary { color: #fff; background: #438fe0; box-shadow: 0 10px 28px #347fc74a; }
 .button-primary:hover { background: #5b9feb; box-shadow: 0 13px 32px #347fc75e; }
@@ -267,3 +267,55 @@ button, select { font: inherit; }
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
 }
 [dir="rtl"] .discover-band .button-arrow, [dir="rtl"] .hero-actions .text-link span[aria-hidden] { display: inline-block; transform: scaleX(-1); }
+
+/* Dark mode: follows the OS setting. Skipped when the reader sets its own theme (<html data-rd-theme>). */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-rd-theme]) {
+    color-scheme: dark;
+    --ink: #e6edf7;
+    --muted: #9eaec4;
+    --blue: #6db0ec;
+    --paper: #0c1626;
+    --page: #111e33;
+    --line: #223350;
+    --card: #14233a;
+    --text: #c3cfdf;
+    --accent: #7db6ec;
+  }
+  :root:not([data-rd-theme]) .feature-card,
+  :root:not([data-rd-theme]) .language-chip,
+  :root:not([data-rd-theme]) .quiz-list a,
+  :root:not([data-rd-theme]) .book-list a { background: var(--card); box-shadow: 0 8px 24px #0000004d; }
+  :root:not([data-rd-theme]) .language-chip:hover,
+  :root:not([data-rd-theme]) .quiz-list a:hover,
+  :root:not([data-rd-theme]) .quiz-list a:focus-visible,
+  :root:not([data-rd-theme]) .book-list a:hover,
+  :root:not([data-rd-theme]) .book-list a:focus-visible { border-color: #3d6ba3; box-shadow: 0 8px 22px #0006; }
+  :root:not([data-rd-theme]) .how-section { background: #0f1b2e; }
+  :root:not([data-rd-theme]) .steps-list li { border-color: var(--line); }
+  :root:not([data-rd-theme]) .step-symbol { color: var(--accent); background: #1a2b45; }
+  :root:not([data-rd-theme]) .step-index,
+  :root:not([data-rd-theme]) .section-kicker,
+  :root:not([data-rd-theme]) .footer-telegram { color: var(--accent); }
+  :root:not([data-rd-theme]) .feature-blue .feature-icon { color: #7db6ec; background: #16304f; }
+  :root:not([data-rd-theme]) .feature-violet .feature-icon { color: #b9a0f2; background: #2a2347; }
+  :root:not([data-rd-theme]) .feature-orange .feature-icon { color: #f0aa6c; background: #3a2a1a; }
+  :root:not([data-rd-theme]) .card-number { color: #1d2d47; }
+  :root:not([data-rd-theme]) .button-dark { background: #438fe0; }
+  :root:not([data-rd-theme]) .button-dark:hover { background: #5b9feb; }
+  :root:not([data-rd-theme]) .art-card { border-color: #ffffff1f; background: var(--card); }
+  :root:not([data-rd-theme]) .art-card-top { border-color: var(--line); }
+  :root:not([data-rd-theme]) .online-dot { border-color: var(--card); }
+  :root:not([data-rd-theme]) .bot-caption,
+  :root:not([data-rd-theme]) .art-footer,
+  :root:not([data-rd-theme]) .more-dots { color: var(--muted); }
+  :root:not([data-rd-theme]) .chat-question { background: #1e3150; }
+  :root:not([data-rd-theme]) .chat-label { color: #8ec0f3; }
+  :root:not([data-rd-theme]) .legal p,
+  :root:not([data-rd-theme]) .legal li,
+  :root:not([data-rd-theme]) .quiz-list span,
+  :root:not([data-rd-theme]) .quiz-description { color: var(--text); }
+  :root:not([data-rd-theme]) .footer-inner > p,
+  :root:not([data-rd-theme]) .footer-legal { color: var(--muted); }
+  :root:not([data-rd-theme]) .discover-search:focus-visible { outline-color: #4f93d6; }
+}
