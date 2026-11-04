@@ -126,7 +126,6 @@
       "bkError": "This chapter couldn't be loaded. Check your connection and try again.",
       "bkRetry": "Try again",
       "bkTrError": "Translation isn't available right now.",
-      "bkOpenGoogle": "Open in Google Translate",
       "bkNoDef": "No dictionary entry found.",
       "bkDict": "Dictionary (English)",
       "bkBase": "Base form",
@@ -136,7 +135,9 @@
       "bkQuizCta": "Take the quiz on Telegram",
       "bkNextChapter": "Next chapter",
       "bkClose": "Close",
-      "bkProgress": "Progress"
+      "bkProgress": "Progress",
+      "bkAutoTr": "Translate the highlighted sentence automatically",
+      "bkMeanings": "Meanings"
     }
   },
   {
@@ -266,7 +267,6 @@
       "bkError": "Bu bölüm yüklenemedi. Bağlantını kontrol edip tekrar dene.",
       "bkRetry": "Tekrar dene",
       "bkTrError": "Çeviri şu anda kullanılamıyor.",
-      "bkOpenGoogle": "Google Çeviri'de aç",
       "bkNoDef": "Sözlükte kayıt bulunamadı.",
       "bkDict": "Sözlük (İngilizce)",
       "bkBase": "Temel biçim",
@@ -276,7 +276,9 @@
       "bkQuizCta": "Quiz'i Telegram'da çöz",
       "bkNextChapter": "Sonraki bölüm",
       "bkClose": "Kapat",
-      "bkProgress": "İlerleme"
+      "bkProgress": "İlerleme",
+      "bkAutoTr": "Vurgulanan cümleyi otomatik çevir",
+      "bkMeanings": "Anlamları"
     }
   },
   {
@@ -406,7 +408,6 @@
       "bkError": "No s'ha pogut carregar aquest capítol. Comprova la connexió i torna-ho a provar.",
       "bkRetry": "Torna-ho a provar",
       "bkTrError": "La traducció no està disponible ara mateix.",
-      "bkOpenGoogle": "Obre a Google Translate",
       "bkNoDef": "No s'ha trobat cap entrada al diccionari.",
       "bkDict": "Diccionari (anglès)",
       "bkBase": "Forma base",
@@ -416,7 +417,9 @@
       "bkQuizCta": "Fes el qüestionari a Telegram",
       "bkNextChapter": "Capítol següent",
       "bkClose": "Tanca",
-      "bkProgress": "Progrés"
+      "bkProgress": "Progrés",
+      "bkAutoTr": "Tradueix automàticament la frase ressaltada",
+      "bkMeanings": "Significats"
     }
   },
   {
@@ -546,7 +549,6 @@
       "bkError": "Dieses Kapitel konnte nicht geladen werden. Prüfe deine Verbindung und versuch es noch einmal.",
       "bkRetry": "Noch einmal versuchen",
       "bkTrError": "Die Übersetzung ist gerade nicht verfügbar.",
-      "bkOpenGoogle": "In Google Übersetzer öffnen",
       "bkNoDef": "Kein Wörterbucheintrag gefunden.",
       "bkDict": "Wörterbuch (Englisch)",
       "bkBase": "Grundform",
@@ -556,7 +558,9 @@
       "bkQuizCta": "Quiz auf Telegram starten",
       "bkNextChapter": "Nächstes Kapitel",
       "bkClose": "Schließen",
-      "bkProgress": "Fortschritt"
+      "bkProgress": "Fortschritt",
+      "bkAutoTr": "Markierten Satz automatisch übersetzen",
+      "bkMeanings": "Bedeutungen"
     }
   },
   {
@@ -686,7 +690,6 @@
       "bkError": "Impossibile caricare questo capitolo. Controlla la connessione e riprova.",
       "bkRetry": "Riprova",
       "bkTrError": "La traduzione non è disponibile in questo momento.",
-      "bkOpenGoogle": "Apri in Google Traduttore",
       "bkNoDef": "Nessuna voce trovata nel dizionario.",
       "bkDict": "Dizionario (inglese)",
       "bkBase": "Forma base",
@@ -696,7 +699,9 @@
       "bkQuizCta": "Fai il quiz su Telegram",
       "bkNextChapter": "Capitolo successivo",
       "bkClose": "Chiudi",
-      "bkProgress": "Avanzamento"
+      "bkProgress": "Avanzamento",
+      "bkAutoTr": "Traduci automaticamente la frase evidenziata",
+      "bkMeanings": "Significati"
     }
   },
   {
@@ -826,7 +831,6 @@
       "bkError": "Bab ini tidak dapat dimuatkan. Semak sambungan anda dan cuba lagi.",
       "bkRetry": "Cuba lagi",
       "bkTrError": "Terjemahan tidak tersedia sekarang.",
-      "bkOpenGoogle": "Buka dalam Google Translate",
       "bkNoDef": "Tiada entri kamus ditemui.",
       "bkDict": "Kamus (Inggeris)",
       "bkBase": "Bentuk dasar",
@@ -836,7 +840,9 @@
       "bkQuizCta": "Jawab kuiz di Telegram",
       "bkNextChapter": "Bab seterusnya",
       "bkClose": "Tutup",
-      "bkProgress": "Kemajuan"
+      "bkProgress": "Kemajuan",
+      "bkAutoTr": "Terjemah ayat yang diserlahkan secara automatik",
+      "bkMeanings": "Maksud"
     }
   },
   {
@@ -966,7 +972,6 @@
       "bkError": "Nie udało się wczytać tego rozdziału. Sprawdź połączenie i spróbuj ponownie.",
       "bkRetry": "Spróbuj ponownie",
       "bkTrError": "Tłumaczenie jest teraz niedostępne.",
-      "bkOpenGoogle": "Otwórz w Tłumaczu Google",
       "bkNoDef": "Nie znaleziono hasła w słowniku.",
       "bkDict": "Słownik (angielski)",
       "bkBase": "Forma podstawowa",
@@ -976,7 +981,9 @@
       "bkQuizCta": "Rozwiąż quiz na Telegramie",
       "bkNextChapter": "Następny rozdział",
       "bkClose": "Zamknij",
-      "bkProgress": "Postęp"
+      "bkProgress": "Postęp",
+      "bkAutoTr": "Automatycznie tłumacz podświetlone zdanie",
+      "bkMeanings": "Znaczenia"
     }
   },
   {
@@ -1106,7 +1113,6 @@
       "bkError": "Не удалось загрузить главу. Проверь подключение и попробуй ещё раз.",
       "bkRetry": "Попробовать ещё раз",
       "bkTrError": "Перевод сейчас недоступен.",
-      "bkOpenGoogle": "Открыть в Google Переводчике",
       "bkNoDef": "В словаре ничего не найдено.",
       "bkDict": "Словарь (английский)",
       "bkBase": "Начальная форма",
@@ -1116,7 +1122,9 @@
       "bkQuizCta": "Пройти квиз в Telegram",
       "bkNextChapter": "Следующая глава",
       "bkClose": "Закрыть",
-      "bkProgress": "Прогресс"
+      "bkProgress": "Прогресс",
+      "bkAutoTr": "Автоматически переводить выделенное предложение",
+      "bkMeanings": "Значения"
     }
   },
   {
@@ -1246,7 +1254,6 @@
       "bkError": "Не вдалося завантажити розділ. Перевір з'єднання і спробуй ще раз.",
       "bkRetry": "Спробувати ще раз",
       "bkTrError": "Переклад зараз недоступний.",
-      "bkOpenGoogle": "Відкрити в Google Перекладачі",
       "bkNoDef": "У словнику нічого не знайдено.",
       "bkDict": "Словник (англійська)",
       "bkBase": "Початкова форма",
@@ -1256,7 +1263,9 @@
       "bkQuizCta": "Пройти вікторину в Telegram",
       "bkNextChapter": "Наступний розділ",
       "bkClose": "Закрити",
-      "bkProgress": "Прогрес"
+      "bkProgress": "Прогрес",
+      "bkAutoTr": "Автоматично перекладати виділене речення",
+      "bkMeanings": "Значення"
     }
   },
   {
@@ -1386,7 +1395,6 @@
       "bkError": "تعذّر تحميل هذا الفصل. تحقّق من اتصالك وحاول مرة أخرى.",
       "bkRetry": "حاول مرة أخرى",
       "bkTrError": "الترجمة غير متاحة الآن.",
-      "bkOpenGoogle": "افتح في ترجمة Google",
       "bkNoDef": "لم يُعثر على مدخل في القاموس.",
       "bkDict": "القاموس (الإنجليزية)",
       "bkBase": "الصيغة الأساسية",
@@ -1396,7 +1404,9 @@
       "bkQuizCta": "ابدأ الاختبار على تيليجرام",
       "bkNextChapter": "الفصل التالي",
       "bkClose": "إغلاق",
-      "bkProgress": "التقدّم"
+      "bkProgress": "التقدّم",
+      "bkAutoTr": "ترجم الجملة المبرزة تلقائيًا",
+      "bkMeanings": "المعاني"
     }
   },
   {
@@ -1526,7 +1536,6 @@
       "bkError": "Dit hoofdstuk kon niet worden geladen. Controleer je verbinding en probeer het opnieuw.",
       "bkRetry": "Opnieuw proberen",
       "bkTrError": "Vertalen is nu niet beschikbaar.",
-      "bkOpenGoogle": "Openen in Google Translate",
       "bkNoDef": "Geen woordenboekitem gevonden.",
       "bkDict": "Woordenboek (Engels)",
       "bkBase": "Grondvorm",
@@ -1536,7 +1545,9 @@
       "bkQuizCta": "Doe de quiz op Telegram",
       "bkNextChapter": "Volgend hoofdstuk",
       "bkClose": "Sluiten",
-      "bkProgress": "Voortgang"
+      "bkProgress": "Voortgang",
+      "bkAutoTr": "Gemarkeerde zin automatisch vertalen",
+      "bkMeanings": "Betekenissen"
     }
   },
   {
@@ -1666,7 +1677,6 @@
       "bkError": "Impossible de charger ce chapitre. Vérifie ta connexion et réessaie.",
       "bkRetry": "Réessayer",
       "bkTrError": "La traduction n'est pas disponible pour le moment.",
-      "bkOpenGoogle": "Ouvrir dans Google Traduction",
       "bkNoDef": "Aucune entrée trouvée dans le dictionnaire.",
       "bkDict": "Dictionnaire (anglais)",
       "bkBase": "Forme de base",
@@ -1676,7 +1686,9 @@
       "bkQuizCta": "Faire le quiz sur Telegram",
       "bkNextChapter": "Chapitre suivant",
       "bkClose": "Fermer",
-      "bkProgress": "Progression"
+      "bkProgress": "Progression",
+      "bkAutoTr": "Traduire automatiquement la phrase surlignée",
+      "bkMeanings": "Sens"
     }
   },
   {
@@ -1806,7 +1818,6 @@
       "bkError": "Bab ini gagal dimuat. Periksa koneksimu dan coba lagi.",
       "bkRetry": "Coba lagi",
       "bkTrError": "Terjemahan sedang tidak tersedia.",
-      "bkOpenGoogle": "Buka di Google Terjemahan",
       "bkNoDef": "Entri kamus tidak ditemukan.",
       "bkDict": "Kamus (Inggris)",
       "bkBase": "Bentuk dasar",
@@ -1816,7 +1827,9 @@
       "bkQuizCta": "Kerjakan kuis di Telegram",
       "bkNextChapter": "Bab berikutnya",
       "bkClose": "Tutup",
-      "bkProgress": "Kemajuan"
+      "bkProgress": "Kemajuan",
+      "bkAutoTr": "Terjemahkan kalimat yang disorot secara otomatis",
+      "bkMeanings": "Arti"
     }
   },
   {
@@ -1946,7 +1959,6 @@
       "bkError": "이 챕터를 불러오지 못했어요. 연결을 확인하고 다시 시도해 주세요.",
       "bkRetry": "다시 시도",
       "bkTrError": "지금은 번역을 사용할 수 없어요.",
-      "bkOpenGoogle": "Google 번역에서 열기",
       "bkNoDef": "사전에서 항목을 찾지 못했어요.",
       "bkDict": "사전(영어)",
       "bkBase": "기본형",
@@ -1956,7 +1968,9 @@
       "bkQuizCta": "텔레그램에서 퀴즈 풀기",
       "bkNextChapter": "다음 챕터",
       "bkClose": "닫기",
-      "bkProgress": "진행률"
+      "bkProgress": "진행률",
+      "bkAutoTr": "강조된 문장 자동 번역",
+      "bkMeanings": "뜻"
     }
   },
   {
@@ -2086,7 +2100,6 @@
       "bkError": "این فصل بارگذاری نشد. اتصالت را بررسی کن و دوباره امتحان کن.",
       "bkRetry": "دوباره امتحان کن",
       "bkTrError": "ترجمه الان در دسترس نیست.",
-      "bkOpenGoogle": "باز کردن در مترجم Google",
       "bkNoDef": "مدخلی در واژه‌نامه پیدا نشد.",
       "bkDict": "واژه‌نامه (انگلیسی)",
       "bkBase": "شکل پایه",
@@ -2096,7 +2109,9 @@
       "bkQuizCta": "آزمون را در تلگرام بده",
       "bkNextChapter": "فصل بعدی",
       "bkClose": "بستن",
-      "bkProgress": "پیشرفت"
+      "bkProgress": "پیشرفت",
+      "bkAutoTr": "جملهٔ برجسته را خودکار ترجمه کن",
+      "bkMeanings": "معانی"
     }
   },
   {
@@ -2226,7 +2241,6 @@
       "bkError": "Não foi possível carregar este capítulo. Verifique sua conexão e tente de novo.",
       "bkRetry": "Tentar de novo",
       "bkTrError": "A tradução não está disponível agora.",
-      "bkOpenGoogle": "Abrir no Google Tradutor",
       "bkNoDef": "Nenhuma entrada encontrada no dicionário.",
       "bkDict": "Dicionário (inglês)",
       "bkBase": "Forma base",
@@ -2236,7 +2250,9 @@
       "bkQuizCta": "Fazer o quiz no Telegram",
       "bkNextChapter": "Próximo capítulo",
       "bkClose": "Fechar",
-      "bkProgress": "Progresso"
+      "bkProgress": "Progresso",
+      "bkAutoTr": "Traduzir automaticamente a frase destacada",
+      "bkMeanings": "Significados"
     }
   },
   {
@@ -2366,7 +2382,6 @@
       "bkError": "No se pudo cargar este capítulo. Revisa tu conexión e inténtalo de nuevo.",
       "bkRetry": "Intentar de nuevo",
       "bkTrError": "La traducción no está disponible ahora mismo.",
-      "bkOpenGoogle": "Abrir en Google Traductor",
       "bkNoDef": "No se encontró ninguna entrada en el diccionario.",
       "bkDict": "Diccionario (inglés)",
       "bkBase": "Forma base",
@@ -2376,7 +2391,9 @@
       "bkQuizCta": "Hacer el quiz en Telegram",
       "bkNextChapter": "Capítulo siguiente",
       "bkClose": "Cerrar",
-      "bkProgress": "Progreso"
+      "bkProgress": "Progreso",
+      "bkAutoTr": "Traducir automáticamente la frase resaltada",
+      "bkMeanings": "Significados"
     }
   },
   {
@@ -2506,7 +2523,6 @@
       "bkError": "Bu bobni yuklab bo'lmadi. Ulanishni tekshiring va qayta urinib ko'ring.",
       "bkRetry": "Qayta urinish",
       "bkTrError": "Tarjima hozir mavjud emas.",
-      "bkOpenGoogle": "Google Tarjimonda ochish",
       "bkNoDef": "Lug'atda yozuv topilmadi.",
       "bkDict": "Lug'at (ingliz tili)",
       "bkBase": "Asosiy shakl",
@@ -2516,7 +2532,9 @@
       "bkQuizCta": "Viktorinani Telegram'da yechish",
       "bkNextChapter": "Keyingi bob",
       "bkClose": "Yopish",
-      "bkProgress": "Jarayon"
+      "bkProgress": "Jarayon",
+      "bkAutoTr": "Ajratilgan gapni avtomatik tarjima qilish",
+      "bkMeanings": "Ma'nolari"
     }
   }
 ]
