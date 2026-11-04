@@ -1,0 +1,13 @@
+[
+  {
+    "slug": "sherlock-holmes",
+    "title": "The Adventures of Sherlock Holmes",
+    "author": "Arthur Conan Doyle",
+    "level": "B2",
+    "language": "en",
+    "source": "https://www.gutenberg.org/ebooks/1661",
+    "cover": ["#1d3b5c", "#c8a45a"],
+    "quiz": "",
+    "chapterQuizzes": {}
+  }
+]
