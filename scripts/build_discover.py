@@ -1,4 +1,4 @@
-"""Build the deployable site: the committed static pages plus the public Discover catalog.
+"""Build the deployable site: the committed static pages, the Books pages and the public Discover catalog.
 
     python scripts/build_discover.py --out /tmp/site [--export discover-export.json]
 
@@ -8,8 +8,9 @@ quizjet-bot docs/decisions/2026-11-02-kesfet-web-yayini.md). Every Discover page
 the others), so a visitor stays in the language they picked. The interface text comes from
 _data/locales.json; quiz titles and descriptions stay in the language their creator wrote them in.
 Without --export (the token is not configured yet) every /kesfet/ page is a "coming soon" page and
-the sitemap only lists the static pages. A truncated or malformed export fails the build so a
-partial catalog is never published.
+the sitemap only lists the static and Books pages. A truncated or malformed export fails the build
+so a partial catalog is never published. The Books pages (/kitaplar/) need no export: see
+scripts/build_books.py.
 """
 from __future__ import annotations
 
@@ -23,6 +24,7 @@ import unicodedata
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
+import build_books
 from build_locales import language_menu, stylesheet_version
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -88,7 +90,7 @@ def load_catalog(path: Path) -> tuple[str, list[dict[str, object]], list[str]]:
 
 
 def shell(locale: dict[str, object], title: str, description: str, suffix: str, body: str,
-          *, noindex: bool = False, jsonld: str = "") -> str:
+          *, noindex: bool = False, jsonld: str = "", head: str = "") -> str:
     """Page frame in ``locale``; ``suffix`` is the path after the language prefix (e.g. "kesfet/")."""
     c = locale["copy"]
     pre = prefix(locale)
@@ -123,13 +125,14 @@ def shell(locale: dict[str, object], title: str, description: str, suffix: str, 
         '    <meta name="twitter:card" content="summary">\n'
         '    <link rel="icon" type="image/png" href="/assets/logo.png">\n'
         f'    <link rel="stylesheet" href="/styles.css?v={stylesheet_version()}">\n'
-        f"{ld}"
+        f"{head}{ld}"
         "  </head>\n"
         "  <body>\n"
         '    <header class="site-header">\n'
         '      <nav class="navigation page-width">\n'
         f'        <a class="brand" href="{pre}/"><img src="/assets/logo.png" alt="" width="44" height="44"><span>quizjet</span></a>\n'
-        f'        <div class="nav-actions"><div class="nav-links"><a href="{pre}/kesfet/">{e(c["discAll"])}</a></div>'
+        f'        <div class="nav-actions"><div class="nav-links"><a href="{pre}/kesfet/">{e(c["discAll"])}</a>'
+        f'<a href="{pre}/kitaplar/">{e(c["navBooks"])}</a></div>'
         f"{language_menu(locale, LOCALES, suffix)}"
         f'<a class="button button-small button-light" href="https://t.me/QuizJetBot" target="_blank" rel="noopener noreferrer">'
         f'{e(c["navStart"])} <span aria-hidden="true">↗</span></a></div>\n'
@@ -301,6 +304,26 @@ def locale_dir(out: Path, locale: dict[str, object]) -> Path:
     return out / str(locale["route"]) if locale["route"] else out
 
 
+def write_books(out: Path) -> list[str]:
+    """The Books shelf and one reader per book, in every language; returns their sitemap paths."""
+    books = build_books.load_books()
+    paths: list[str] = []
+    for locale in LOCALES:
+        base, pre = locale_dir(out, locale), prefix(locale)
+        title, description, body, head = build_books.list_page(locale, pre, books)
+        write(base / "kitaplar" / "index.html", shell(locale, title, description, "kitaplar/", body, head=head))
+        paths.append(f"{pre}/kitaplar/")
+        for book in books:
+            suffix = f"kitaplar/{book['slug']}/"
+            title, description, body, jsonld, head = build_books.reader_page(locale, pre, book)
+            write(base / suffix / "index.html", shell(locale, title, description, suffix, body, jsonld=jsonld, head=head))
+            paths.append(f"{pre}/{suffix}")
+    for book in books:
+        for path, content in build_books.chapter_files(book).items():
+            write(out / path, content)
+    return paths
+
+
 def build(out: Path, export: Path | None) -> str:
     if out.resolve().is_relative_to(ROOT.resolve()):
         raise ValueError("--out must be outside the repository (the page checks scan every index.html in it)")
@@ -312,10 +335,12 @@ def build(out: Path, export: Path | None) -> str:
             target.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(path, target)
 
+    book_paths = write_books(out)
     if export is None:
         apply_band(out, None)
         for locale in LOCALES:
             write(locale_dir(out, locale) / "kesfet" / "index.html", render_placeholder(locale))
+        write(out / "sitemap.xml", sitemap(book_paths))
         return "Built without the Discover catalog (no export given)."
 
     bot, items, skipped = load_catalog(export)
@@ -330,7 +355,7 @@ def build(out: Path, export: Path | None) -> str:
             write(base / "q" / str(item["key"]) / "index.html", render_quiz(locale, item, bot))
             paths.append(f"{pre}/q/{item['key']}/")
     write(out / "discover.json", catalog_json(items, bot, generated))
-    write(out / "sitemap.xml", sitemap(paths))
+    write(out / "sitemap.xml", sitemap(paths + book_paths))
     note = f" Skipped {len(skipped)} item(s) with an unusable key or empty title." if skipped else ""
     return f"Built the Discover catalog with {len(items)} quizzes in {len(LOCALES)} languages.{note}"
 

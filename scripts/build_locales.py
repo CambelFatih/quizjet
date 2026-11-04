@@ -310,8 +310,9 @@ def render_page(template: str, locale: dict[str, object], locales: list[dict[str
     if route:
         page = re.sub(r'((?:href|src)=")(assets/|styles\.css)', r"\1/\2", page)
     if route:
-        # Discover pages exist in every language; keep the visitor in the language they chose.
+        # Discover and Books pages exist in every language; keep the visitor in the language they chose.
         page = page.replace('href="/kesfet/"', f'href="/{route}/kesfet/"')
+        page = page.replace('href="/kitaplar/"', f'href="/{route}/kitaplar/"')
     if route in legal_routes:
         page = re.sub(r'href="/(privacy|terms|support)\.html"', rf'href="/{route}/\1.html"', page)
     css_version = stylesheet_version()

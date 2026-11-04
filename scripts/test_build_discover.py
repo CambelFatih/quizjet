@@ -5,7 +5,9 @@ import json
 import tempfile
 from pathlib import Path
 
+import build_books
 import build_discover as bd
+import import_gutenberg as ig
 
 EXPORT = {
     "generatedAtUtc": "2026-11-02T02:41:00Z",
@@ -87,7 +89,7 @@ def run() -> None:
             assert sum(1 for _ in out.rglob("q/good_key-1/index.html")) == 18
             landing_tr = (out / "tr" / "index.html").read_text(encoding="utf-8")
             assert 'href="/tr/kesfet/"' in landing_tr and 'href="/kesfet/"' not in landing_tr
-            assert sitemap.count("<loc>") == 18 + 18 * (1 + 2), "landing + per language: catalog + 2 quizzes"
+            assert sitemap.count("<loc>") == 18 + 18 * (1 + 2) + 18 * 2, "landing + per language: catalog + 2 quizzes + shelf + 1 book"
             assert "https://quizjet.app/tr/q/good_key-1/" in sitemap
 
             # the landing band shows the real count, in every language, with no placeholder left
@@ -107,7 +109,22 @@ def run() -> None:
                 bare_html = (bare / landing).read_text(encoding="utf-8")
                 assert 'id="discover-band"' not in bare_html and "{count}" not in bare_html, "band is removed without a catalog"
                 assert ('href="/tr/kesfet/"' if landing.startswith("tr/") else 'href="/kesfet/"') in bare_html, "hero and menu links stay, in the page's language"
-            assert "kesfet" not in (bare / "sitemap.xml").read_text(encoding="utf-8")
+            bare_sitemap = (bare / "sitemap.xml").read_text(encoding="utf-8")
+            assert "kesfet" not in bare_sitemap and "https://quizjet.app/tr/kitaplar/sherlock-holmes/" in bare_sitemap
+
+            # Books: shelf + reader in every language, chapters published once and language-neutral
+            assert sum(1 for _ in bare.rglob("kitaplar/sherlock-holmes/index.html")) == 18
+            chapter = json.loads((bare / "kitaplar" / "sherlock-holmes" / "1.json").read_text(encoding="utf-8"))
+            assert chapter["title"] == "A Scandal in Bohemia" and chapter["p"][0][0] == "To Sherlock Holmes she is always THE woman."
+            assert not (bare / "tr" / "kitaplar" / "sherlock-holmes" / "1.json").exists()
+            tr_reader = (bare / "tr" / "kitaplar" / "sherlock-holmes" / "index.html").read_text(encoding="utf-8")
+            assert '<html lang="tr" dir="ltr">' in tr_reader and 'href="/tr/kitaplar/"' in tr_reader
+            assert '"lang":"tr"' in tr_reader and "Bu cümle" in tr_reader and "/assets/reader.js?v=" in tr_reader
+            assert 'href="/de/kitaplar/sherlock-holmes/"' in tr_reader, "language menu stays on the book"
+            assert '"@type":"Book"' in tr_reader
+            shelf = (bare / "kitaplar" / "index.html").read_text(encoding="utf-8")
+            assert 'href="/kitaplar/sherlock-holmes/"' in shelf and "Chapters: 12" in shelf
+            assert 'href="/tr/kitaplar/"' in (bare / "tr" / "index.html").read_text(encoding="utf-8"), "landing links the shelf"
 
             # a truncated export is refused
             export.write_text(json.dumps({**EXPORT, "truncated": True}), encoding="utf-8")
@@ -125,7 +142,34 @@ def run() -> None:
                 pass
         finally:
             bd.BLOCKLIST_PATH = original_blocklist
+    check_books(Path(tempfile.mkdtemp()))
     print("build_discover self-check passed.")
+
+
+def check_books(tmp: Path) -> None:
+    # sentence splitting keeps abbreviations, initials and '"Seven!" I answered.' together
+    assert ig.split_sentences('"Wedlock suits you," he remarked. "I think, Watson, that you have." Mr. St. Simon came.') == [
+        '"Wedlock suits you," he remarked.', '"I think, Watson, that you have."', "Mr. St. Simon came."]
+    assert ig.split_sentences('"Seven!" I answered. J. Smith left. Then?') == ['"Seven!" I answered.', "J. Smith left.", "Then?"]
+    assert ig.clean("a--b _word_\n  c") == "a—b word c"
+    # metadata errors fail the build instead of publishing a broken link
+    (tmp / "b.json").write_text('{"chapters": [{"title": "One", "p": [["Hi."]]}]}', encoding="utf-8")
+    for bad in ({"quiz": "bad key"}, {"chapterQuizzes": {"2": "k"}}, {"slug": "Bad/Slug"}):
+        meta = {"slug": "b", "title": "T", "author": "A", "level": "A1", "source": "https://x", **bad}
+        (tmp / "books.json").write_text(json.dumps([meta]), encoding="utf-8")
+        try:
+            build_books.load_books(tmp / "books.json", tmp)
+            raise AssertionError(f"{bad} must be refused")
+        except (ValueError, FileNotFoundError):
+            pass
+    # the data blob cannot close its <script> tag
+    meta = {"slug": "b", "title": "</script><script>alert(1)</script>", "author": "A", "level": "A1", "source": "https://x",
+            "chapterQuizzes": {"1": "chapter_key"}}
+    (tmp / "books.json").write_text(json.dumps([meta]), encoding="utf-8")
+    book = build_books.load_books(tmp / "books.json", tmp)[0]
+    _, _, body, jsonld, _ = build_books.reader_page(bd.LOCALES[0], "", book)
+    assert "</script><script>alert(1)" not in body and "</script><script>alert(1)" not in jsonld
+    assert '"chapterQuizzes":{"1":"chapter_key"}' in body
 
 
 if __name__ == "__main__":
