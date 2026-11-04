@@ -89,3 +89,4 @@
 #rd-tr[aria-pressed="true"] { color: var(--rd-edge); border-color: var(--rd-edge); font-weight: 700; }
 .rd-check { display: flex; gap: 8px; align-items: center; margin-top: 12px; font-size: 15px; }
 .rd-text.study .s:has(+ .tl) .sb-tr { color: #fff; border-color: var(--rd-edge); background: var(--rd-edge); }
+.reader .rd-why { display: block; margin-top: 4px; color: var(--rd-muted); font: 11px/1.4 ui-monospace, monospace; overflow-wrap: anywhere; }

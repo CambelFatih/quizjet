@@ -28,8 +28,25 @@
   const POS_KEY = "qj.book." + D.slug, PREFS_KEY = "qj.reader", WORDS_KEY = "qj.words", TR_KEY = "qj.tr";
   const RATES = [0.6, 0.8, 1, 1.2];
   const dark = window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches;
+  // Only what the reader explicitly chose is stored; everything else is a default worked out on each load.
+  // The first version stored every default on the first visit, so a visit to the English page froze an
+  // empty translation language that the Turkish page then inherited: no translation, no Translate button.
+  const chosen = load(PREFS_KEY, {});
+  if (chosen.v !== 2) { delete chosen.target; chosen.v = 2; }
   const prefs = Object.assign({ font: 19, spacing: "1.8", theme: dark ? "dark" : "light", view: "book", rate: 1,
-    target: D.lang === "en" ? "" : D.lang, autoTr: false, tipSeen: false }, load(PREFS_KEY, {}));
+    target: defaultTarget(), autoTr: false, tipSeen: false }, chosen);
+  function setPref(name, value) { prefs[name] = value; chosen[name] = value; store(PREFS_KEY, chosen); }
+  // The page language, or on the English page the phone's own language when the reader offers it.
+  function defaultTarget() {
+    const offered = [...document.querySelectorAll('#rd-set-form [name="target"] option')].map((o) => o.value).filter(Boolean);
+    const wanted = D.lang === "en" ? (navigator.languages || [navigator.language || ""]) : [D.lang];
+    for (const tag of wanted) {
+      const t = String(tag).toLowerCase(), base = t.split("-")[0];
+      const hit = offered.find((c) => c.toLowerCase() === t) || offered.find((c) => c.toLowerCase().split("-")[0] === base);
+      if (hit) return hit;
+    }
+    return "";
+  }
   let words = load(WORDS_KEY, []);
   let chapter = 1, sentences = [], spans = [], active = -1, playing = false, continuous = false, run = 0, userScrollAt = 0;
 
@@ -45,17 +62,16 @@
     ["spacing", "theme", "view"].forEach((name) => form.querySelectorAll('[name="' + name + '"]').forEach((r) => { r.checked = r.value === String(prefs[name]); }));
     form.elements.target.value = prefs.target;
     form.elements.autoTr.checked = prefs.autoTr;
-    store(PREFS_KEY, prefs);
   }
   $("rd-set-form").addEventListener("change", (ev) => {
     const el = ev.target, oldTarget = prefs.target;
-    prefs[el.name] = el.type === "checkbox" ? el.checked : el.value;
+    setPref(el.name, el.type === "checkbox" ? el.checked : el.value);
     applyPrefs();
     if (el.name === "target" || el.name === "autoTr") refreshLines(oldTarget !== prefs.target);
   });
   $("rd-set-form").addEventListener("click", (ev) => {
     const b = ev.target.closest("[data-font]");
-    if (b) { prefs.font = Math.min(28, Math.max(14, prefs.font + 2 * Number(b.dataset.font))); applyPrefs(); }
+    if (b) { setPref("font", Math.min(28, Math.max(14, prefs.font + 2 * Number(b.dataset.font)))); applyPrefs(); }
   });
   $("rd-set-btn").addEventListener("click", () => setDlg.showModal());
 
@@ -274,7 +290,7 @@
   trBtn.addEventListener("click", () => { setActive(current(), 0); showLine(active, false); });
   playBtn.addEventListener("click", () => (playing && continuous ? stop() : speakFrom(current(), true)));
   speedBtn.addEventListener("click", () => {
-    prefs.rate = RATES[(RATES.indexOf(prefs.rate) + 1) % RATES.length];
+    setPref("rate", RATES[(RATES.indexOf(prefs.rate) + 1) % RATES.length]);
     applyPrefs();
     if (playing) speakFrom(active, continuous);
   });
@@ -300,14 +316,18 @@
   // Each provider returns {text, dict?}, null when it does not apply (no need to give up on it), or throws when it failed.
   const providers = {
     google: async (q, tl) => {
-      const r = await fetch("https://translate.googleapis.com/translate_a/single?client=gtx&dt=t&dt=bd&dj=1&sl=en&tl="
+      const r = await fetch("https://translate.googleapis.com/translate_a/single?client=gtx&dt=t&dt=bd&dt=md&dj=1&sl=en&tl="
         + encodeURIComponent(gcode(tl)) + "&hl=" + encodeURIComponent(gcode(D.lang)) + "&q=" + encodeURIComponent(q));
       if (!r.ok) throw new Error("google " + r.status);
       const d = await r.json();
       const out = (d.sentences || []).map((x) => x.trans || "").join("").trim();
       if (!out) throw new Error("google empty");
       const dict = (d.dict || []).map((x) => ({ pos: String(x.pos || ""), terms: (x.terms || []).slice(0, 6).map(String) })).filter((x) => x.terms.length);
-      return { text: out, dict: dict };
+      const defs = [];
+      for (const x of d.definitions || []) for (const en of (x.entry || []).slice(0, 2)) {
+        if (en.gloss) defs.push({ pos: String(x.pos || ""), gloss: String(en.gloss), example: String(en.example || "") });
+      }
+      return { text: out, dict: dict, defs: defs.slice(0, 5) };
     },
     device: async (q, tl) => {
       if (!self.Translator) return null;
@@ -349,7 +369,7 @@
         }
         // The one place a visitor (or support) can see why: the browser console.
         console.warn("QuizJet reader: no translation for " + prefs.target, failed.length ? failed : "all providers skipped this visit");
-        throw new Error("no translation");
+        throw new Error(failed.join(" · "));
       })();
       p.catch(() => trCache.delete(key)); // a failure is not an answer: the next tap asks again
       trCache.set(key, p);
@@ -361,10 +381,12 @@
     el.hidden = false;
     el.textContent = C.bkLoading;
     el.trQuery = [q, done];
-    translate(q).then((res) => { el.textContent = res.text; if (done) done(res); }, () => {
-      el.innerHTML = esc(C.bkTrError) + ' <button type="button" class="rd-mini" data-retry>' + esc(C.bkRetry) + "</button>";
+    translate(q).then((res) => { el.textContent = res.text; if (done) done(res); }, (err) => {
+      el.innerHTML = esc(C.bkTrError) + ' <button type="button" class="rd-mini" data-retry>' + esc(C.bkRetry) + "</button>" + why(err);
     });
   }
+  // The reason in small print: on a phone there is no console, so a screenshot has to carry it.
+  function why(err) { const m = err && err.message; return m ? '<small class="rd-why" lang="en" dir="ltr">' + esc(m) + "</small>" : ""; }
   function retried(ev) {
     const b = ev.target.closest("[data-retry]");
     if (!b) return false;
@@ -413,20 +435,39 @@
     if (/ly$/.test(w)) add(w.slice(0, -2));
     return c.slice(0, 4);
   }
+  // Resolves to {base, entries}, or null when the dictionary has no entry; rejects when it could not be asked.
   async function define(w) {
     if (defCache.has(w)) return defCache.get(w);
-    let found = null, settled = true;
     for (const cand of baseForms(w)) {
-      let r = null;
-      try { r = await fetch("https://api.dictionaryapi.dev/api/v2/entries/en/" + encodeURIComponent(cand)); } catch (_) { settled = false; break; }
-      if (r.ok) { found = { base: cand, entries: await r.json() }; break; }
-      if (r.status !== 404) { settled = false; break; } // rate limit or outage: don't burn more requests
+      const r = await within(8000, fetch("https://api.dictionaryapi.dev/api/v2/entries/en/" + encodeURIComponent(cand)))
+        .catch((err) => { throw new Error("dictionaryapi.dev: " + (err && err.message)); });
+      if (r.ok) { const found = { base: cand, entries: await r.json() }; defCache.set(w, found); return found; }
+      if (r.status !== 404) throw new Error("dictionaryapi.dev: HTTP " + r.status); // rate limit or outage: don't burn more requests
     }
-    if (settled) defCache.set(w, found); // "not in the dictionary" is an answer; "offline" is not
-    return found;
+    defCache.set(w, null); // "not in the dictionary" is an answer; "offline" is not
+    return null;
+  }
+  // ctx.dict: undefined while loading, null for no entry, {entries} when found, {error} when the dictionary failed;
+  // ctx.defs: Google's English definitions, the stand-in when the dictionary has nothing to show.
+  function showDefs(ctx) {
+    if (panel.ctx !== ctx) return;
+    const el = $("rd-def");
+    if (ctx.dict && ctx.dict.entries) { renderDefinition(el, $("rd-phon"), ctx.word, ctx.dict); return; }
+    if (ctx.defs && ctx.defs.length) {
+      el.innerHTML = ctx.defs.map((d) => "<li><b>" + esc(d.pos) + "</b> " + esc(d.gloss) + (d.example ? "<br><em>“" + esc(d.example) + "”</em>" : "") + "</li>").join("");
+      return;
+    }
+    if (ctx.dict === undefined) return;
+    el.innerHTML = ctx.dict === null ? "<li>" + esc(C.bkNoDef) + "</li>"
+      : "<li>" + esc(C.bkDictError) + ' <button type="button" class="rd-mini" data-act="redef">' + esc(C.bkRetry) + "</button>" + why(ctx.dict.error) + "</li>";
+  }
+  function lookUp(ctx) {
+    ctx.dict = undefined;
+    $("rd-def").innerHTML = "<li>" + esc(C.bkLoading) + "</li>";
+    define(ctx.word).then((res) => { ctx.dict = res; ctx.base = res ? res.base : ""; showDefs(ctx); },
+      (err) => { ctx.dict = { error: err }; showDefs(ctx); });
   }
   function renderDefinition(el, phonEl, w, res) {
-    if (!res) { el.innerHTML = "<li>" + esc(C.bkNoDef) + "</li>"; return; }
     const phon = res.entries.map((x) => x.phonetic || (x.phonetics || []).map((p) => p.text).find(Boolean)).find(Boolean);
     phonEl.textContent = (phon || "") + (res.base !== w ? "  ·  " + C.bkBase + ": " + res.base : "");
     const items = [];
@@ -446,7 +487,7 @@
   }
   function openWord(w, i) {
     stop();
-    if (!prefs.tipSeen) { prefs.tipSeen = true; applyPrefs(); }
+    if (!prefs.tipSeen) { setPref("tipSeen", true); applyPrefs(); }
     const word = w.textContent, lower = word.toLowerCase().replace(/’/g, "'");
     panelBody.innerHTML =
       '<h2 lang="en" dir="ltr">' + esc(word) + "</h2>"
@@ -469,6 +510,8 @@
       fill($("rd-wtr"), lower, (res) => {
         if (panel.ctx !== ctx) return;
         ctx.tr = res.text;
+        ctx.defs = res.defs;
+        showDefs(ctx);
         updateEntry(ctx);
         if (res.dict && res.dict.length) {
           $("rd-mean").innerHTML = "<h3>" + esc(C.bkMeanings) + '</h3><ul class="rd-def" dir="auto">'
@@ -476,11 +519,7 @@
         }
       });
     }
-    define(lower).then((res) => {
-      if (panel.ctx !== ctx) return;
-      ctx.base = res ? res.base : "";
-      renderDefinition($("rd-def"), $("rd-phon"), lower, res);
-    });
+    lookUp(ctx);
     panel.showModal();
   }
   panel.addEventListener("click", (ev) => {
@@ -496,6 +535,7 @@
     }
     else if (act.dataset.act === "from") { panel.close(); speakFrom(ctx.i, true); }
     else if (act.dataset.act === "save") toggleSave(ctx);
+    else if (act.dataset.act === "redef") lookUp(ctx);
   });
   [setDlg, wordsDlg].forEach((dlg) => dlg.addEventListener("click", (ev) => {
     if (ev.target === dlg || ev.target.closest("[data-close]")) dlg.close();

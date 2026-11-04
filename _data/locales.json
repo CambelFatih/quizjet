@@ -137,7 +137,8 @@
       "bkClose": "Close",
       "bkProgress": "Progress",
       "bkAutoTr": "Translate the highlighted sentence automatically",
-      "bkMeanings": "Meanings"
+      "bkMeanings": "Meanings",
+      "bkDictError": "The dictionary isn't available right now."
     }
   },
   {
@@ -278,7 +279,8 @@
       "bkClose": "Kapat",
       "bkProgress": "İlerleme",
       "bkAutoTr": "Vurgulanan cümleyi otomatik çevir",
-      "bkMeanings": "Anlamları"
+      "bkMeanings": "Anlamları",
+      "bkDictError": "Sözlük şu anda kullanılamıyor."
     }
   },
   {
@@ -419,7 +421,8 @@
       "bkClose": "Tanca",
       "bkProgress": "Progrés",
       "bkAutoTr": "Tradueix automàticament la frase ressaltada",
-      "bkMeanings": "Significats"
+      "bkMeanings": "Significats",
+      "bkDictError": "El diccionari no està disponible ara mateix."
     }
   },
   {
@@ -560,7 +563,8 @@
       "bkClose": "Schließen",
       "bkProgress": "Fortschritt",
       "bkAutoTr": "Markierten Satz automatisch übersetzen",
-      "bkMeanings": "Bedeutungen"
+      "bkMeanings": "Bedeutungen",
+      "bkDictError": "Das Wörterbuch ist gerade nicht verfügbar."
     }
   },
   {
@@ -701,7 +705,8 @@
       "bkClose": "Chiudi",
       "bkProgress": "Avanzamento",
       "bkAutoTr": "Traduci automaticamente la frase evidenziata",
-      "bkMeanings": "Significati"
+      "bkMeanings": "Significati",
+      "bkDictError": "Il dizionario non è disponibile in questo momento."
     }
   },
   {
@@ -842,7 +847,8 @@
       "bkClose": "Tutup",
       "bkProgress": "Kemajuan",
       "bkAutoTr": "Terjemah ayat yang diserlahkan secara automatik",
-      "bkMeanings": "Maksud"
+      "bkMeanings": "Maksud",
+      "bkDictError": "Kamus tidak tersedia sekarang."
     }
   },
   {
@@ -983,7 +989,8 @@
       "bkClose": "Zamknij",
       "bkProgress": "Postęp",
       "bkAutoTr": "Automatycznie tłumacz podświetlone zdanie",
-      "bkMeanings": "Znaczenia"
+      "bkMeanings": "Znaczenia",
+      "bkDictError": "Słownik jest teraz niedostępny."
     }
   },
   {
@@ -1124,7 +1131,8 @@
       "bkClose": "Закрыть",
       "bkProgress": "Прогресс",
       "bkAutoTr": "Автоматически переводить выделенное предложение",
-      "bkMeanings": "Значения"
+      "bkMeanings": "Значения",
+      "bkDictError": "Словарь сейчас недоступен."
     }
   },
   {
@@ -1265,7 +1273,8 @@
       "bkClose": "Закрити",
       "bkProgress": "Прогрес",
       "bkAutoTr": "Автоматично перекладати виділене речення",
-      "bkMeanings": "Значення"
+      "bkMeanings": "Значення",
+      "bkDictError": "Словник зараз недоступний."
     }
   },
   {
@@ -1406,7 +1415,8 @@
       "bkClose": "إغلاق",
       "bkProgress": "التقدّم",
       "bkAutoTr": "ترجم الجملة المبرزة تلقائيًا",
-      "bkMeanings": "المعاني"
+      "bkMeanings": "المعاني",
+      "bkDictError": "القاموس غير متاح الآن."
     }
   },
   {
@@ -1547,7 +1557,8 @@
       "bkClose": "Sluiten",
       "bkProgress": "Voortgang",
       "bkAutoTr": "Gemarkeerde zin automatisch vertalen",
-      "bkMeanings": "Betekenissen"
+      "bkMeanings": "Betekenissen",
+      "bkDictError": "Het woordenboek is nu niet beschikbaar."
     }
   },
   {
@@ -1688,7 +1699,8 @@
       "bkClose": "Fermer",
       "bkProgress": "Progression",
       "bkAutoTr": "Traduire automatiquement la phrase surlignée",
-      "bkMeanings": "Sens"
+      "bkMeanings": "Sens",
+      "bkDictError": "Le dictionnaire n'est pas disponible pour le moment."
     }
   },
   {
@@ -1829,7 +1841,8 @@
       "bkClose": "Tutup",
       "bkProgress": "Kemajuan",
       "bkAutoTr": "Terjemahkan kalimat yang disorot secara otomatis",
-      "bkMeanings": "Arti"
+      "bkMeanings": "Arti",
+      "bkDictError": "Kamus sedang tidak tersedia."
     }
   },
   {
@@ -1970,7 +1983,8 @@
       "bkClose": "닫기",
       "bkProgress": "진행률",
       "bkAutoTr": "강조된 문장 자동 번역",
-      "bkMeanings": "뜻"
+      "bkMeanings": "뜻",
+      "bkDictError": "지금은 사전을 사용할 수 없어요."
     }
   },
   {
@@ -2111,7 +2125,8 @@
       "bkClose": "بستن",
       "bkProgress": "پیشرفت",
       "bkAutoTr": "جملهٔ برجسته را خودکار ترجمه کن",
-      "bkMeanings": "معانی"
+      "bkMeanings": "معانی",
+      "bkDictError": "واژه‌نامه الان در دسترس نیست."
     }
   },
   {
@@ -2252,7 +2267,8 @@
       "bkClose": "Fechar",
       "bkProgress": "Progresso",
       "bkAutoTr": "Traduzir automaticamente a frase destacada",
-      "bkMeanings": "Significados"
+      "bkMeanings": "Significados",
+      "bkDictError": "O dicionário não está disponível agora."
     }
   },
   {
@@ -2393,7 +2409,8 @@
       "bkClose": "Cerrar",
       "bkProgress": "Progreso",
       "bkAutoTr": "Traducir automáticamente la frase resaltada",
-      "bkMeanings": "Significados"
+      "bkMeanings": "Significados",
+      "bkDictError": "El diccionario no está disponible ahora mismo."
     }
   },
   {
@@ -2534,7 +2551,8 @@
       "bkClose": "Yopish",
       "bkProgress": "Jarayon",
       "bkAutoTr": "Ajratilgan gapni avtomatik tarjima qilish",
-      "bkMeanings": "Ma'nolari"
+      "bkMeanings": "Ma'nolari",
+      "bkDictError": "Lug'at hozir mavjud emas."
     }
   }
 ]
