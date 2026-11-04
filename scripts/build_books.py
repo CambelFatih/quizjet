@@ -128,7 +128,7 @@ def reader_page(locale: dict[str, object], pre: str, book: dict[str, object]) ->
           <button type="button" class="rd-icon" id="rd-set-btn" aria-label="{e(c["bkSettings"])}">Aa</button>
         </div>
         <p class="rd-progress" id="rd-progress"></p>
-        <p class="rd-tip">{e(c["bkTip"])}</p>
+        <p class="rd-tip" id="rd-tip">{e(c["bkTip"])}</p>
         <article class="rd-text" id="rd-text" lang="en" dir="ltr"><p>{e(c["bkLoading"])}</p></article>
         <aside class="rd-quiz" id="rd-quiz" hidden>
           <h2>{e(c["bkQuizTitle"])}</h2>
@@ -143,7 +143,7 @@ def reader_page(locale: dict[str, object], pre: str, book: dict[str, object]) ->
           <div class="rd-row">
             <button type="button" id="rd-prev" aria-label="{e(c["bkPrev"])}">‹</button>
             <button type="button" id="rd-this"><span aria-hidden="true">▶</span> {e(c["bkThis"])}</button>
-            <button type="button" id="rd-tr"><span aria-hidden="true">文A</span> {e(c["bkTranslate"])}</button>
+            <button type="button" id="rd-tr" aria-pressed="false"><span aria-hidden="true">文A</span> {e(c["bkTranslate"])}</button>
             <button type="button" id="rd-next" aria-label="{e(c["bkNext"])}">›</button>
           </div>
           <div class="rd-row rd-player" id="rd-player">
@@ -166,6 +166,7 @@ def reader_page(locale: dict[str, object], pre: str, book: dict[str, object]) ->
           <fieldset><legend>{e(c["bkTheme"])}</legend>{radios("theme", [("light", c["bkLight"]), ("sepia", c["bkSepia"]), ("dark", c["bkDark"])])}</fieldset>
           <fieldset><legend>{e(c["bkView"])}</legend>{radios("view", [("book", c["bkViewBook"]), ("study", c["bkViewStudy"])])}</fieldset>
           <label class="rd-field">{e(c["bkTarget"])} <select name="target">{target_options}</select></label>
+          <label class="rd-check"><input type="checkbox" name="autoTr"> {e(c["bkAutoTr"])}</label>
         </form></dialog>
         <dialog class="rd-sheet" id="rd-words"><div class="rd-sheet-in">
           <button type="button" class="rd-x" data-close aria-label="{e(c["bkClose"])}">×</button>

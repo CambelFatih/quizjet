@@ -122,6 +122,7 @@ def run() -> None:
             assert '"lang":"tr"' in tr_reader and "Bu cümle" in tr_reader and "/assets/reader.js?v=" in tr_reader
             assert 'href="/de/kitaplar/sherlock-holmes/"' in tr_reader, "language menu stays on the book"
             assert '"@type":"Book"' in tr_reader
+            assert 'name="autoTr"' in tr_reader and 'id="rd-tip"' in tr_reader and "translate.google.com/?" not in tr_reader
             shelf = (bare / "kitaplar" / "index.html").read_text(encoding="utf-8")
             assert 'href="/kitaplar/sherlock-holmes/"' in shelf and "Chapters: 12" in shelf
             assert 'href="/tr/kitaplar/"' in (bare / "tr" / "index.html").read_text(encoding="utf-8"), "landing links the shelf"

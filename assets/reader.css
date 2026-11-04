@@ -83,3 +83,9 @@
 .reader .quiz-note { color: var(--rd-muted); }
 :root[data-rd-theme="dark"] .site-footer { color: #eef1f5; border-color: #3a414d; }
 #rd-prev, #rd-next { font-size: 24px; line-height: 1; }
+.reader .tl { display: block; margin: 4px 0 12px; padding: 6px 10px; border-inline-start: 3px solid var(--rd-edge); border-radius: 4px; color: var(--rd-ink); background: var(--rd-soft); font: calc(var(--rd-font) * .82) / 1.55 "DM Sans", system-ui, sans-serif; }
+.rd-text.study .tl { margin: 0; padding: 8px 52px 10px 42px; border-inline-start: 0; border-bottom: 1px solid var(--rd-line); border-radius: 0; }
+.reader .tl .rd-mini { min-height: 32px; margin-inline-start: 6px; }
+#rd-tr[aria-pressed="true"] { color: var(--rd-edge); border-color: var(--rd-edge); font-weight: 700; }
+.rd-check { display: flex; gap: 8px; align-items: center; margin-top: 12px; font-size: 15px; }
+.rd-text.study .s:has(+ .tl) .sb-tr { color: #fff; border-color: var(--rd-edge); background: var(--rd-edge); }
