@@ -9,5 +9,16 @@
     "cover": ["#1d3b5c", "#c8a45a"],
     "quiz": "",
     "chapterQuizzes": {}
+  },
+  {
+    "slug": "frankenstein",
+    "title": "Frankenstein; or, The Modern Prometheus",
+    "author": "Mary Wollstonecraft Shelley",
+    "level": "C1",
+    "language": "en",
+    "source": "https://www.gutenberg.org/ebooks/84",
+    "cover": ["#1f2b24", "#8fb07a"],
+    "quiz": "",
+    "chapterQuizzes": {}
   }
 ]

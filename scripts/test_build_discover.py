@@ -89,7 +89,7 @@ def run() -> None:
             assert sum(1 for _ in out.rglob("q/good_key-1/index.html")) == 18
             landing_tr = (out / "tr" / "index.html").read_text(encoding="utf-8")
             assert 'href="/tr/kesfet/"' in landing_tr and 'href="/kesfet/"' not in landing_tr
-            assert sitemap.count("<loc>") == 18 + 18 * (1 + 2) + 18 * 2, "landing + per language: catalog + 2 quizzes + shelf + 1 book"
+            assert sitemap.count("<loc>") == 18 + 18 * (1 + 2) + 18 * 3, "landing + per language: catalog + 2 quizzes + shelf + 2 books"
             assert "https://quizjet.app/tr/q/good_key-1/" in sitemap
 
             # the landing band shows the real count, in every language, with no placeholder left
@@ -125,6 +125,7 @@ def run() -> None:
             assert 'name="autoTr"' in tr_reader and 'id="rd-tip"' in tr_reader and "translate.google.com/?" not in tr_reader
             shelf = (bare / "kitaplar" / "index.html").read_text(encoding="utf-8")
             assert 'href="/kitaplar/sherlock-holmes/"' in shelf and "Chapters: 12" in shelf
+            assert 'href="/kitaplar/frankenstein/"' in shelf and "Chapters: 28" in shelf
             assert 'href="/tr/kitaplar/"' in (bare / "tr" / "index.html").read_text(encoding="utf-8"), "landing links the shelf"
 
             # a truncated export is refused
@@ -153,6 +154,9 @@ def check_books(tmp: Path) -> None:
         '"Wedlock suits you," he remarked.', '"I think, Watson, that you have."', "Mr. St. Simon came."]
     assert ig.split_sentences('"Seven!" I answered. J. Smith left. Then?') == ['"Seven!" I answered.', "J. Smith left.", "Then?"]
     assert ig.clean("a--b _word_\n  c") == "a—b word c"
+    assert ig.clean("“It’s _so_.”") == '"It\'s so."', "curly quotes become the ones the splitter knows"
+    toc = "*** START OF X\n\nChapter 1\n\nChapter 2\n\nChapter 1\n\nHi.\n"
+    assert [c["title"] for c in ig.parse(toc, r"^(Chapter [0-9]+)$")] == ["Chapter 1"], "contents entries are dropped"
     # metadata errors fail the build instead of publishing a broken link
     (tmp / "b.json").write_text('{"chapters": [{"title": "One", "p": [["Hi."]]}]}', encoding="utf-8")
     for bad in ({"quiz": "bad key"}, {"chapterQuizzes": {"2": "k"}}, {"slug": "Bad/Slug"}):
