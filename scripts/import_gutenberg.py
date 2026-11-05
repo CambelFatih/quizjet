@@ -1,6 +1,7 @@
 """Turn a Project Gutenberg plain-text book into the reader's chapter data.
 
     python scripts/import_gutenberg.py pg1661.txt _data/books/sherlock-holmes.json
+    python scripts/import_gutenberg.py pg84.txt _data/books/frankenstein.json --chapter-re '^((?:Letter|Chapter) [0-9]+)$'
 
 Output: {"chapters": [{"title": ..., "p": [[sentence, ...], ...]}]}. Only the text between the
 Gutenberg START/END markers is kept. A chapter starts at a line matching --chapter-re (group 1 is
@@ -23,7 +24,8 @@ SMALL_WORDS = {"a", "an", "and", "in", "of", "the", "with", "on", "at", "to", "f
 # ponytail: fixed abbreviation list, enough for 19th-century English prose; add entries when a new
 # book splits a sentence after one of its own abbreviations.
 ABBREVIATIONS = {"mr", "mrs", "messrs", "dr", "st", "mme", "mlle", "no", "co", "vol", "rev", "capt", "col",
-                 "gen", "lt", "sgt", "jr", "sr", "prof", "hon", "esq", "ft", "mt", "vs", "etc", "i.e", "e.g"}
+                 "gen", "lt", "sgt", "jr", "sr", "prof", "hon", "esq", "ft", "mt", "vs", "etc", "i.e", "e.g", "dec"}
+CURLY_QUOTES = str.maketrans("“”‘’", "\"\"''")
 # A sentence ends at . ! ? (plus closing quotes/brackets) followed by space and a capital or opening quote.
 BOUNDARY_RE = re.compile(r"""[.!?]+["')\]]*(?=\s+["'(\[]?[A-Z0-9])""")
 
@@ -35,6 +37,7 @@ def title_case(text: str) -> str:
 
 def clean(text: str) -> str:
     text = text.replace("--", "—").replace("_", "")  # Gutenberg dashes and _italics_
+    text = text.translate(CURLY_QUOTES)  # newer Gutenberg files use “ ” ‘ ’; the splitter knows " and '
     return " ".join(text.split())
 
 
@@ -65,7 +68,8 @@ def parse(text: str, chapter_re: str = CHAPTER_RE, skip_re: str = SKIP_RE) -> li
             chapters.append({"title": title_case(heading.group(1)), "p": []})
         elif chapters and first and not skip_pattern.match(first):
             chapters[-1]["p"].append(split_sentences(clean(block)))
-    if chapters and chapters[-1]["p"]:
+    chapters = [c for c in chapters if c["p"]]  # a table of contents yields headings with no text
+    if chapters:
         # The end of the last chapter often carries a trailing "End of the Project Gutenberg..." line.
         last = chapters[-1]["p"]
         while last and last[-1][0].lower().startswith("end of"):
