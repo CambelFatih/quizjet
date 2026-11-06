@@ -137,7 +137,11 @@ def run() -> None:
 
         # no edition yet: the page exists for the menu link, unindexed and out of the sitemap; the landing band leaves
         empty = tmp_path / "empty"
-        bd.build(empty, None)
+        bn.NEWS_DIR = tmp_path / "no-news"  # the repo itself carries real editions once the workflow has run
+        try:
+            bd.build(empty, None)
+        finally:
+            bn.NEWS_DIR = original_dir
         bare = (empty / "haberler" / "index.html").read_text(encoding="utf-8")
         assert '<meta name="robots" content="noindex">' in bare and "next daily update" in bare
         assert "haberler" not in (empty / "sitemap.xml").read_text(encoding="utf-8")
