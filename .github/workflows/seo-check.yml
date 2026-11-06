@@ -1,8 +1,8 @@
 name: SEO checks
 
-# No pull_request trigger (owner decision, 2026-11-04): opening a PR runs nothing. The same three
+# No pull_request trigger (owner decision, 2026-11-04): opening a PR runs nothing. The same four
 # checks run on every push to main here and again in deploy.yml before the site is published;
-# run them by hand before a PR: build_locales.py --check, check_seo.py, test_build_discover.py.
+# run them by hand before a PR: build_locales.py --check, check_seo.py, test_build_discover.py, test_build_news.py.
 on:
   push:
     branches:
@@ -25,3 +25,4 @@ jobs:
           python scripts/build_locales.py --check
           python scripts/check_seo.py
           python scripts/test_build_discover.py
+          python scripts/test_build_news.py

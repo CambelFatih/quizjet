@@ -206,13 +206,13 @@ def render_legal_page(meta: dict[str, object], code: str, page: str, body: str) 
         f'    <meta name="description" content="{html.escape(info["description"], quote=True)}">\n'
         f'    <link rel="canonical" href="{legal_url(route, page)}">\n'
         f"{alternates}"
-        '    <link rel="icon" type="image/png" href="/assets/logo.png">\n'
+        '    <link rel="icon" type="image/png" href="/assets/logo-96.png">\n'
         f'    <link rel="stylesheet" href="/styles.css?v={stylesheet_version()}">\n'
         "  </head>\n"
         "  <body>\n"
         '    <header class="site-header">\n'
         '      <nav class="navigation page-width">\n'
-        f'        <a class="brand" href="{home}"><img src="/assets/logo.png" alt="" width="44" height="44"><span>quizjet</span></a>\n'
+        f'        <a class="brand" href="{home}"><img src="/assets/logo-96.png" alt="" width="44" height="44"><span>quizjet</span></a>\n'
         f'        <div class="nav-actions legal-switch">{switch}</div>\n'
         "      </nav>\n"
         "    </header>\n"
@@ -223,7 +223,7 @@ def render_legal_page(meta: dict[str, object], code: str, page: str, body: str) 
         "    </main>\n"
         '    <footer class="site-footer">\n'
         '      <div class="footer-inner page-width">\n'
-        f'        <a class="brand footer-brand" href="{home}"><img src="/assets/logo.png" alt="" width="36" height="36"><span>quizjet</span></a>\n'
+        f'        <a class="brand footer-brand" href="{home}"><img src="/assets/logo-96.png" alt="" width="36" height="36"><span>quizjet</span></a>\n'
         f'        <nav class="footer-legal">{links}</nav>\n'
         "      </div>\n"
         "    </footer>\n"
@@ -249,7 +249,7 @@ def render_page(template: str, locale: dict[str, object], locales: list[dict[str
     route = locale["route"]
     title_text = html.unescape(re.sub(r"<[^>]*>", " ", copy["heroTitle"]))
     title_text = " ".join(title_text.split())
-    title = f"Quizjet — {title_text}"
+    title = f"QuizJet — {title_text}"
     description = copy["heroLead"]
 
     page = CopyReplacer(template, copy).localized_source()
@@ -347,12 +347,48 @@ def legacy_redirect_page(target: str) -> str:
         '    <meta name="robots" content="noindex">\n'
         f'    <link rel="canonical" href="{BASE_URL}/">\n'
         f'    <meta http-equiv="refresh" content="0;url={target}">\n'
-        '    <title>Quizjet page moved</title>\n'
+        '    <title>QuizJet page moved</title>\n'
         '  </head>\n'
         '  <body>\n'
-        f'    <p>This page has moved. <a href="{target}">Continue to Quizjet</a>.</p>\n'
+        f'    <p>This page has moved. <a href="{target}">Continue to QuizJet</a>.</p>\n'
         '  </body>\n'
         '</html>\n'
+    )
+
+
+def not_found_page(locale: dict[str, object]) -> str:
+    """GitHub Pages serves /404.html for any missing path: a quiz taken out of Discover, a mistyped URL."""
+    c = locale["copy"]
+    e = lambda value: html.escape(str(value), quote=True)  # noqa: E731
+    return (
+        "<!doctype html>\n"
+        f'<html lang="{e(locale["code"])}" dir="{e(locale["dir"])}">\n'
+        "  <head>\n"
+        '    <meta charset="utf-8">\n'
+        '    <meta name="viewport" content="width=device-width, initial-scale=1">\n'
+        '    <meta name="theme-color" content="#101f37">\n'
+        '    <meta name="robots" content="noindex">\n'
+        "    <title>Page not found — QuizJet</title>\n"
+        '    <link rel="icon" type="image/png" href="/assets/logo-96.png">\n'
+        f'    <link rel="stylesheet" href="/styles.css?v={stylesheet_version()}">\n'
+        "  </head>\n"
+        "  <body>\n"
+        '    <header class="site-header">\n'
+        '      <nav class="navigation page-width">\n'
+        '        <a class="brand" href="/"><img src="/assets/logo-96.png" alt="" width="44" height="44"><span>quizjet</span></a>\n'
+        "      </nav>\n"
+        "    </header>\n"
+        '    <main class="discover page-width">\n'
+        "      <h1>Page not found</h1>\n"
+        '      <p class="discover-lead">This page does not exist or is no longer public. A quiz leaves quizjet.app when its owner turns Discover off.</p>\n'
+        '      <div class="quiz-actions">\n'
+        f'        <a class="button button-dark" href="/kesfet/">{e(c["browseQuizzes"])}</a>\n'
+        f'        <a class="button button-light" href="/kitaplar/">{e(c["bkBrowse"])}</a>\n'
+        f'        <a class="button button-light" href="/haberler/">{e(c["navNews"])}</a>\n'
+        "      </div>\n"
+        "    </main>\n"
+        "  </body>\n"
+        "</html>\n"
     )
 
 
@@ -363,6 +399,7 @@ def outputs(template: str, locales: list[dict[str, object]], legal_meta: dict[st
         target = ROOT / locale["route"] / "index.html" if locale["route"] else ROOT / "index.html"
         generated[target] = render_page(template, locale, locales, legal_routes)
     generated[ROOT / "en" / "index.html"] = legacy_redirect_page("/")
+    generated[ROOT / "404.html"] = not_found_page(locales[0])
     generated[ROOT / "sitemap.xml"] = sitemap_content(locales)
     generated.update(legal_outputs(legal_meta))
     return generated

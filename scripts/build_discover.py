@@ -124,14 +124,14 @@ def shell(locale: dict[str, object], title: str, description: str, suffix: str, 
         f'    <meta property="og:url" content="{url}">\n'
         f'    <meta property="og:image" content="{BASE_URL}/assets/logo.png">\n'
         '    <meta name="twitter:card" content="summary">\n'
-        '    <link rel="icon" type="image/png" href="/assets/logo.png">\n'
+        '    <link rel="icon" type="image/png" href="/assets/logo-96.png">\n'
         f'    <link rel="stylesheet" href="/styles.css?v={stylesheet_version()}">\n'
         f"{head}{ld}"
         "  </head>\n"
         "  <body>\n"
         '    <header class="site-header">\n'
         '      <nav class="navigation page-width">\n'
-        f'        <a class="brand" href="{pre}/"><img src="/assets/logo.png" alt="" width="44" height="44"><span>quizjet</span></a>\n'
+        f'        <a class="brand" href="{pre}/"><img src="/assets/logo-96.png" alt="" width="44" height="44"><span>quizjet</span></a>\n'
         f'        <div class="nav-actions"><div class="nav-links"><a href="{pre}/kesfet/">{e(c["discAll"])}</a>'
         f'<a href="{pre}/kitaplar/">{e(c["navBooks"])}</a><a href="{pre}/haberler/">{e(c["navNews"])}</a></div>'
         f"{language_menu(locale, LOCALES, suffix)}"
@@ -142,7 +142,7 @@ def shell(locale: dict[str, object], title: str, description: str, suffix: str, 
         f'    <main class="discover page-width">\n{body}    </main>\n'
         '    <footer class="site-footer">\n'
         '      <div class="footer-inner page-width">\n'
-        f'        <a class="brand footer-brand" href="{pre}/"><img src="/assets/logo.png" alt="" width="36" height="36"><span>quizjet</span></a>\n'
+        f'        <a class="brand footer-brand" href="{pre}/"><img src="/assets/logo-96.png" alt="" width="36" height="36"><span>quizjet</span></a>\n'
         f'        <nav class="footer-legal"><a href="{legal}/privacy.html">{e(c["footerPrivacy"])}</a>'
         f'<a href="{legal}/terms.html">{e(c["footerTerms"])}</a><a href="{legal}/support.html">{e(c["footerSupport"])}</a></nav>\n'
         "      </div>\n"
