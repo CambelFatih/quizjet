@@ -21,6 +21,7 @@
   const text = $("rd-text"), chSel = $("rd-ch"), seek = $("rd-seek"), pos = $("rd-pos"), bar = $("rd-bar");
   const playBtn = $("rd-play"), speedBtn = $("rd-speed"), prevBtn = $("rd-prev"), nextBtn = $("rd-next"), trBtn = $("rd-tr");
   const panel = $("rd-panel"), panelBody = $("rd-panel-body"), setDlg = $("rd-set"), wordsDlg = $("rd-words");
+  const quizBox = $("rd-quiz"), tools = root.querySelector(".rd-tools"), pgPrev = $("rd-pg-prev"), pgNext = $("rd-pg-next");
 
   function load(key, fallback) { try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback; } catch (_) { return fallback; } }
   function store(key, value) { try { localStorage.setItem(key, JSON.stringify(value)); } catch (_) { /* private mode or full: keep going */ } }
@@ -62,6 +63,7 @@
     ["spacing", "theme", "view"].forEach((name) => form.querySelectorAll('[name="' + name + '"]').forEach((r) => { r.checked = r.value === String(prefs[name]); }));
     form.elements.target.value = prefs.target;
     form.elements.autoTr.checked = prefs.autoTr;
+    layout(); // font, spacing, view and the tip all change what fits on a page
   }
   $("rd-set-form").addEventListener("change", (ev) => {
     const el = ev.target, oldTarget = prefs.target;
@@ -75,6 +77,7 @@
     if (b) { setPref("font", Math.min(28, Math.max(14, prefs.font + 2 * Number(b.dataset.font)))); applyPrefs(); }
   });
   $("rd-set-btn").addEventListener("click", () => setDlg.showModal());
+  $("rd-voice-btn").addEventListener("click", () => { if (synth) pickVoice(); setDlg.showModal(); }); // the voice list sits at the top
 
   /* ---------- speech ---------- */
   const synth = window.speechSynthesis;
@@ -102,10 +105,12 @@
   } else {
     $("rd-player").hidden = true;
     $("rd-voice").hidden = true;
+    $("rd-voice-btn").hidden = true;
     $("rd-this").disabled = true;
     $("rd-novoice").hidden = false;
   }
   function utter(textToSay) {
+    if (!voices.length) pickVoice(); // some phones list no voices at load and never fire voiceschanged
     const u = utterance = new SpeechSynthesisUtterance(textToSay);
     u.lang = voice ? voice.lang : "en-GB";
     if (voice) u.voice = voice;
@@ -158,7 +163,7 @@
         }
         playing = false;
         updatePlay();
-        if (continuous) $("rd-quiz").scrollIntoView({ block: "center", behavior: "smooth" }); // chapter done: offer the quiz
+        if (continuous) goPage(pageOf(quizBox)); // chapter done: offer the quiz
       };
       u.onerror = () => { if (mine === run) { playing = false; updatePlay(); } };
       synth.speak(u);
@@ -196,6 +201,8 @@
       const o = Number(w.dataset.o);
       if (charIndex >= o && charIndex < o + w.textContent.length) { w.classList.add("on"); litWord = w; break; }
     }
+    // A sentence can run over onto the next page: turn when the voice gets there, not at the next sentence.
+    if (litWord && playing && Date.now() - userScrollAt > 4000 && pageOf(litWord) !== page) goPage(pageOf(litWord));
   }
 
   /* ---------- position ---------- */
@@ -213,27 +220,74 @@
       if (!lineFor(i)) showLine(i, true);
     }
     updateTrButton();
-    // follow: 0 = never scroll (the reader tapped it), 1 = only if the reader isn't scrolling by hand, 2 = always.
-    if (follow === 2 || (follow === 1 && Date.now() - userScrollAt > 4000)) {
-      const r = spans[i].getBoundingClientRect();
-      if (r.top < 60 || r.bottom > innerHeight - bar.offsetHeight - 10) spans[i].scrollIntoView({ block: "center", behavior: "smooth" });
-    }
+    // follow: 0 = never turn the page (the reader tapped it), 1 = only if the reader isn't paging by hand, 2 = always.
+    if (follow === 2 || (follow === 1 && Date.now() - userScrollAt > 4000)) goPage(pageOf(spans[i]));
+    else savePos();
+  }
+
+  /* ---------- pages ---------- */
+  // The chapter is laid out in CSS columns one screen wide inside a box that never scrolls by hand; a page is one
+  // column, and turning it is a plain smooth scrollTo sideways. Nothing is measured per page: the browser paginates.
+  let page = 0, stride = 1, anchor = 0; // anchor: first sentence of the page, kept across re-layouts (font, rotation)
+  function layout() {
+    text.style.height = Math.max(220, innerHeight - bar.offsetHeight - (text.getBoundingClientRect().top - tools.getBoundingClientRect().top) - 34) + "px";
+    const w = text.getBoundingClientRect().width;
+    text.style.columnWidth = w + "px";
+    stride = w + parseFloat(getComputedStyle(text).columnGap);
+    if (spans.length) goPage(pageOf(spans[anchor] || spans[0]), true);
+  }
+  function pageCount() { return Math.max(1, Math.round((text.scrollWidth + stride - text.clientWidth) / stride)); }
+  function pageOf(el) {
+    const r = el.getClientRects()[0];
+    return r ? Math.floor((r.left - text.getBoundingClientRect().left + text.scrollLeft + 1) / stride) : page;
+  }
+  function goPage(n, instant) {
+    page = Math.max(0, Math.min(n, pageCount() - 1));
+    text.scrollTo({ left: page * stride, behavior: instant ? "auto" : "smooth" });
+    const t = tools.getBoundingClientRect().top; // keep the toolbar at the top so the page fills the screen
+    if (Math.abs(t - 8) > 2) scrollBy(0, t - 8);
     savePos();
   }
+  function turn(d) {
+    userScrollAt = Date.now();
+    if (page + d >= pageCount()) { if (chapter < D.chapters.length) location.hash = chapter + 1; return; }
+    goPage(page + d);
+  }
+  // The first sentence that starts on this page or later; reopening goes back to the page where it starts.
   function topSentence() {
-    const limit = 70;
-    for (let i = 0; i < spans.length; i++) if (spans[i].getBoundingClientRect().bottom > limit) return i;
-    return 0;
+    for (let i = 0; i < spans.length; i++) if (pageOf(spans[i]) >= page) return i;
+    return Math.max(spans.length - 1, 0);
   }
   function savePos() {
     if (!spans.length) return;
-    const top = topSentence();
-    store(POS_KEY, { ch: chapter, s: Math.max(active, 0), top: top });
-    const pct = new Intl.NumberFormat(D.lang, { style: "percent" }).format(spans.length > 1 ? top / (spans.length - 1) : 1);
-    $("rd-progress").textContent = C.bkChapter + " " + chapter + " / " + D.chapters.length + " · " + C.bkProgress + ": " + pct;
+    anchor = topSentence();
+    store(POS_KEY, { ch: chapter, s: Math.max(active, 0), top: anchor });
+    const n = pageCount();
+    $("rd-progress").textContent = C.bkChapter + " " + chapter + " / " + D.chapters.length + " · " + C.bkPage + " " + (page + 1) + " / " + n;
+    pgPrev.disabled = page === 0;
+    pgNext.disabled = page >= n - 1 && chapter >= D.chapters.length;
   }
-  let scrollTimer = 0;
-  addEventListener("scroll", () => { clearTimeout(scrollTimer); scrollTimer = setTimeout(savePos, 400); }, { passive: true });
+  pgPrev.addEventListener("click", () => turn(-1));
+  pgNext.addEventListener("click", () => turn(1));
+  let sx = null, sy = 0, swiped = false;
+  text.addEventListener("pointerdown", (ev) => { sx = ev.clientX; sy = ev.clientY; });
+  text.addEventListener("pointercancel", () => { sx = null; });
+  text.addEventListener("pointerup", (ev) => {
+    if (sx === null) return;
+    const dx = ev.clientX - sx, dy = ev.clientY - sy;
+    sx = null;
+    if (Math.abs(dx) < 40 || Math.abs(dx) < Math.abs(dy)) return;
+    swiped = true; // the click that follows a mouse drag is not a tap on a sentence
+    setTimeout(() => { swiped = false; }, 0);
+    turn(dx < 0 ? 1 : -1);
+  });
+  addEventListener("keydown", (ev) => {
+    if (document.querySelector("dialog[open]") || /^(INPUT|SELECT|TEXTAREA)$/.test(ev.target.tagName)) return;
+    const d = { ArrowRight: 1, PageDown: 1, ArrowLeft: -1, PageUp: -1 }[ev.key];
+    if (d) { ev.preventDefault(); turn(d); }
+  });
+  let resizeTimer = 0;
+  addEventListener("resize", () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(layout, 150); });
   ["wheel", "touchmove", "keydown"].forEach((t) => addEventListener(t, () => { userScrollAt = Date.now(); }, { passive: true }));
 
   /* ---------- chapter loading ---------- */
@@ -269,7 +323,7 @@
       }
       frag.append(p);
     }
-    text.replaceChildren(frag);
+    text.replaceChildren(frag, quizBox); // the quiz is the chapter's last page
     seek.max = Math.max(spans.length - 1, 0);
     markSaved();
   }
@@ -278,7 +332,7 @@
     $("rd-quiz-link").href = "https://t.me/" + D.bot + (key ? "?start=" + encodeURIComponent(key) : "");
     $("rd-next-ch").hidden = chapter >= D.chapters.length;
     $("rd-next-ch").href = "#" + (chapter + 1);
-    $("rd-quiz").hidden = false;
+    quizBox.hidden = false;
   }
   function loadChapter(n) {
     stop();
@@ -287,16 +341,18 @@
     active = -1;
     sentences = [];
     spans = []; // savePos() is a no-op until the new chapter is on screen
-    $("rd-quiz").hidden = true;
+    page = 0;
+    quizBox.hidden = true;
     text.innerHTML = "<p>" + esc(C.bkLoading) + "</p>";
     fetch("/kitaplar/" + D.slug + "/" + n + ".json")
       .then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); })
       .then((data) => {
         if (n !== chapter) return;
+        const saved = load(POS_KEY, {});
         render(data);
         showQuiz();
-        const saved = load(POS_KEY, {});
-        if (saved.ch === n && saved.top > 0 && spans[saved.top]) spans[saved.top].scrollIntoView({ block: "start" });
+        anchor = saved.ch === n && spans[saved.top] ? saved.top : 0;
+        layout();
         setActive(saved.ch === n && spans[saved.s] ? saved.s : 0, 0);
       })
       .catch(() => {
@@ -312,7 +368,7 @@
   chSel.addEventListener("change", () => { location.hash = chSel.value; });
   addEventListener("hashchange", () => {
     const n = chapterFromHash();
-    if (n && n !== chapter) { loadChapter(n); root.scrollIntoView(); }
+    if (n && n !== chapter) loadChapter(n);
   });
 
   /* ---------- controls ---------- */
@@ -327,7 +383,11 @@
   }
   $("rd-this").addEventListener("click", () => speakFrom(current(), false));
   trBtn.addEventListener("click", () => { setActive(current(), 0); showLine(active, false); });
-  playBtn.addEventListener("click", () => (playing && continuous ? stop() : speakFrom(current(), true)));
+  playBtn.addEventListener("click", () => {
+    if (playing && continuous) { stop(); return; }
+    userScrollAt = 0; // pressing play means "turn the pages with the voice", even right after paging by hand
+    speakFrom(current(), true);
+  });
   speedBtn.addEventListener("click", () => {
     setPref("rate", RATES[(RATES.indexOf(prefs.rate) + 1) % RATES.length]);
     applyPrefs();
@@ -337,7 +397,7 @@
   seek.addEventListener("change", () => { if (playing) speakFrom(Number(seek.value), continuous); });
 
   text.addEventListener("click", (ev) => {
-    if (retried(ev)) return;
+    if (swiped || retried(ev)) return;
     const s = ev.target.closest(".s");
     if (!s) return;
     const i = Number(s.dataset.i);

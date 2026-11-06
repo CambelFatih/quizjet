@@ -121,16 +121,22 @@ def reader_page(locale: dict[str, object], pre: str, book: dict[str, object]) ->
         <p class="quiz-back"><a href="{pre}/kitaplar/">{back} {e(c["bkBack"])}</a></p>
         <h1 lang="en" dir="ltr">{e(book["title"])}</h1>
         <p class="rd-meta"><span lang="en" dir="ltr">{e(book["author"])}</span> · {e(c["bkLevel"])}: {e(book["level"])}</p>
+        <p class="quiz-note">{e(c["bkSource"])} <a href="{e(book["source"])}" target="_blank" rel="noopener noreferrer">gutenberg.org</a></p>
         <div class="rd-tools">
           <label class="sr-only" for="rd-ch">{e(c["bkChapter"])}</label>
           <select id="rd-ch" lang="en" dir="ltr">{options}</select>
           <button type="button" class="rd-icon" id="rd-words-btn" aria-label="{e(c["bkWords"])}"><span aria-hidden="true">★</span> <span id="rd-words-n">0</span></button>
+          <button type="button" class="rd-icon" id="rd-voice-btn" aria-label="{e(c["bkVoice"])}" title="{e(c["bkVoice"])}"><span aria-hidden="true">🗣</span></button>
           <button type="button" class="rd-icon" id="rd-set-btn" aria-label="{e(c["bkSettings"])}">Aa</button>
         </div>
-        <p class="rd-progress" id="rd-progress"></p>
+        <div class="rd-pager" dir="ltr">
+          <button type="button" class="rd-icon" id="rd-pg-prev" aria-label="{e(c["bkPrevPage"])}">‹</button>
+          <p class="rd-progress" id="rd-progress" dir="{locale["dir"]}"></p>
+          <button type="button" class="rd-icon" id="rd-pg-next" aria-label="{e(c["bkNextPage"])}">›</button>
+        </div>
         <p class="rd-tip" id="rd-tip">{e(c["bkTip"])}</p>
         <article class="rd-text" id="rd-text" lang="en" dir="ltr"><p>{e(c["bkLoading"])}</p></article>
-        <aside class="rd-quiz" id="rd-quiz" hidden>
+        <aside class="rd-quiz" id="rd-quiz" lang="{e(locale["code"])}" dir="{locale["dir"]}" hidden>
           <h2>{e(c["bkQuizTitle"])}</h2>
           <p>{e(c["bkQuizBody"])}</p>
           <div class="quiz-actions">
@@ -138,7 +144,6 @@ def reader_page(locale: dict[str, object], pre: str, book: dict[str, object]) ->
             <a class="button button-light" id="rd-next-ch" href="#">{e(c["bkNextChapter"])} <span aria-hidden="true">→</span></a>
           </div>
         </aside>
-        <p class="quiz-note">{e(c["bkSource"])} <a href="{e(book["source"])}" target="_blank" rel="noopener noreferrer">gutenberg.org</a></p>
         <div class="rd-bar" id="rd-bar" dir="ltr">
           <div class="rd-row">
             <button type="button" id="rd-prev" aria-label="{e(c["bkPrev"])}">‹</button>
@@ -161,12 +166,12 @@ def reader_page(locale: dict[str, object], pre: str, book: dict[str, object]) ->
         <dialog class="rd-sheet" id="rd-set"><form class="rd-sheet-in" method="dialog" id="rd-set-form">
           <button class="rd-x" aria-label="{e(c["bkClose"])}">×</button>
           <h2>{e(c["bkSettings"])}</h2>
+          <div id="rd-voice"><label class="rd-field">{e(c["bkVoice"])} <select name="voice" dir="ltr"><option value="">{e(c["bkVoiceAuto"])}</option></select></label>
+          <p class="rd-hint">{e(c["bkVoiceHint"])}</p></div>
           <div class="rd-field"><span>{e(c["bkFont"])}</span><button type="button" data-font="-1">A−</button><button type="button" data-font="1">A+</button></div>
           <fieldset><legend>{e(c["bkSpacing"])}</legend>{radios("spacing", [("1.5", "1.5"), ("1.8", "1.8"), ("2.1", "2.1")])}</fieldset>
           <fieldset><legend>{e(c["bkTheme"])}</legend>{radios("theme", [("light", c["bkLight"]), ("sepia", c["bkSepia"]), ("dark", c["bkDark"])])}</fieldset>
           <fieldset><legend>{e(c["bkView"])}</legend>{radios("view", [("book", c["bkViewBook"]), ("study", c["bkViewStudy"])])}</fieldset>
-          <div id="rd-voice"><label class="rd-field">{e(c["bkVoice"])} <select name="voice" dir="ltr"><option value="">{e(c["bkVoiceAuto"])}</option></select></label>
-          <p class="rd-hint">{e(c["bkVoiceHint"])}</p></div>
           <label class="rd-field">{e(c["bkTarget"])} <select name="target">{target_options}</select></label>
           <label class="rd-check"><input type="checkbox" name="autoTr"> {e(c["bkAutoTr"])}</label>
         </form></dialog>

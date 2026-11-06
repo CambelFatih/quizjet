@@ -24,7 +24,13 @@
 .rd-icon, .rd-row button, .rd-mini, .rd-field button { min-height: 42px; padding: 0 12px; border: 1px solid var(--rd-line); border-radius: 10px; color: var(--rd-ink); background: var(--rd-soft); cursor: pointer; }
 .rd-icon:focus-visible, .rd-row button:focus-visible, .rd-text .w:focus-visible { outline: 3px solid #8ec0f3; outline-offset: 2px; }
 
-.rd-text { margin: 18px 0; font: var(--rd-font) / var(--rd-lh) Georgia, "Times New Roman", serif; overflow-wrap: break-word; }
+/* Paged: one column per screen, turned by reader.js; height is set there to fill the screen above the bar. */
+.rd-text { height: 60vh; margin: 12px 0; overflow: hidden; column-fill: auto; column-gap: 40px; touch-action: pan-y pinch-zoom; font: var(--rd-font) / var(--rd-lh) Georgia, "Times New Roman", serif; overflow-wrap: break-word; }
+.rd-text .rd-quiz { break-inside: avoid; font: 16px/1.5 "DM Sans", system-ui, sans-serif; }
+.rd-pager { display: flex; gap: 8px; align-items: center; }
+.rd-pager .rd-progress { flex: 1; text-align: center; }
+.rd-pager button { width: 48px; font-size: 22px; line-height: 1; }
+.rd-pager button:disabled { opacity: .4; cursor: default; }
 .rd-text p { margin: 0 0 1em; }
 .rd-text .s { border-radius: 4px; box-decoration-break: clone; -webkit-box-decoration-break: clone; transition: background .15s; }
 .rd-text .s.on { background: var(--rd-on); box-shadow: inset 0 -2px var(--rd-edge); }
