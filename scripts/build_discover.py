@@ -25,6 +25,7 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 
 import build_books
+import build_news
 from build_locales import language_menu, stylesheet_version
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -132,7 +133,7 @@ def shell(locale: dict[str, object], title: str, description: str, suffix: str, 
         '      <nav class="navigation page-width">\n'
         f'        <a class="brand" href="{pre}/"><img src="/assets/logo.png" alt="" width="44" height="44"><span>quizjet</span></a>\n'
         f'        <div class="nav-actions"><div class="nav-links"><a href="{pre}/kesfet/">{e(c["discAll"])}</a>'
-        f'<a href="{pre}/kitaplar/">{e(c["navBooks"])}</a></div>'
+        f'<a href="{pre}/kitaplar/">{e(c["navBooks"])}</a><a href="{pre}/haberler/">{e(c["navNews"])}</a></div>'
         f"{language_menu(locale, LOCALES, suffix)}"
         f'<a class="button button-small button-light" href="https://t.me/QuizJetBot" target="_blank" rel="noopener noreferrer">'
         f'{e(c["navStart"])} <span aria-hidden="true">↗</span></a></div>\n'
@@ -324,6 +325,31 @@ def write_books(out: Path) -> list[str]:
     return paths
 
 
+def write_news(out: Path) -> list[str]:
+    """The news editions and one reader per edition, in every language; returns their sitemap paths.
+
+    With no edition yet (the keys are not configured, or nothing survived) the list page still exists,
+    unindexed and out of the sitemap, so the menu link never 404s."""
+    editions = build_news.load_editions()
+    paths: list[str] = []
+    for locale in LOCALES:
+        base, pre = locale_dir(out, locale), prefix(locale)
+        title, description, body, head = build_news.list_page(locale, pre, editions)
+        write(base / "haberler" / "index.html", shell(locale, title, description, "haberler/", body, head=head, noindex=not editions))
+        if editions:
+            paths.append(f"{pre}/haberler/")
+        for edition in editions:
+            suffix = f"haberler/{edition['date']}/"
+            book = build_news.edition_book(locale, pre, edition)
+            title, description, body, jsonld, head = build_books.reader_page(locale, pre, book)
+            write(base / suffix / "index.html", shell(locale, title, description, suffix, body, jsonld=jsonld, head=head))
+            paths.append(f"{pre}/{suffix}")
+    for edition in editions:
+        for path, content in build_news.chapter_files(edition).items():
+            write(out / path, content)
+    return paths
+
+
 def build(out: Path, export: Path | None) -> str:
     if out.resolve().is_relative_to(ROOT.resolve()):
         raise ValueError("--out must be outside the repository (the page checks scan every index.html in it)")
@@ -335,7 +361,7 @@ def build(out: Path, export: Path | None) -> str:
             target.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(path, target)
 
-    book_paths = write_books(out)
+    book_paths = write_books(out) + write_news(out)
     if export is None:
         apply_band(out, None)
         for locale in LOCALES:

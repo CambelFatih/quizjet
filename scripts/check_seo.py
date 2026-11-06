@@ -17,7 +17,7 @@ SITEMAP_NAMESPACE = "http://www.sitemaps.org/schemas/sitemap/0.9"
 # bot's Discover export, scripts/build_books.py from _data/books.json), so they cannot be checked
 # against files in the repository.
 # One copy per language: /kesfet/ and /q/<key>/ for English, /<route>/kesfet/ and /<route>/q/<key>/ otherwise.
-GENERATED_ROUTE_RE = re.compile(r"^/(?:[a-z]{2}(?:-[a-z]{2})?/)?(?:kesfet|q|kitaplar)/")
+GENERATED_ROUTE_RE = re.compile(r"^/(?:[a-z]{2}(?:-[a-z]{2})?/)?(?:kesfet|q|kitaplar|haberler)/")
 LOCALES = json.loads((ROOT / "_data" / "locales.json").read_text(encoding="utf-8"))
 LOCALE_BY_ROUTE = {locale["route"]: locale for locale in LOCALES}
 
