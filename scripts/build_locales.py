@@ -42,6 +42,16 @@ def head_links() -> str:
     return ICON_LINKS + FONT_PRELOADS
 
 
+# The phone menu is a <details> that needs no script to open; these lines close it when a link, the backdrop or
+# Escape is used, so an in-page link (#features) does not leave the panel over the section it scrolled to.
+NAV_MENU_SCRIPT = (
+    "    <script>document.querySelectorAll('.nav-menu').forEach(function (m) {"
+    " m.addEventListener('click', function (e) { if (e.target === m || e.target.closest('a')) m.removeAttribute('open'); }); });"
+    " addEventListener('keydown', function (e) { if (e.key === 'Escape')"
+    " document.querySelectorAll('.nav-menu[open]').forEach(function (m) { m.removeAttribute('open'); }); });</script>\n"
+)
+
+
 def absolute_position(line_offsets: list[int], position: tuple[int, int]) -> int:
     line, column = position
     return line_offsets[line - 1] + column
@@ -364,6 +374,7 @@ def render_page(template: str, locale: dict[str, object], locales: list[dict[str
     elif route:
         # the legal pages exist in English and Turkish only: the other languages link the English text and say so
         page = re.sub(r'(<a href="/(?:privacy|terms|support)\.html">[^<]*)(</a>)', r"\1 (EN)\2", page)
+    page = page.replace("  </body>", NAV_MENU_SCRIPT + "  </body>", 1)
     css_version = stylesheet_version()
     page = re.sub(
         r'(<link rel="stylesheet" href=")/?styles\.css(?:\?v=[^"]*)?(")',

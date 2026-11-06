@@ -182,7 +182,8 @@
       "nfBody": "This page does not exist or is no longer public. A quiz leaves quizjet.app when its owner turns Discover off.",
       "bkQuizSoon": "The quiz for this book is on its way. Until then, open QuizJet on Telegram and play other quizzes.",
       "seoTitle": "QuizJet — Telegram quiz bot in {languages} languages",
-      "seoDescription": "Play public quizzes on Telegram or create your own with AI. Learn English with classic books and a daily news text. Free, in {languages} languages."
+      "seoDescription": "Play public quizzes on Telegram or create your own with AI. Learn English with classic books and a daily news text. Free, in {languages} languages.",
+      "navMenu": "Menu"
     }
   },
   {
@@ -368,7 +369,8 @@
       "nfBody": "Bu sayfa yok ya da artık herkese açık değil. Sahibi Keşfet'i kapattığında quiz quizjet.app'ten kalkar.",
       "bkQuizSoon": "Bu kitabın quiz'i yolda. O zamana kadar Telegram'da QuizJet'i aç ve başka quiz'ler oyna.",
       "seoTitle": "QuizJet — {languages} dilde Telegram quiz botu",
-      "seoDescription": "Telegram'da herkese açık quiz'leri oyna ya da AI ile kendi quiz'ini hazırla. Klasik kitaplar ve günlük bir haber metniyle İngilizce öğren. Ücretsiz, {languages} dilde."
+      "seoDescription": "Telegram'da herkese açık quiz'leri oyna ya da AI ile kendi quiz'ini hazırla. Klasik kitaplar ve günlük bir haber metniyle İngilizce öğren. Ücretsiz, {languages} dilde.",
+      "navMenu": "Menü"
     }
   },
   {
@@ -554,7 +556,8 @@
       "nfBody": "Aquesta pàgina no existeix o ja no és pública. Un qüestionari desapareix de quizjet.app quan el seu creador desactiva Descobreix.",
       "bkQuizSoon": "El qüestionari d'aquest llibre és en camí. Mentrestant, obre QuizJet a Telegram i juga a altres qüestionaris.",
       "seoTitle": "QuizJet — bot de qüestionaris per a Telegram en {languages} idiomes",
-      "seoDescription": "Juga a qüestionaris públics a Telegram o crea'n de propis amb IA. Aprèn anglès amb llibres clàssics i un text de notícies diari. Gratuït, en {languages} idiomes."
+      "seoDescription": "Juga a qüestionaris públics a Telegram o crea'n de propis amb IA. Aprèn anglès amb llibres clàssics i un text de notícies diari. Gratuït, en {languages} idiomes.",
+      "navMenu": "Menú"
     }
   },
   {
@@ -740,7 +743,8 @@
       "nfBody": "Diese Seite existiert nicht oder ist nicht mehr öffentlich. Ein Quiz verschwindet von quizjet.app, wenn sein Ersteller Entdecken ausschaltet.",
       "bkQuizSoon": "Das Quiz zu diesem Buch ist in Arbeit. Bis dahin: Öffne QuizJet auf Telegram und spiel andere Quizze.",
       "seoTitle": "QuizJet — Telegram-Quiz-Bot in {languages} Sprachen",
-      "seoDescription": "Öffentliche Quizze auf Telegram spielen oder eigene mit KI erstellen. Englisch lernen mit Klassikern und einer täglichen Nachricht. Kostenlos, in {languages} Sprachen."
+      "seoDescription": "Öffentliche Quizze auf Telegram spielen oder eigene mit KI erstellen. Englisch lernen mit Klassikern und einer täglichen Nachricht. Kostenlos, in {languages} Sprachen.",
+      "navMenu": "Menü"
     }
   },
   {
@@ -926,7 +930,8 @@
       "nfBody": "Questa pagina non esiste o non è più pubblica. Un quiz sparisce da quizjet.app quando chi l'ha creato disattiva Scopri.",
       "bkQuizSoon": "Il quiz di questo libro è in arrivo. Nel frattempo apri QuizJet su Telegram e gioca ad altri quiz.",
       "seoTitle": "QuizJet — bot di quiz per Telegram in {languages} lingue",
-      "seoDescription": "Gioca ai quiz pubblici su Telegram o creane di tuoi con l'IA. Impara l'inglese con i classici e un testo di notizie al giorno. Gratis, in {languages} lingue."
+      "seoDescription": "Gioca ai quiz pubblici su Telegram o creane di tuoi con l'IA. Impara l'inglese con i classici e un testo di notizie al giorno. Gratis, in {languages} lingue.",
+      "navMenu": "Menu"
     }
   },
   {
@@ -1112,7 +1117,8 @@
       "nfBody": "Halaman ini tidak wujud atau tidak lagi umum. Kuiz hilang dari quizjet.app apabila pemiliknya mematikan Teroka.",
       "bkQuizSoon": "Kuiz untuk buku ini sedang disediakan. Sementara itu, buka QuizJet di Telegram dan mainkan kuiz lain.",
       "seoTitle": "QuizJet — bot kuiz Telegram dalam {languages} bahasa",
-      "seoDescription": "Mainkan kuiz umum di Telegram atau cipta kuiz sendiri dengan AI. Belajar bahasa Inggeris dengan buku klasik dan teks berita harian. Percuma, dalam {languages} bahasa."
+      "seoDescription": "Mainkan kuiz umum di Telegram atau cipta kuiz sendiri dengan AI. Belajar bahasa Inggeris dengan buku klasik dan teks berita harian. Percuma, dalam {languages} bahasa.",
+      "navMenu": "Menu"
     }
   },
   {
@@ -1298,7 +1304,8 @@
       "nfBody": "Ta strona nie istnieje lub nie jest już publiczna. Quiz znika z quizjet.app, gdy jego autor wyłączy Odkrywaj.",
       "bkQuizSoon": "Quiz do tej książki jest w przygotowaniu. Do tego czasu otwórz QuizJet w Telegramie i zagraj w inne quizy.",
       "seoTitle": "QuizJet — bot quizowy na Telegramie w {languages} językach",
-      "seoDescription": "Graj w publiczne quizy na Telegramie albo twórz własne z AI. Ucz się angielskiego na klasykach i codziennym tekście z wiadomości. Za darmo, w {languages} językach."
+      "seoDescription": "Graj w publiczne quizy na Telegramie albo twórz własne z AI. Ucz się angielskiego na klasykach i codziennym tekście z wiadomości. Za darmo, w {languages} językach.",
+      "navMenu": "Menu"
     }
   },
   {
@@ -1484,7 +1491,8 @@
       "nfBody": "Этой страницы нет или она больше не публичная. Квиз исчезает с quizjet.app, когда его автор выключает «Каталог».",
       "bkQuizSoon": "Квиз к этой книге готовится. А пока откройте QuizJet в Telegram и сыграйте в другие квизы.",
       "seoTitle": "QuizJet — квиз-бот для Telegram на {languages} языках",
-      "seoDescription": "Играйте в публичные квизы в Telegram или создавайте свои с ИИ. Учите английский по классике и ежедневному новостному тексту. Бесплатно, на {languages} языках."
+      "seoDescription": "Играйте в публичные квизы в Telegram или создавайте свои с ИИ. Учите английский по классике и ежедневному новостному тексту. Бесплатно, на {languages} языках.",
+      "navMenu": "Меню"
     }
   },
   {
@@ -1670,7 +1678,8 @@
       "nfBody": "Цієї сторінки немає або вона більше не публічна. Вікторина зникає з quizjet.app, коли її автор вимикає «Каталог».",
       "bkQuizSoon": "Вікторина до цієї книги готується. А поки відкрийте QuizJet у Telegram і зіграйте в інші вікторини.",
       "seoTitle": "QuizJet — бот-вікторина для Telegram {languages} мовами",
-      "seoDescription": "Грайте в публічні вікторини в Telegram або створюйте власні зі ШІ. Вивчайте англійську за класикою та щоденним новинним текстом. Безкоштовно, {languages} мовами."
+      "seoDescription": "Грайте в публічні вікторини в Telegram або створюйте власні зі ШІ. Вивчайте англійську за класикою та щоденним новинним текстом. Безкоштовно, {languages} мовами.",
+      "navMenu": "Меню"
     }
   },
   {
@@ -1856,7 +1865,8 @@
       "nfBody": "هذه الصفحة غير موجودة أو لم تعد عامة. يختفي الاختبار من quizjet.app عندما يوقف صاحبه خاصية «اكتشف».",
       "bkQuizSoon": "اختبار هذا الكتاب قيد الإعداد. حتى ذلك الحين، افتح QuizJet على تيليجرام والعب اختبارات أخرى.",
       "seoTitle": "QuizJet — بوت اختبارات على تيليجرام بـ{languages} لغة",
-      "seoDescription": "العب اختبارات عامة على تيليجرام أو أنشئ اختباراتك بالذكاء الاصطناعي. تعلّم الإنجليزية مع كتب كلاسيكية ونص إخباري يومي. مجانًا، بـ{languages} لغة."
+      "seoDescription": "العب اختبارات عامة على تيليجرام أو أنشئ اختباراتك بالذكاء الاصطناعي. تعلّم الإنجليزية مع كتب كلاسيكية ونص إخباري يومي. مجانًا، بـ{languages} لغة.",
+      "navMenu": "القائمة"
     }
   },
   {
@@ -2042,7 +2052,8 @@
       "nfBody": "Deze pagina bestaat niet of is niet meer openbaar. Een quiz verdwijnt van quizjet.app zodra de maker Ontdek uitzet.",
       "bkQuizSoon": "De quiz bij dit boek is onderweg. Open intussen QuizJet op Telegram en speel andere quizzen.",
       "seoTitle": "QuizJet — Telegram-quizbot in {languages} talen",
-      "seoDescription": "Speel openbare quizzen op Telegram of maak je eigen quiz met AI. Leer Engels met klassieke boeken en een dagelijkse nieuwstekst. Gratis, in {languages} talen."
+      "seoDescription": "Speel openbare quizzen op Telegram of maak je eigen quiz met AI. Leer Engels met klassieke boeken en een dagelijkse nieuwstekst. Gratis, in {languages} talen.",
+      "navMenu": "Menu"
     }
   },
   {
@@ -2228,7 +2239,8 @@
       "nfBody": "Cette page n'existe pas ou n'est plus publique. Un quiz disparaît de quizjet.app quand son auteur désactive Découvrir.",
       "bkQuizSoon": "Le quiz de ce livre arrive bientôt. En attendant, ouvrez QuizJet sur Telegram et jouez à d'autres quiz.",
       "seoTitle": "QuizJet — bot de quiz Telegram en {languages} langues",
-      "seoDescription": "Jouez à des quiz publics sur Telegram ou créez les vôtres avec l'IA. Apprenez l'anglais avec des classiques et une actualité par jour. Gratuit, en {languages} langues."
+      "seoDescription": "Jouez à des quiz publics sur Telegram ou créez les vôtres avec l'IA. Apprenez l'anglais avec des classiques et une actualité par jour. Gratuit, en {languages} langues.",
+      "navMenu": "Menu"
     }
   },
   {
@@ -2414,7 +2426,8 @@
       "nfBody": "Halaman ini tidak ada atau sudah tidak publik. Kuis hilang dari quizjet.app saat pembuatnya mematikan Jelajahi.",
       "bkQuizSoon": "Kuis untuk buku ini sedang disiapkan. Sementara itu, buka QuizJet di Telegram dan mainkan kuis lain.",
       "seoTitle": "QuizJet — bot kuis Telegram dalam {languages} bahasa",
-      "seoDescription": "Mainkan kuis publik di Telegram atau buat kuismu sendiri dengan AI. Belajar bahasa Inggris lewat buku klasik dan teks berita harian. Gratis, dalam {languages} bahasa."
+      "seoDescription": "Mainkan kuis publik di Telegram atau buat kuismu sendiri dengan AI. Belajar bahasa Inggris lewat buku klasik dan teks berita harian. Gratis, dalam {languages} bahasa.",
+      "navMenu": "Menu"
     }
   },
   {
@@ -2600,7 +2613,8 @@
       "nfBody": "이 페이지는 존재하지 않거나 더 이상 공개되지 않습니다. 퀴즈는 만든 사람이 둘러보기를 끄면 quizjet.app에서 사라집니다.",
       "bkQuizSoon": "이 책의 퀴즈를 준비하고 있습니다. 그동안 텔레그램에서 QuizJet을 열고 다른 퀴즈를 즐겨 보세요.",
       "seoTitle": "QuizJet — {languages}개 언어로 즐기는 텔레그램 퀴즈 봇",
-      "seoDescription": "텔레그램에서 공개 퀴즈를 풀거나 AI로 나만의 퀴즈를 만들어 보세요. 고전 책과 매일의 뉴스 텍스트로 영어를 배울 수 있습니다. 무료, {languages}개 언어 지원."
+      "seoDescription": "텔레그램에서 공개 퀴즈를 풀거나 AI로 나만의 퀴즈를 만들어 보세요. 고전 책과 매일의 뉴스 텍스트로 영어를 배울 수 있습니다. 무료, {languages}개 언어 지원.",
+      "navMenu": "메뉴"
     }
   },
   {
@@ -2786,7 +2800,8 @@
       "nfBody": "این صفحه وجود ندارد یا دیگر عمومی نیست. وقتی سازندهٔ آزمون گزینهٔ «کشف کنید» را خاموش کند، آزمون از quizjet.app حذف می‌شود.",
       "bkQuizSoon": "آزمون این کتاب در راه است. تا آن زمان، QuizJet را در تلگرام باز کنید و آزمون‌های دیگر را بازی کنید.",
       "seoTitle": "QuizJet — ربات آزمون تلگرام به {languages} زبان",
-      "seoDescription": "در تلگرام آزمون‌های عمومی را بازی کنید یا با هوش مصنوعی آزمون خودتان را بسازید. با کتاب‌های کلاسیک و یک متن خبری روزانه انگلیسی یاد بگیرید. رایگان، به {languages} زبان."
+      "seoDescription": "در تلگرام آزمون‌های عمومی را بازی کنید یا با هوش مصنوعی آزمون خودتان را بسازید. با کتاب‌های کلاسیک و یک متن خبری روزانه انگلیسی یاد بگیرید. رایگان، به {languages} زبان.",
+      "navMenu": "منو"
     }
   },
   {
@@ -2972,7 +2987,8 @@
       "nfBody": "Esta página não existe ou não é mais pública. Um quiz some do quizjet.app quando o criador desativa Descobrir.",
       "bkQuizSoon": "O quiz deste livro está a caminho. Enquanto isso, abra o QuizJet no Telegram e jogue outros quizzes.",
       "seoTitle": "QuizJet — bot de quiz para Telegram em {languages} idiomas",
-      "seoDescription": "Jogue quizzes públicos no Telegram ou crie os seus com IA. Aprenda inglês com livros clássicos e um texto de notícias por dia. Grátis, em {languages} idiomas."
+      "seoDescription": "Jogue quizzes públicos no Telegram ou crie os seus com IA. Aprenda inglês com livros clássicos e um texto de notícias por dia. Grátis, em {languages} idiomas.",
+      "navMenu": "Menu"
     }
   },
   {
@@ -3158,7 +3174,8 @@
       "nfBody": "Esta página no existe o ya no es pública. Un quiz desaparece de quizjet.app cuando su creador desactiva Descubrir.",
       "bkQuizSoon": "El quiz de este libro está en camino. Mientras tanto, abre QuizJet en Telegram y juega a otros quizzes.",
       "seoTitle": "QuizJet — bot de quiz para Telegram en {languages} idiomas",
-      "seoDescription": "Juega a quizzes públicos en Telegram o crea los tuyos con IA. Aprende inglés con libros clásicos y un texto de noticias diario. Gratis, en {languages} idiomas."
+      "seoDescription": "Juega a quizzes públicos en Telegram o crea los tuyos con IA. Aprende inglés con libros clásicos y un texto de noticias diario. Gratis, en {languages} idiomas.",
+      "navMenu": "Menú"
     }
   },
   {
@@ -3344,7 +3361,8 @@
       "nfBody": "Bu sahifa mavjud emas yoki endi ochiq emas. Muallif «Kashf qilish» funksiyasini oʻchirsa, viktorina quizjet.app dan yoʻqoladi.",
       "bkQuizSoon": "Bu kitob uchun viktorina tayyorlanmoqda. Ungacha Telegramda QuizJet ni oching va boshqa viktorinalarni oʻynang.",
       "seoTitle": "QuizJet — {languages} tilda Telegram viktorina boti",
-      "seoDescription": "Telegramda ochiq viktorinalar oʻynang yoki AI bilan oʻzingiznikini yarating. Klassik kitoblar va kunlik yangilik bilan ingliz tilini oʻrganing. Bepul, {languages} tilda."
+      "seoDescription": "Telegramda ochiq viktorinalar oʻynang yoki AI bilan oʻzingiznikini yarating. Klassik kitoblar va kunlik yangilik bilan ingliz tilini oʻrganing. Bepul, {languages} tilda.",
+      "navMenu": "Menyu"
     }
   }
 ]
