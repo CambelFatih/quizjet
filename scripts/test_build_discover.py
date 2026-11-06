@@ -104,6 +104,10 @@ def run() -> None:
             assert '<html lang="tr" dir="ltr">' in tr_catalog and "<h1>Quiz&#x27;leri keşfet</h1>" in tr_catalog
             assert 'href="/tr/q/good_key-1/"' in tr_catalog and 'href="/q/good_key-1/"' not in tr_catalog
             assert 'href="/de/discover/"' in tr_catalog, "language menu switches to the same page in another language"
+            assert ('<details class="nav-menu"><summary aria-label="Menü"></summary><div class="nav-panel">'
+                    '<a class="brand nav-panel-brand" href="/tr/">') in tr_catalog and '<div class="nav-panel"><a class="brand' in tr_catalog, "phone menu panel"
+            assert tr_catalog.split('<div class="nav-panel">')[1].count('<a href="/tr/discover/">') == 1
+            assert tr_catalog.count("querySelectorAll('.nav-menu')") == 1
             assert tr_catalog.count('rel="alternate" hreflang=') == 19, "18 languages + x-default"
             tr_quiz = (out / "tr" / "q" / "good_key-1" / "index.html").read_text(encoding="utf-8")
             assert 'href="/tr/discover/"' in tr_quiz and "Özel sohbette başlat" in tr_quiz

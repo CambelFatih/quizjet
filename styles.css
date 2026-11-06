@@ -32,8 +32,9 @@ button, select { font: inherit; }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
 a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visible, select:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
 .site-header :focus-visible, .hero :focus-visible, .closing-card :focus-visible, .button-dark:focus-visible, .button-primary:focus-visible { outline-color: #8ec0f3; }
-.skip-link { position: absolute; top: 8px; left: -200vw; z-index: 20; padding: 10px 16px; border-radius: 10px; color: var(--navy); background: #fff; font-size: 14px; font-weight: 700; box-shadow: 0 8px 24px #0006; }
-.skip-link:focus { left: 16px; }
+/* Hidden by clipping, not by an off-screen offset: a negative left offset is scrollable space in a right-to-left page. */
+.skip-link { position: absolute; top: 8px; inset-inline-start: 16px; z-index: 20; padding: 10px 16px; border-radius: 10px; color: var(--navy); background: #fff; font-size: 14px; font-weight: 700; box-shadow: 0 8px 24px #0006; }
+.skip-link:not(:focus) { width: 1px; height: 1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
 .site-header { position: relative; z-index: 3; color: #fff; background: var(--navy); }
 .navigation { min-height: 82px; display: flex; align-items: center; justify-content: space-between; gap: 28px; }
@@ -218,10 +219,28 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
 [dir="rtl"] .card-number { right: auto; left: 19px; }
 [dir="rtl"] .closing-decoration { right: auto; left: 13%; }
 
+/* Under 800 px the links move into a full-screen menu: a <details> whose summary is the ☰ button and, once open, the ✕
+   in the top-right corner. The header and the menu keep one arrangement in every language (brand left, button right,
+   panel from the right), the page itself stays right-to-left where it is. Opening needs no script. */
+.nav-menu { display: none; }
+.navigation, .nav-panel { direction: ltr; }
 @media (max-width: 800px) {
   .navigation { min-height: 72px; gap: 14px; }
-  .nav-links { gap: 16px; }
-  .nav-actions { gap: 11px; }
+  .nav-links { display: none; }
+  .nav-actions { gap: 6px; }
+  .nav-menu { display: block; }
+  .nav-menu > summary { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 10px; color: #fff; cursor: pointer; list-style: none; }
+  .nav-menu > summary::-webkit-details-marker { display: none; }
+  .nav-menu > summary::before { content: ""; width: 22px; height: 2px; border-radius: 2px; background: currentColor; box-shadow: 0 -7px 0 currentColor, 0 7px 0 currentColor; }
+  .nav-menu[open] > summary { position: fixed; top: 14px; right: 16px; z-index: 12; }
+  .nav-menu[open] > summary::before { content: "✕"; width: auto; height: auto; background: none; box-shadow: none; font-size: 24px; font-weight: 700; line-height: 1; }
+  .nav-panel { position: fixed; inset: 0; z-index: 11; padding: 96px 28px 40px; overflow-y: auto; text-align: right; color: #fff; background: radial-gradient(70% 45% at 92% 0%, #3a7fd04d 0%, transparent 60%), radial-gradient(55% 40% at 0% 100%, #6f55d942 0%, transparent 60%), var(--navy); animation: nav-panel-in .3s ease-out; }
+  .nav-panel::before { content: ""; position: absolute; inset: 0; opacity: .16; background-image: radial-gradient(#8badd2 1px, transparent 1px); background-size: 26px 26px; mask-image: linear-gradient(180deg, #000 30%, transparent 90%); pointer-events: none; }
+  .nav-panel > * { position: relative; }
+  .nav-panel-brand { position: absolute; top: 14px; left: 16px; }
+  .nav-panel a:not(.brand) { display: block; padding: 18px 0; border-bottom: 1px solid #ffffff14; color: #fff; font-family: Manrope, "DM Sans", sans-serif; font-size: 28px; font-weight: 700; line-height: 1.2; letter-spacing: -.02em; }
+  .nav-panel a:not(.brand):last-child { border-bottom: 0; }
+  html:has(.nav-menu[open]) { overflow: hidden; }
   .hero-grid { min-height: auto; grid-template-columns: 1fr; gap: 10px; padding-top: 58px; padding-bottom: 70px; }
   .hero-copy { max-width: 640px; margin-inline: auto; text-align: center; }
   .hero-lead { margin-inline: auto; }
@@ -241,11 +260,6 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
   .navigation { min-height: 68px; flex-wrap: wrap; padding-block: 12px; }
   .brand { gap: 8px; font-size: 20px; }
   .brand img { width: 35px; height: 35px; }
-  .brand { order: 1; }
-  .nav-actions { order: 2; margin-inline-start: auto; }
-  .nav-links { order: 3; flex-basis: 100%; gap: 18px; overflow-x: auto; padding: 2px 0 8px; scrollbar-width: none; }
-  .nav-links::-webkit-scrollbar { display: none; }
-  .nav-links a { flex: none; white-space: nowrap; padding-block: 6px; }
   .nav-actions { gap: 10px; }
   .language-menu { position: static; }
   .language-menu summary { font-size: 12px; }
@@ -282,6 +296,8 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
   .footer-inner > p { order: 3; flex-basis: 100%; line-height: 1.7; }
   [dir="rtl"] .closing-decoration { right: auto; left: 7%; }
 }
+
+@keyframes nav-panel-in { from { transform: translateX(10%); opacity: 0; } to { transform: none; opacity: 1; } }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }

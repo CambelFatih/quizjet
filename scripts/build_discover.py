@@ -26,7 +26,7 @@ from pathlib import Path
 
 import build_books
 import build_news
-from build_locales import head_links, language_menu, legacy_redirect_page, legal_url, stylesheet_version
+from build_locales import NAV_MENU_SCRIPT, head_links, language_menu, legacy_redirect_page, legal_url, stylesheet_version
 
 ROOT = Path(__file__).resolve().parents[1]
 BASE_URL = "https://quizjet.app"
@@ -149,7 +149,10 @@ def shell(locale: dict[str, object], title: str, description: str, suffix: str, 
         f'      <nav class="navigation page-width" aria-label="{e(c["navMainLabel"])}">\n'
         f'        <a class="brand" href="{pre}/"><img src="/assets/logo-96.png" alt="" width="44" height="44"><span>quizjet</span></a>\n'
         f'        <div class="nav-links">{links}</div>\n'
-        f'        <div class="nav-actions">{language_menu(locale, LOCALES, suffix)}</div>\n'
+        f'        <div class="nav-actions">{language_menu(locale, LOCALES, suffix)}'
+        f'<details class="nav-menu"><summary aria-label="{e(c["navMenu"])}"></summary><div class="nav-panel">'
+        f'<a class="brand nav-panel-brand" href="{pre}/"><img src="/assets/logo-96.png" alt="" width="44" height="44"><span>quizjet</span></a>'
+        f'{links}</div></details></div>\n'
         "      </nav>\n"
         "    </header>\n"
         f'    <main class="discover page-width" id="top">\n{body}    </main>\n'
@@ -160,6 +163,7 @@ def shell(locale: dict[str, object], title: str, description: str, suffix: str, 
         f'<a href="{legal}/terms.html">{e(c["footerTerms"])}{en}</a><a href="{legal}/support.html">{e(c["footerSupport"])}{en}</a></nav>\n'
         "      </div>\n"
         "    </footer>\n"
+        f"{NAV_MENU_SCRIPT}"
         "  </body>\n"
         "</html>\n"
     )
