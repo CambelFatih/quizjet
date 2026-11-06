@@ -16,10 +16,11 @@ FOUND = {
     "facts": ["central bank left its main rate unchanged", "decision came on Wednesday", "inflation slowing but above target",
               "shares rose after the decision", "investors expect a cut early next year", "next months will show if prices calm",
               PAGE_SENTENCE],  # a 20-word "fact" is a lifted sentence: dropped
-    "sources": [{"title": "Central bank holds rates", "url": "https://example.com/a"},
-                {"title": "Markets react", "url": "https://example.com/b"},
-                {"title": "dup", "url": "https://example.com/a"},
-                {"title": "x", "url": "javascript:alert(1)"}],
+    "sources": [{"title": "Central bank holds rates", "url": "https://example.com/a", "published": "2026-11-05"},
+                {"title": "Markets react", "url": "https://example.com/b", "published": ""},
+                {"title": "dup", "url": "https://example.com/a", "published": "2026-11-06"},
+                {"title": "x", "url": "javascript:alert(1)", "published": "2026-11-06"},
+                {"title": "last year's rate decision", "url": "https://example.com/old", "published": "2025-11-05"}],
 }
 # What the writer call hands back.
 ORIGINAL = {
@@ -60,9 +61,10 @@ def run() -> None:
     os.environ["OPENAI_API_KEY"] = "o-key"
     try:
         # the clean room: research keeps short facts and real links; the writer sees facts only
-        found = bn.research("business and finance", "o-key")
+        found = bn.research("business and finance", "o-key", "2026-11-06")
         assert PAGE_SENTENCE not in found["facts"] and len(found["facts"]) == 6, "a fact longer than MAX_FACT_WORDS is a lifted sentence"
-        assert [s["u"] for s in found["sources"]] == ["https://example.com/a", "https://example.com/b"], "deduplicated, http(s) only"
+        assert [s["u"] for s in found["sources"]] == ["https://example.com/a", "https://example.com/b"], "deduplicated, http(s) only, nothing older than two days"
+        assert "Today is 2026-11-06 (UTC)" in calls[-1]["instructions"] and "published on 2026-11-04 or later" in calls[-1]["instructions"], "the runner's date, not the model's guess"
         lesson = bn.write_lesson(found["facts"], "o-key")
         writer = calls[-1]
         assert "tools" not in writer and writer["model"] == bn.MODEL, "the writer searches nothing"
