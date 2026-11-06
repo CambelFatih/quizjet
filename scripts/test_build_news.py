@@ -9,13 +9,19 @@ from pathlib import Path
 import build_discover as bd
 import build_news as bn
 
-SNIPPETS = [
-    {"t": "Central bank holds rates", "u": "https://example.com/a",
-     "c": "The central bank kept its main interest rate unchanged on Wednesday, saying inflation was slowing but still above target."},
-    {"t": "Markets react to rate decision", "u": "https://example.com/b",
-     "c": "Shares rose after the decision, with investors betting on a cut early next year."},
-    {"t": "Unrelated story", "u": "https://example.com/c", "c": "A football club signed a new striker."},
-]
+# What the research call (hosted web_search) hands back. The page sentence is what must never reach the writer.
+PAGE_SENTENCE = "The central bank kept its main interest rate unchanged on Wednesday, saying inflation was slowing but still above target."
+FOUND = {
+    "story": "Central bank holds rates",
+    "facts": ["central bank left its main rate unchanged", "decision came on Wednesday", "inflation slowing but above target",
+              "shares rose after the decision", "investors expect a cut early next year", "next months will show if prices calm",
+              PAGE_SENTENCE],  # a 20-word "fact" is a lifted sentence: dropped
+    "sources": [{"title": "Central bank holds rates", "url": "https://example.com/a"},
+                {"title": "Markets react", "url": "https://example.com/b"},
+                {"title": "dup", "url": "https://example.com/a"},
+                {"title": "x", "url": "javascript:alert(1)"}],
+}
+# What the writer call hands back.
 ORIGINAL = {
     "title": "Interest rates stay the same for now",
     "paragraphs": [
@@ -30,34 +36,65 @@ ORIGINAL = {
         {"q": "What happened to shares?", "o": ["They fell", "They rose", "Nothing", "They were sold"], "answer": "They rose", "why": "The market went up after the news."},
         {"q": "When might borrowing get cheaper?", "o": ["Tomorrow", "Never", "Early next year", "In ten years"], "answer": "Early next year", "why": "Investors expect a cut at the start of next year."},
     ],
-    "sources": [1, 2, 9],
 }
 
 
+def fake_api(calls: list[dict[str, object]]):
+    """Both OpenAI calls, told apart by the web_search tool; records every request body."""
+    def post(url, body, headers, timeout=120):
+        assert url.endswith("/v1/responses") and headers["Authorization"] == "Bearer o-key" and body["store"] is False
+        assert body["text"]["format"]["strict"] is True
+        calls.append(body)
+        answer = FOUND if "tools" in body else ORIGINAL
+        if "tools" in body:
+            assert body["tool_choice"] == "required" and body["tools"][0]["type"] == "web_search"
+        return {"output": [{"type": "web_search_call"}, {"type": "reasoning"},
+                           {"type": "message", "content": [{"type": "output_text", "text": json.dumps(answer)}]}]}
+    return post
+
+
 def run() -> None:
-    # the overlap guard: an eight-word run copied from a snippet is caught, original wording passes
-    copied = dict(ORIGINAL, paragraphs=["The central bank kept its main interest rate unchanged on Wednesday, and that is the news."] + ORIGINAL["paragraphs"][1:])
-    assert bn.overlap("the central bank kept its main interest rate unchanged", [SNIPPETS[0]["c"]])
-    assert not bn.overlap(" ".join(ORIGINAL["paragraphs"]), [s["c"] for s in SNIPPETS])
+    original_post, original_env, original_dir = bn.post_json, dict(os.environ), bn.NEWS_DIR
+    calls: list[dict[str, object]] = []
+    bn.post_json = fake_api(calls)
+    os.environ["OPENAI_API_KEY"] = "o-key"
     try:
-        bn.article(copied, SNIPPETS, "business")
-        raise AssertionError("a copied sentence must be rejected")
-    except ValueError as exc:
-        assert "copies a source" in str(exc), exc
-    try:
-        bn.article(dict(ORIGINAL, sources=[1]), SNIPPETS, "business")
-        raise AssertionError("one source is not enough")
-    except ValueError:
-        pass
+        # the clean room: research keeps short facts and real links; the writer sees facts only
+        found = bn.research("business and finance", "o-key")
+        assert PAGE_SENTENCE not in found["facts"] and len(found["facts"]) == 6, "a fact longer than MAX_FACT_WORDS is a lifted sentence"
+        assert [s["u"] for s in found["sources"]] == ["https://example.com/a", "https://example.com/b"], "deduplicated, http(s) only"
+        lesson = bn.write_lesson(found["facts"], "o-key")
+        writer = calls[-1]
+        assert "tools" not in writer and writer["model"] == bn.MODEL, "the writer searches nothing"
+        assert "saying inflation was slowing" not in writer["input"] and PAGE_SENTENCE not in writer["input"], "no page text reaches the writer"
+        assert writer["input"].startswith("Facts:\n- central bank left its main rate unchanged\n")
 
-    art = bn.article(ORIGINAL, SNIPPETS, "business")
-    assert art["topic"] == "business" and art["level"] == "B1"
-    assert art["p"][0] == ["A big bank that controls money in the country decided not to change interest rates this week.",
-                           "Prices are rising more slowly than before, but they are still rising too fast."], art["p"][0]
-    assert [q["a"] for q in art["quiz"]] == [1, 1, 2], "the answer index comes from the answer text"
-    assert [s["u"] for s in art["sources"]] == ["https://example.com/a", "https://example.com/b"], "only the snippets the model used, and only real ones"
+        art = bn.article(lesson, found, "business")
+        assert art["topic"] == "business" and art["level"] == "B1"
+        assert art["p"][0] == ["A big bank that controls money in the country decided not to change interest rates this week.",
+                               "Prices are rising more slowly than before, but they are still rising too fast."], art["p"][0]
+        assert [q["a"] for q in art["quiz"]] == [1, 1, 2], "the answer index comes from the answer text"
+        assert [s["u"] for s in art["sources"]] == ["https://example.com/a", "https://example.com/b"]
+        try:
+            bn.article(lesson, dict(found, sources=found["sources"][:1]), "business")
+            raise AssertionError("one report is not enough")
+        except ValueError:
+            pass
 
-    original_dir = bn.NEWS_DIR
+        # the whole generation: one research and one writer call per topic, one file, a second run bills nothing
+        calls.clear()
+        with tempfile.TemporaryDirectory() as tmp:
+            written = bn.generate("2026-11-06", Path(tmp))
+            edition = json.loads(written.read_text(encoding="utf-8"))
+            assert edition["date"] == "2026-11-06" and [a["topic"] for a in edition["articles"]] == [t for t, _ in bn.TOPICS]
+            assert len(calls) == 2 * len(bn.TOPICS) and sum("tools" in c for c in calls) == len(bn.TOPICS)
+            bn.generate("2026-11-06", Path(tmp))
+            assert len(calls) == 2 * len(bn.TOPICS), "an existing edition is never regenerated"
+    finally:
+        bn.post_json = original_post
+        os.environ.clear()
+        os.environ.update(original_env)
+
     with tempfile.TemporaryDirectory() as tmp:
         tmp_path = Path(tmp)
         news = tmp_path / "news"
@@ -92,15 +129,19 @@ def run() -> None:
         assert "https://quizjet.app/tr/haberler/2026-11-06/" in sitemap and "https://quizjet.app/haberler/" in sitemap
         landing = (out / "tr" / "index.html").read_text(encoding="utf-8")
         assert 'href="/tr/haberler/"' in landing and 'href="/haberler/"' not in landing, "the landing menu links the lessons in its own language"
+        assert 'id="news-band"' in landing and "Bugünün haberlerini oku" in landing, "the landing band is reachable on phones, where the menu links are hidden"
         book = (out / "tr" / "kitaplar" / "sherlock-holmes" / "index.html").read_text(encoding="utf-8")
         assert "gutenberg.org" in book and 'id="rd-next-ch" href="#">Sonraki bölüm ' in book and '"base":"/kitaplar/sherlock-holmes/"' in book, "books keep their framing"
 
-        # no edition yet: the page exists for the menu link, unindexed and out of the sitemap
+        # no edition yet: the page exists for the menu link, unindexed and out of the sitemap; the landing band leaves
         empty = tmp_path / "empty"
         bd.build(empty, None)
         bare = (empty / "haberler" / "index.html").read_text(encoding="utf-8")
         assert '<meta name="robots" content="noindex">' in bare and "next daily update" in bare
         assert "haberler" not in (empty / "sitemap.xml").read_text(encoding="utf-8")
+        for landing_page in ("index.html", "ar/index.html"):
+            bare_landing = (empty / landing_page).read_text(encoding="utf-8")
+            assert 'id="news-band"' not in bare_landing and 'id="books-band"' in bare_landing, "no edition: the News band leaves, the Books band stays"
 
         # a bad edition fails the build instead of publishing half a lesson
         (news / "2026-11-07.json").write_text('{"date": "2026-11-08", "articles": []}', encoding="utf-8")
@@ -112,32 +153,6 @@ def run() -> None:
             pass
         finally:
             bn.NEWS_DIR = original_dir
-    # the generation path with both APIs faked: Tavily's results feed the model, the Responses API's
-    # output_text is parsed, every topic that survives lands in one file, a second run bills nothing
-    calls = []
-    def fake_post(url, body, headers, timeout=120):
-        calls.append(url)
-        if "tavily" in url:
-            assert body["api_key"] == "t-key" and body["topic"] == "news"
-            return {"results": [dict(url=s["u"], title=s["t"], content=s["c"]) for s in SNIPPETS] + [{"url": "javascript:alert(1)", "title": "x", "content": "y"}]}
-        assert headers["Authorization"] == "Bearer o-key" and body["text"]["format"]["strict"] is True
-        return {"output": [{"type": "reasoning"}, {"type": "message", "content": [{"type": "output_text", "text": json.dumps(ORIGINAL)}]}]}
-    original_post, original_env = bn.post_json, dict(os.environ)
-    bn.post_json = fake_post
-    os.environ.update(OPENAI_API_KEY="o-key", TAVILY_API_KEY="t-key")
-    try:
-        with tempfile.TemporaryDirectory() as tmp:
-            written = bn.generate("2026-11-06", Path(tmp))
-            edition = json.loads(written.read_text(encoding="utf-8"))
-            assert edition["date"] == "2026-11-06" and [a["topic"] for a in edition["articles"]] == [t for t, _ in bn.TOPICS]
-            assert len(calls) == 2 * len(bn.TOPICS), "one search and one generation per topic"
-            assert all(src["u"].startswith("https://") for a in edition["articles"] for src in a["sources"]), "only http(s) sources are published"
-            bn.generate("2026-11-06", Path(tmp))
-            assert len(calls) == 2 * len(bn.TOPICS), "an existing edition is never regenerated"
-    finally:
-        bn.post_json = original_post
-        os.environ.clear()
-        os.environ.update(original_env)
     print("build_news: OK")
 
 

@@ -166,7 +166,9 @@
       "nwTopicPolitics": "Politics",
       "nwTopicBusiness": "Business",
       "nwTopicSports": "Sports",
-      "nwTopicScience": "Science"
+      "nwTopicScience": "Science",
+      "nwBandBody": "A short, original news text every day at B1 level, with read-aloud, word translation and four questions.",
+      "nwBrowse": "Read today's news"
     }
   },
   {
@@ -336,7 +338,9 @@
       "nwTopicPolitics": "Siyaset",
       "nwTopicBusiness": "Ekonomi",
       "nwTopicSports": "Spor",
-      "nwTopicScience": "Bilim"
+      "nwTopicScience": "Bilim",
+      "nwBandBody": "Her gün B1 seviyesinde kısa, özgün bir haber metni: sesli okuma, kelime çevirisi ve dört soru.",
+      "nwBrowse": "Bugünün haberlerini oku"
     }
   },
   {
@@ -506,7 +510,9 @@
       "nwTopicPolitics": "Política",
       "nwTopicBusiness": "Economia",
       "nwTopicSports": "Esports",
-      "nwTopicScience": "Ciència"
+      "nwTopicScience": "Ciència",
+      "nwBandBody": "Cada dia un text de notícies curt i original de nivell B1, amb lectura en veu alta, traducció de paraules i quatre preguntes.",
+      "nwBrowse": "Llegeix les notícies d'avui"
     }
   },
   {
@@ -676,7 +682,9 @@
       "nwTopicPolitics": "Politik",
       "nwTopicBusiness": "Wirtschaft",
       "nwTopicSports": "Sport",
-      "nwTopicScience": "Wissenschaft"
+      "nwTopicScience": "Wissenschaft",
+      "nwBandBody": "Jeden Tag ein kurzer, eigener Nachrichtentext auf Niveau B1, mit Vorlesen, Wortübersetzung und vier Fragen.",
+      "nwBrowse": "Die Nachrichten von heute lesen"
     }
   },
   {
@@ -846,7 +854,9 @@
       "nwTopicPolitics": "Politica",
       "nwTopicBusiness": "Economia",
       "nwTopicSports": "Sport",
-      "nwTopicScience": "Scienza"
+      "nwTopicScience": "Scienza",
+      "nwBandBody": "Ogni giorno un breve testo di notizie originale di livello B1, con lettura ad alta voce, traduzione delle parole e quattro domande.",
+      "nwBrowse": "Leggi le notizie di oggi"
     }
   },
   {
@@ -1016,7 +1026,9 @@
       "nwTopicPolitics": "Politik",
       "nwTopicBusiness": "Ekonomi",
       "nwTopicSports": "Sukan",
-      "nwTopicScience": "Sains"
+      "nwTopicScience": "Sains",
+      "nwBandBody": "Setiap hari satu teks berita pendek dan asli pada tahap B1, dengan bacaan bersuara, terjemahan perkataan dan empat soalan.",
+      "nwBrowse": "Baca berita hari ini"
     }
   },
   {
@@ -1186,7 +1198,9 @@
       "nwTopicPolitics": "Polityka",
       "nwTopicBusiness": "Gospodarka",
       "nwTopicSports": "Sport",
-      "nwTopicScience": "Nauka"
+      "nwTopicScience": "Nauka",
+      "nwBandBody": "Codziennie krótki, autorski tekst wiadomości na poziomie B1, z czytaniem na głos, tłumaczeniem słów i czterema pytaniami.",
+      "nwBrowse": "Przeczytaj dzisiejsze wiadomości"
     }
   },
   {
@@ -1356,7 +1370,9 @@
       "nwTopicPolitics": "Политика",
       "nwTopicBusiness": "Экономика",
       "nwTopicSports": "Спорт",
-      "nwTopicScience": "Наука"
+      "nwTopicScience": "Наука",
+      "nwBandBody": "Каждый день короткий оригинальный новостной текст уровня B1 с чтением вслух, переводом слов и четырьмя вопросами.",
+      "nwBrowse": "Читать сегодняшние новости"
     }
   },
   {
@@ -1526,7 +1542,9 @@
       "nwTopicPolitics": "Політика",
       "nwTopicBusiness": "Економіка",
       "nwTopicSports": "Спорт",
-      "nwTopicScience": "Наука"
+      "nwTopicScience": "Наука",
+      "nwBandBody": "Щодня короткий оригінальний новинний текст рівня B1 з читанням вголос, перекладом слів і чотирма запитаннями.",
+      "nwBrowse": "Читати сьогоднішні новини"
     }
   },
   {
@@ -1696,7 +1714,9 @@
       "nwTopicPolitics": "سياسة",
       "nwTopicBusiness": "اقتصاد",
       "nwTopicSports": "رياضة",
-      "nwTopicScience": "علوم"
+      "nwTopicScience": "علوم",
+      "nwBandBody": "كل يوم نص إخباري قصير وأصلي بمستوى B1، مع قراءة بصوت عالٍ وترجمة الكلمات وأربعة أسئلة.",
+      "nwBrowse": "اقرأ أخبار اليوم"
     }
   },
   {
@@ -1866,7 +1886,9 @@
       "nwTopicPolitics": "Politiek",
       "nwTopicBusiness": "Economie",
       "nwTopicSports": "Sport",
-      "nwTopicScience": "Wetenschap"
+      "nwTopicScience": "Wetenschap",
+      "nwBandBody": "Elke dag een korte, eigen nieuwstekst op niveau B1, met voorlezen, woordvertaling en vier vragen.",
+      "nwBrowse": "Lees het nieuws van vandaag"
     }
   },
   {
@@ -2036,7 +2058,9 @@
       "nwTopicPolitics": "Politique",
       "nwTopicBusiness": "Économie",
       "nwTopicSports": "Sport",
-      "nwTopicScience": "Science"
+      "nwTopicScience": "Science",
+      "nwBandBody": "Chaque jour, un court texte d'actualité original de niveau B1, avec lecture à voix haute, traduction des mots et quatre questions.",
+      "nwBrowse": "Lire l'actualité du jour"
     }
   },
   {
@@ -2206,7 +2230,9 @@
       "nwTopicPolitics": "Politik",
       "nwTopicBusiness": "Ekonomi",
       "nwTopicSports": "Olahraga",
-      "nwTopicScience": "Sains"
+      "nwTopicScience": "Sains",
+      "nwBandBody": "Setiap hari satu teks berita pendek dan orisinal di level B1, dengan bacaan bersuara, terjemahan kata, dan empat pertanyaan.",
+      "nwBrowse": "Baca berita hari ini"
     }
   },
   {
@@ -2376,7 +2402,9 @@
       "nwTopicPolitics": "정치",
       "nwTopicBusiness": "경제",
       "nwTopicSports": "스포츠",
-      "nwTopicScience": "과학"
+      "nwTopicScience": "과학",
+      "nwBandBody": "매일 B1 수준의 짧고 독창적인 뉴스 글 한 편, 소리 내어 읽기와 단어 번역, 네 가지 질문과 함께.",
+      "nwBrowse": "오늘의 뉴스 읽기"
     }
   },
   {
@@ -2546,7 +2574,9 @@
       "nwTopicPolitics": "سیاست",
       "nwTopicBusiness": "اقتصاد",
       "nwTopicSports": "ورزش",
-      "nwTopicScience": "علم"
+      "nwTopicScience": "علم",
+      "nwBandBody": "هر روز یک متن خبری کوتاه و اصیل در سطح B1، با خوانش صوتی، ترجمهٔ واژه‌ها و چهار پرسش.",
+      "nwBrowse": "خواندن اخبار امروز"
     }
   },
   {
@@ -2716,7 +2746,9 @@
       "nwTopicPolitics": "Política",
       "nwTopicBusiness": "Economia",
       "nwTopicSports": "Esportes",
-      "nwTopicScience": "Ciência"
+      "nwTopicScience": "Ciência",
+      "nwBandBody": "Todo dia um texto de notícia curto e original no nível B1, com leitura em voz alta, tradução de palavras e quatro perguntas.",
+      "nwBrowse": "Ler as notícias de hoje"
     }
   },
   {
@@ -2886,7 +2918,9 @@
       "nwTopicPolitics": "Política",
       "nwTopicBusiness": "Economía",
       "nwTopicSports": "Deportes",
-      "nwTopicScience": "Ciencia"
+      "nwTopicScience": "Ciencia",
+      "nwBandBody": "Cada día un texto de noticias breve y original de nivel B1, con lectura en voz alta, traducción de palabras y cuatro preguntas.",
+      "nwBrowse": "Leer las noticias de hoy"
     }
   },
   {
@@ -3056,7 +3090,9 @@
       "nwTopicPolitics": "Siyosat",
       "nwTopicBusiness": "Iqtisod",
       "nwTopicSports": "Sport",
-      "nwTopicScience": "Fan"
+      "nwTopicScience": "Fan",
+      "nwBandBody": "Har kuni B1 darajasida qisqa va original yangilik matni: ovozli o'qish, so'z tarjimasi va to'rtta savol.",
+      "nwBrowse": "Bugungi yangiliklarni o'qing"
     }
   }
 ]

@@ -38,18 +38,19 @@ jobs:
           python-version: "3.13"
 
       - name: Write today's news lesson
-        # Needs secrets OPENAI_API_KEY and TAVILY_API_KEY; without them the site is published without news.
+        # Needs the OPENAI_API_KEY secret; without it the site is published without news.
         # Nothing is generated (or billed) when _data/news/<today>.json already exists, so the push-to-main
         # run after the daily one costs nothing. The file is committed so the archive of lessons stays;
         # a push by GITHUB_TOKEN starts no second workflow run. Copyright posture: scripts/build_news.py.
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          TAVILY_API_KEY: ${{ secrets.TAVILY_API_KEY }}
         run: |
-          if [ -z "$OPENAI_API_KEY" ] || [ -z "$TAVILY_API_KEY" ]; then
-            echo "::notice::OPENAI_API_KEY / TAVILY_API_KEY are not set; publishing without a new news lesson."
+          if [ -z "$OPENAI_API_KEY" ]; then
+            echo "::notice::OPENAI_API_KEY is not set; publishing without a new news lesson."
             exit 0
           fi
+          # A queued run checks out an older commit: take main's tip first, so a lesson another run just committed is seen.
+          git pull -q --ff-only origin main || echo "::warning::Could not fast-forward to main; generating from this commit."
           python scripts/build_news.py --generate || { echo "::warning::News generation failed; publishing without a new lesson."; exit 0; }
           if [ -n "$(git status --porcelain _data/news)" ]; then
             git config user.name "github-actions[bot]"
@@ -65,6 +66,7 @@ jobs:
           python scripts/build_locales.py --check
           python scripts/check_seo.py
           python scripts/test_build_discover.py
+          python scripts/test_build_news.py
 
       - name: Fetch Discover catalog
         env:
