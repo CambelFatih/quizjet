@@ -273,7 +273,19 @@ def sitemap(extra_paths: list[str]) -> str:
     return ET.tostring(urlset, encoding="utf-8", xml_declaration=True).decode("utf-8") + "\n"
 
 
-BAND_RE = re.compile(r'[ \t]*<section class="discover-band[^"]*" id="discover-band">.*?</section>\n\n?', re.DOTALL)
+def band_re(band_id: str) -> re.Pattern[str]:
+    return re.compile(rf'[ \t]*<section class="discover-band[^"]*" id="{band_id}">.*?</section>\n\n?', re.DOTALL)
+
+
+BAND_RE = band_re("discover-band")
+
+
+def drop_band(out: Path, band_id: str) -> None:
+    """Remove one landing band from every language page (a band that would lead to an empty page)."""
+    for page in out.rglob("index.html"):
+        text = page.read_text(encoding="utf-8")
+        if f'id="{band_id}"' in text:
+            write(page, band_re(band_id).sub("", text))
 
 
 def apply_band(out: Path, count: int | None) -> None:
@@ -331,6 +343,8 @@ def write_news(out: Path) -> list[str]:
     With no edition yet (the keys are not configured, or nothing survived) the list page still exists,
     unindexed and out of the sitemap, so the menu link never 404s."""
     editions = build_news.load_editions()
+    if not editions:
+        drop_band(out, "news-band")
     paths: list[str] = []
     for locale in LOCALES:
         base, pre = locale_dir(out, locale), prefix(locale)

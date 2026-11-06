@@ -92,6 +92,7 @@ def run() -> None:
         assert "https://quizjet.app/tr/haberler/2026-11-06/" in sitemap and "https://quizjet.app/haberler/" in sitemap
         landing = (out / "tr" / "index.html").read_text(encoding="utf-8")
         assert 'href="/tr/haberler/"' in landing and 'href="/haberler/"' not in landing, "the landing menu links the lessons in its own language"
+        assert 'id="news-band"' in landing and "Bugünün haberlerini oku" in landing, "the landing band is reachable on phones, where the menu links are hidden"
         book = (out / "tr" / "kitaplar" / "sherlock-holmes" / "index.html").read_text(encoding="utf-8")
         assert "gutenberg.org" in book and 'id="rd-next-ch" href="#">Sonraki bölüm ' in book and '"base":"/kitaplar/sherlock-holmes/"' in book, "books keep their framing"
 
@@ -101,6 +102,9 @@ def run() -> None:
         bare = (empty / "haberler" / "index.html").read_text(encoding="utf-8")
         assert '<meta name="robots" content="noindex">' in bare and "next daily update" in bare
         assert "haberler" not in (empty / "sitemap.xml").read_text(encoding="utf-8")
+        for landing_page in ("index.html", "ar/index.html"):
+            bare_landing = (empty / landing_page).read_text(encoding="utf-8")
+            assert 'id="news-band"' not in bare_landing and 'id="books-band"' in bare_landing, "no edition: the News band leaves, the Books band stays"
 
         # a bad edition fails the build instead of publishing half a lesson
         (news / "2026-11-07.json").write_text('{"date": "2026-11-08", "articles": []}', encoding="utf-8")
