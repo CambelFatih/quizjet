@@ -1,0 +1,14 @@
+{
+  "name": "QuizJet",
+  "short_name": "QuizJet",
+  "description": "Quiz bot on Telegram",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#101f37",
+  "theme_color": "#101f37",
+  "icons": [
+    { "src": "/assets/logo.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/assets/apple-touch-icon.png", "sizes": "180x180", "type": "image/png" }
+  ]
+}
