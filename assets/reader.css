@@ -62,7 +62,7 @@
 .rd-sheet legend, .rd-field { margin-bottom: 6px; font-weight: 700; font-size: 14px; }
 .rd-sheet fieldset label { display: inline-flex; gap: 6px; align-items: center; margin: 0 14px 6px 0; font-size: 15px; }
 .rd-field { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
-.rd-field select { min-height: 40px; border: 1px solid var(--rd-line); border-radius: 9px; color: var(--rd-ink); background: var(--rd-bg); }
+.rd-field select { max-width: 100%; min-height: 40px; border: 1px solid var(--rd-line); border-radius: 9px; color: var(--rd-ink); background: var(--rd-bg); }
 .rd-x { position: absolute; top: 12px; inset-inline-end: 12px; width: 40px; height: 40px; border: 0; border-radius: 50%; color: var(--rd-ink); background: var(--rd-soft); font-size: 22px; cursor: pointer; }
 .rd-phon { margin: 0; color: var(--rd-muted); }
 .rd-trans { margin: 8px 0; font-size: 18px; font-weight: 700; }
@@ -87,6 +87,7 @@
 .rd-text.study .tl { margin: 0; padding: 8px 52px 10px 42px; border-inline-start: 0; border-bottom: 1px solid var(--rd-line); border-radius: 0; }
 .reader .tl .rd-mini { min-height: 32px; margin-inline-start: 6px; }
 #rd-tr[aria-pressed="true"] { color: var(--rd-edge); border-color: var(--rd-edge); font-weight: 700; }
+.rd-hint { margin: 0 0 12px; color: var(--rd-muted); font-size: 13px; }
 .rd-check { display: flex; gap: 8px; align-items: center; margin-top: 12px; font-size: 15px; }
 .rd-text.study .s:has(+ .tl) .sb-tr { color: #fff; border-color: var(--rd-edge); background: var(--rd-edge); }
 .reader .rd-why { display: block; margin-top: 4px; color: var(--rd-muted); font: 11px/1.4 ui-monospace, monospace; overflow-wrap: anywhere; }
