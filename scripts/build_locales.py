@@ -121,7 +121,7 @@ def replace_meta(html_text: str, attribute: str, name: str, value: str) -> str:
 
 
 def language_menu(locale: dict[str, object], locales: list[dict[str, object]], suffix: str = "") -> str:
-    """Language switcher; ``suffix`` keeps the visitor on the same page in the other language (e.g. "kesfet/")."""
+    """Language switcher; ``suffix`` keeps the visitor on the same page in the other language (e.g. "discover/")."""
     copy = locale["copy"]
     code = locale["code"]
     current_name = html.escape(str(locale["name"]))
@@ -311,9 +311,9 @@ def render_page(template: str, locale: dict[str, object], locales: list[dict[str
         page = re.sub(r'((?:href|src)=")(assets/|styles\.css)', r"\1/\2", page)
     if route:
         # Discover and Books pages exist in every language; keep the visitor in the language they chose.
-        page = page.replace('href="/kesfet/"', f'href="/{route}/kesfet/"')
-        page = page.replace('href="/kitaplar/"', f'href="/{route}/kitaplar/"')
-        page = page.replace('href="/haberler/"', f'href="/{route}/haberler/"')
+        page = page.replace('href="/discover/"', f'href="/{route}/discover/"')
+        page = page.replace('href="/books/"', f'href="/{route}/books/"')
+        page = page.replace('href="/news/"', f'href="/{route}/news/"')
     if route in legal_routes:
         page = re.sub(r'href="/(privacy|terms|support)\.html"', rf'href="/{route}/\1.html"', page)
     css_version = stylesheet_version()
@@ -338,14 +338,15 @@ def sitemap_content(locales: list[dict[str, object]]) -> str:
     return ET.tostring(urlset, encoding="utf-8", xml_declaration=True).decode("utf-8") + "\n"
 
 
-def legacy_redirect_page(target: str) -> str:
+def legacy_redirect_page(target: str, canonical: str = BASE_URL + "/") -> str:
+    """A page that only forwards to ``target``: the old English URL (/en/) and the Turkish path names the site launched with."""
     return (
         '<!doctype html>\n'
         '<html lang="en">\n'
         '  <head>\n'
         '    <meta charset="utf-8">\n'
         '    <meta name="robots" content="noindex">\n'
-        f'    <link rel="canonical" href="{BASE_URL}/">\n'
+        f'    <link rel="canonical" href="{canonical}">\n'
         f'    <meta http-equiv="refresh" content="0;url={target}">\n'
         '    <title>QuizJet page moved</title>\n'
         '  </head>\n'
@@ -382,9 +383,9 @@ def not_found_page(locale: dict[str, object]) -> str:
         "      <h1>Page not found</h1>\n"
         '      <p class="discover-lead">This page does not exist or is no longer public. A quiz leaves quizjet.app when its owner turns Discover off.</p>\n'
         '      <div class="quiz-actions">\n'
-        f'        <a class="button button-dark" href="/kesfet/">{e(c["browseQuizzes"])}</a>\n'
-        f'        <a class="button button-light" href="/kitaplar/">{e(c["bkBrowse"])}</a>\n'
-        f'        <a class="button button-light" href="/haberler/">{e(c["navNews"])}</a>\n'
+        f'        <a class="button button-dark" href="/discover/">{e(c["browseQuizzes"])}</a>\n'
+        f'        <a class="button button-light" href="/books/">{e(c["bkBrowse"])}</a>\n'
+        f'        <a class="button button-light" href="/news/">{e(c["navNews"])}</a>\n'
         "      </div>\n"
         "    </main>\n"
         "  </body>\n"

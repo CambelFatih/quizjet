@@ -440,7 +440,7 @@
     page = 0;
     quizBox.hidden = true;
     text.innerHTML = "<p>" + esc(C.bkLoading) + "</p>";
-    fetch((D.base || "/kitaplar/" + D.slug + "/") + n + ".json")
+    fetch((D.base || "/books/" + D.slug + "/") + n + ".json")
       .then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); })
       .then((data) => {
         if (n !== chapter) return;

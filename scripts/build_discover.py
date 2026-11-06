@@ -4,12 +4,12 @@
 
 The export comes from the bot (GET https://api.quizjet.app/public/discover/export, see
 quizjet-bot docs/decisions/2026-11-02-kesfet-web-yayini.md). Every Discover page exists in all
-18 site languages (/kesfet/ and /q/<key>/ for English, /<route>/kesfet/ and /<route>/q/<key>/ for
+18 site languages (/discover/ and /q/<key>/ for English, /<route>/discover/ and /<route>/q/<key>/ for
 the others), so a visitor stays in the language they picked. The interface text comes from
 _data/locales.json; quiz titles and descriptions stay in the language their creator wrote them in.
-Without --export (the token is not configured yet) every /kesfet/ page is a "coming soon" page and
+Without --export (the token is not configured yet) every /discover/ page is a "coming soon" page and
 the sitemap only lists the static and Books pages. A truncated or malformed export fails the build
-so a partial catalog is never published. The Books pages (/kitaplar/) need no export: see
+so a partial catalog is never published. The Books pages (/books/) need no export: see
 scripts/build_books.py.
 """
 from __future__ import annotations
@@ -26,7 +26,7 @@ from pathlib import Path
 
 import build_books
 import build_news
-from build_locales import language_menu, stylesheet_version
+from build_locales import language_menu, legacy_redirect_page, stylesheet_version
 
 ROOT = Path(__file__).resolve().parents[1]
 BASE_URL = "https://quizjet.app"
@@ -39,6 +39,13 @@ LEGAL_ROUTES = {
     if language["route"]
 }
 SITEMAP_NS = "http://www.sitemaps.org/schemas/sitemap/0.9"
+# URL segments are English and never localized: UI text comes from _data/locales.json, the address of a page
+# is the same in every language apart from its /<route>/ prefix (the way /q/<key>/ always was). A new section
+# gets one English name here and nowhere else; test_build_discover pins the built tree against this set.
+ROUTES = {"discover", "books", "news", "q"}
+# The site launched with Turkish names. Every page that had one keeps a redirect there (search engines and
+# shared links); never reuse these names for anything new and never drop the redirects.
+LEGACY_ROUTES = {"kesfet": "discover", "kitaplar": "books", "haberler": "news"}
 # Telegram's deep-link payload alphabet; a key outside it cannot start the quiz anyway.
 KEY_RE = re.compile(r"^[A-Za-z0-9_-]{1,64}$")
 BOT_RE = re.compile(r"^[A-Za-z0-9_]{5,32}$")
@@ -92,7 +99,7 @@ def load_catalog(path: Path) -> tuple[str, list[dict[str, object]], list[str]]:
 
 def shell(locale: dict[str, object], title: str, description: str, suffix: str, body: str,
           *, noindex: bool = False, jsonld: str = "", head: str = "") -> str:
-    """Page frame in ``locale``; ``suffix`` is the path after the language prefix (e.g. "kesfet/")."""
+    """Page frame in ``locale``; ``suffix`` is the path after the language prefix (e.g. "discover/")."""
     c = locale["copy"]
     pre = prefix(locale)
     url = f"{BASE_URL}{pre}/{suffix}"
@@ -132,8 +139,8 @@ def shell(locale: dict[str, object], title: str, description: str, suffix: str, 
         '    <header class="site-header">\n'
         '      <nav class="navigation page-width">\n'
         f'        <a class="brand" href="{pre}/"><img src="/assets/logo-96.png" alt="" width="44" height="44"><span>quizjet</span></a>\n'
-        f'        <div class="nav-actions"><div class="nav-links"><a href="{pre}/kesfet/">{e(c["discAll"])}</a>'
-        f'<a href="{pre}/kitaplar/">{e(c["navBooks"])}</a><a href="{pre}/haberler/">{e(c["navNews"])}</a></div>'
+        f'        <div class="nav-actions"><div class="nav-links"><a href="{pre}/discover/">{e(c["discAll"])}</a>'
+        f'<a href="{pre}/books/">{e(c["navBooks"])}</a><a href="{pre}/news/">{e(c["navNews"])}</a></div>'
         f"{language_menu(locale, LOCALES, suffix)}"
         f'<a class="button button-small button-light" href="https://t.me/QuizJetBot" target="_blank" rel="noopener noreferrer">'
         f'{e(c["navStart"])} <span aria-hidden="true">↗</span></a></div>\n'
@@ -196,7 +203,7 @@ def render_catalog(locale: dict[str, object], items: list[dict[str, object]]) ->
         f'      <p id="none" class="discover-empty" hidden>{e(c["discEmpty"])}</p>\n'
         + SEARCH_SCRIPT
     )
-    return shell(locale, f'{c["discTitle"]} — QuizJet', c["discMeta"], "kesfet/", body)
+    return shell(locale, f'{c["discTitle"]} — QuizJet', c["discMeta"], "discover/", body)
 
 
 def render_placeholder(locale: dict[str, object]) -> str:
@@ -206,7 +213,7 @@ def render_placeholder(locale: dict[str, object]) -> str:
         f'      <p class="discover-lead">{e(c["discSoon"])} '
         f'<a href="https://t.me/QuizJetBot">{e(c["playNow"])}</a></p>\n'
     )
-    return shell(locale, f'{c["discTitle"]} — QuizJet', c["discSoon"], "kesfet/", body, noindex=True)
+    return shell(locale, f'{c["discTitle"]} — QuizJet', c["discSoon"], "discover/", body, noindex=True)
 
 
 def render_quiz(locale: dict[str, object], item: dict[str, object], bot: str) -> str:
@@ -234,7 +241,7 @@ def render_quiz(locale: dict[str, object], item: dict[str, object], bot: str) ->
     # The handle and the date are left-to-right islands; inside Arabic/Persian text they would flip.
     note = e(c["discGroupNote"]).replace("{bot}", f'<bdi dir="ltr">@{e(bot)}</bdi>')
     body = (
-        f'      <p class="quiz-back"><a href="{pre}/kesfet/">{back} {e(c["discAll"])}</a></p>\n'
+        f'      <p class="quiz-back"><a href="{pre}/discover/">{back} {e(c["discAll"])}</a></p>\n'
         f"      <h1>{e(title)}</h1>\n"
         + (f'      <p class="quiz-description">{e(description)}</p>\n' if description else "")
         + f'      <p class="quiz-facts">{e(facts(item, c))} · {e(c["discPlayers"])}: {int(item["participants"])}'
@@ -304,8 +311,10 @@ def apply_band(out: Path, count: int | None) -> None:
 
 
 def publishable(path: Path) -> bool:
+    """What the artifact carries: not the build inputs (scripts/, _data, _legal, _includes, dotfiles) and not the
+    repo's own documents (CLAUDE.md), which are for people working here, not for visitors."""
     parts = path.relative_to(ROOT).parts
-    return parts[0] != "scripts" and not any(part.startswith((".", "_")) for part in parts)
+    return parts[0] != "scripts" and path.suffix != ".md" and not any(part.startswith((".", "_")) for part in parts)
 
 
 def write(path: Path, content: str) -> None:
@@ -324,10 +333,10 @@ def write_books(out: Path) -> list[str]:
     for locale in LOCALES:
         base, pre = locale_dir(out, locale), prefix(locale)
         title, description, body, head = build_books.list_page(locale, pre, books)
-        write(base / "kitaplar" / "index.html", shell(locale, title, description, "kitaplar/", body, head=head))
-        paths.append(f"{pre}/kitaplar/")
+        write(base / "books" / "index.html", shell(locale, title, description, "books/", body, head=head))
+        paths.append(f"{pre}/books/")
         for book in books:
-            suffix = f"kitaplar/{book['slug']}/"
+            suffix = f"books/{book['slug']}/"
             title, description, body, jsonld, head = build_books.reader_page(locale, pre, book)
             write(base / suffix / "index.html", shell(locale, title, description, suffix, body, jsonld=jsonld, head=head))
             paths.append(f"{pre}/{suffix}")
@@ -349,11 +358,11 @@ def write_news(out: Path) -> list[str]:
     for locale in LOCALES:
         base, pre = locale_dir(out, locale), prefix(locale)
         title, description, body, head = build_news.list_page(locale, pre, editions)
-        write(base / "haberler" / "index.html", shell(locale, title, description, "haberler/", body, head=head, noindex=not editions))
+        write(base / "news" / "index.html", shell(locale, title, description, "news/", body, head=head, noindex=not editions))
         if editions:
-            paths.append(f"{pre}/haberler/")
+            paths.append(f"{pre}/news/")
         for edition in editions:
-            suffix = f"haberler/{edition['date']}/"
+            suffix = f"news/{edition['date']}/"
             book = build_news.edition_book(locale, pre, edition)
             title, description, body, jsonld, head = build_books.reader_page(locale, pre, book)
             write(base / suffix / "index.html", shell(locale, title, description, suffix, body, jsonld=jsonld, head=head))
@@ -362,6 +371,15 @@ def write_news(out: Path) -> list[str]:
         for path, content in build_news.chapter_files(edition).items():
             write(out / path, content)
     return paths
+
+
+def write_legacy_redirects(out: Path, new_paths: list[str]) -> None:
+    """A redirect page at the Turkish-named address of every page that had one (LEGACY_ROUTES)."""
+    for new in new_paths:
+        for old_name, new_name in LEGACY_ROUTES.items():
+            old = new.replace(f"/{new_name}/", f"/{old_name}/", 1)
+            if old != new:
+                write(out / old.strip("/") / "index.html", legacy_redirect_page(new, BASE_URL + new))
 
 
 def build(out: Path, export: Path | None) -> str:
@@ -376,10 +394,12 @@ def build(out: Path, export: Path | None) -> str:
             shutil.copy2(path, target)
 
     book_paths = write_books(out) + write_news(out)
+    # /discover/ and /news/ exist in every build (placeholder or not), so their old names always forward.
+    write_legacy_redirects(out, [f"{prefix(l)}/discover/" for l in LOCALES] + [f"{prefix(l)}/news/" for l in LOCALES] + book_paths)
     if export is None:
         apply_band(out, None)
         for locale in LOCALES:
-            write(locale_dir(out, locale) / "kesfet" / "index.html", render_placeholder(locale))
+            write(locale_dir(out, locale) / "discover" / "index.html", render_placeholder(locale))
         write(out / "sitemap.xml", sitemap(book_paths))
         return "Built without the Discover catalog (no export given)."
 
@@ -389,8 +409,8 @@ def build(out: Path, export: Path | None) -> str:
     paths: list[str] = []
     for locale in LOCALES:
         base, pre = locale_dir(out, locale), prefix(locale)
-        write(base / "kesfet" / "index.html", render_catalog(locale, items))
-        paths.append(f"{pre}/kesfet/")
+        write(base / "discover" / "index.html", render_catalog(locale, items))
+        paths.append(f"{pre}/discover/")
         for item in items:
             write(base / "q" / str(item["key"]) / "index.html", render_quiz(locale, item, bot))
             paths.append(f"{pre}/q/{item['key']}/")
