@@ -106,6 +106,7 @@ def shell(locale: dict[str, object], title: str, description: str, suffix: str, 
     pre = prefix(locale)
     url = f"{BASE_URL}{pre}/{suffix}"
     legal = pre if locale["route"] in LEGAL_ROUTES else ""
+    en = "" if legal or locale["code"] == "en" else " (EN)"  # the legal pages are English and Turkish only; say so elsewhere
     e = lambda value: html.escape(str(value), quote=True)  # noqa: E731
     alternates = "".join(
         f'    <link rel="alternate" hreflang="{e(other["code"])}" href="{BASE_URL}{prefix(other)}/{suffix}">\n'
@@ -157,8 +158,8 @@ def shell(locale: dict[str, object], title: str, description: str, suffix: str, 
         '    <footer class="site-footer">\n'
         '      <div class="footer-inner page-width">\n'
         f'        <a class="brand footer-brand" href="{pre}/"><img src="/assets/logo-96.png" alt="" width="36" height="36"><span>quizjet</span></a>\n'
-        f'        <nav class="footer-legal" aria-label="{e(c["footerLegalLabel"])}"><a href="{legal}/privacy.html">{e(c["footerPrivacy"])}</a>'
-        f'<a href="{legal}/terms.html">{e(c["footerTerms"])}</a><a href="{legal}/support.html">{e(c["footerSupport"])}</a></nav>\n'
+        f'        <nav class="footer-legal" aria-label="{e(c["footerLegalLabel"])}"><a href="{legal}/privacy.html">{e(c["footerPrivacy"])}{en}</a>'
+        f'<a href="{legal}/terms.html">{e(c["footerTerms"])}{en}</a><a href="{legal}/support.html">{e(c["footerSupport"])}{en}</a></nav>\n'
         "      </div>\n"
         "    </footer>\n"
         "  </body>\n"

@@ -112,6 +112,8 @@ def run() -> None:
             assert '<bdi dir="ltr">@QuizJetBot</bdi>' in tr_quiz and "{bot}" not in tr_quiz
             de_quiz = (out / "de" / "q" / "good_key-1" / "index.html").read_text(encoding="utf-8")
             assert 'href="/privacy.html"' in de_quiz and 'href="/de/privacy.html"' not in de_quiz, "legal pages stay EN/TR"
+            assert "Datenschutz (EN)</a>" in de_quiz and " (EN)</a>" not in tr_quiz and " (EN)</a>" not in quiz, "and the other languages say so"
+            assert " (EN)</a>" in (out / "de" / "index.html").read_text(encoding="utf-8") and " (EN)</a>" not in landing_tr
             ar_quiz = (out / "ar" / "q" / "good_key-1" / "index.html").read_text(encoding="utf-8")
             assert '<html lang="ar" dir="rtl">' in ar_quiz and "→ " in ar_quiz, "RTL back arrow points right"
             assert sum(1 for _ in out.rglob("q/good_key-1/index.html")) == 18
@@ -163,6 +165,7 @@ def run() -> None:
             assert 'href="/de/books/sherlock-holmes/"' in tr_reader, "language menu stays on the book"
             assert '"@type":"Book"' in tr_reader
             assert 'name="autoTr"' in tr_reader and 'id="rd-tip"' in tr_reader and "translate.google.com/?" not in tr_reader
+            assert tr_reader.index('id="rd-tip"') < tr_reader.index('class="rd-tools"'), "the tip sits above the toolbar: hiding it never changes the page height"
             shelf = (bare / "books" / "index.html").read_text(encoding="utf-8")
             assert 'href="/books/sherlock-holmes/"' in shelf and "Chapters: 12" in shelf
             assert 'href="/books/frankenstein/"' in shelf and "Chapters: 28" in shelf
