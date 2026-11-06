@@ -75,6 +75,7 @@
     if (b) { setPref("font", Math.min(28, Math.max(14, prefs.font + 2 * Number(b.dataset.font)))); applyPrefs(); }
   });
   $("rd-set-btn").addEventListener("click", () => setDlg.showModal());
+  $("rd-voice-btn").addEventListener("click", () => { if (synth) pickVoice(); setDlg.showModal(); }); // the voice list sits at the top
 
   /* ---------- speech ---------- */
   const synth = window.speechSynthesis;
@@ -102,10 +103,12 @@
   } else {
     $("rd-player").hidden = true;
     $("rd-voice").hidden = true;
+    $("rd-voice-btn").hidden = true;
     $("rd-this").disabled = true;
     $("rd-novoice").hidden = false;
   }
   function utter(textToSay) {
+    if (!voices.length) pickVoice(); // some phones list no voices at load and never fire voiceschanged
     const u = utterance = new SpeechSynthesisUtterance(textToSay);
     u.lang = voice ? voice.lang : "en-GB";
     if (voice) u.voice = voice;

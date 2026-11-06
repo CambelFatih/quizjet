@@ -125,6 +125,7 @@ def reader_page(locale: dict[str, object], pre: str, book: dict[str, object]) ->
           <label class="sr-only" for="rd-ch">{e(c["bkChapter"])}</label>
           <select id="rd-ch" lang="en" dir="ltr">{options}</select>
           <button type="button" class="rd-icon" id="rd-words-btn" aria-label="{e(c["bkWords"])}"><span aria-hidden="true">★</span> <span id="rd-words-n">0</span></button>
+          <button type="button" class="rd-icon" id="rd-voice-btn" aria-label="{e(c["bkVoice"])}" title="{e(c["bkVoice"])}"><span aria-hidden="true">🗣</span></button>
           <button type="button" class="rd-icon" id="rd-set-btn" aria-label="{e(c["bkSettings"])}">Aa</button>
         </div>
         <p class="rd-progress" id="rd-progress"></p>
@@ -161,12 +162,12 @@ def reader_page(locale: dict[str, object], pre: str, book: dict[str, object]) ->
         <dialog class="rd-sheet" id="rd-set"><form class="rd-sheet-in" method="dialog" id="rd-set-form">
           <button class="rd-x" aria-label="{e(c["bkClose"])}">×</button>
           <h2>{e(c["bkSettings"])}</h2>
+          <div id="rd-voice"><label class="rd-field">{e(c["bkVoice"])} <select name="voice" dir="ltr"><option value="">{e(c["bkVoiceAuto"])}</option></select></label>
+          <p class="rd-hint">{e(c["bkVoiceHint"])}</p></div>
           <div class="rd-field"><span>{e(c["bkFont"])}</span><button type="button" data-font="-1">A−</button><button type="button" data-font="1">A+</button></div>
           <fieldset><legend>{e(c["bkSpacing"])}</legend>{radios("spacing", [("1.5", "1.5"), ("1.8", "1.8"), ("2.1", "2.1")])}</fieldset>
           <fieldset><legend>{e(c["bkTheme"])}</legend>{radios("theme", [("light", c["bkLight"]), ("sepia", c["bkSepia"]), ("dark", c["bkDark"])])}</fieldset>
           <fieldset><legend>{e(c["bkView"])}</legend>{radios("view", [("book", c["bkViewBook"]), ("study", c["bkViewStudy"])])}</fieldset>
-          <div id="rd-voice"><label class="rd-field">{e(c["bkVoice"])} <select name="voice" dir="ltr"><option value="">{e(c["bkVoiceAuto"])}</option></select></label>
-          <p class="rd-hint">{e(c["bkVoiceHint"])}</p></div>
           <label class="rd-field">{e(c["bkTarget"])} <select name="target">{target_options}</select></label>
           <label class="rd-check"><input type="checkbox" name="autoTr"> {e(c["bkAutoTr"])}</label>
         </form></dialog>
