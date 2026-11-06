@@ -26,6 +26,7 @@ concurrency:
 jobs:
   delete:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
       - name: List, then delete unless dry run
