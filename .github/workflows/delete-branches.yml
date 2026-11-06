@@ -1,0 +1,42 @@
+name: Delete branches
+
+# Deletes every remote branch whose name matches `pattern`, never `main` and never a branch whose name
+# contains "backup" or "archive" (any case). Dry run by default: it only lists. Run it from
+# Actions → "Delete branches" → Run workflow; read the dry-run log, then run again with dry_run off.
+# A session's credential cannot delete branches (403), the repository's own token can.
+on:
+  workflow_dispatch:
+    inputs:
+      pattern:
+        description: "Regex on the branch name, e.g. ^(claude|cursor|ccr-)"
+        required: true
+        type: string
+      dry_run:
+        description: "Only list the branches that would be deleted"
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+
+concurrency:
+  group: delete-branches
+  cancel-in-progress: false
+
+jobs:
+  delete:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: List, then delete unless dry run
+        env:
+          PATTERN: ${{ inputs.pattern }}
+          DRY_RUN: ${{ inputs.dry_run }}
+        run: |
+          git ls-remote --heads origin | awk '{print $2}' | sed 's#^refs/heads/##' \
+            | grep -E -- "$PATTERN" | grep -Eiv '^main$|backup|archive' > branches.txt || true
+          echo "Matched $(wc -l < branches.txt) branch(es):"
+          cat branches.txt
+          if [ "$DRY_RUN" = "true" ]; then echo "Dry run: nothing deleted."; exit 0; fi
+          xargs -r git push origin --delete < branches.txt
+          echo "Deleted $(wc -l < branches.txt) branch(es)."
