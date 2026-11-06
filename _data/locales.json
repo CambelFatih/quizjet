@@ -9,7 +9,6 @@
     "copy": {
       "navFeatures": "Features",
       "navLanguages": "Languages",
-      "navStart": "Open bot",
       "languageLabel": "Website language",
       "eyebrow": "A multilingual quiz on Telegram",
       "heroTitle": "Curiosity looks good on you.<br><span>Play with QuizJet.</span>",
@@ -196,7 +195,6 @@
     "copy": {
       "navFeatures": "Özellikler",
       "navLanguages": "Diller",
-      "navStart": "Bota git",
       "languageLabel": "Site dili",
       "eyebrow": "Telegram'da çok dilli quiz",
       "heroTitle": "Merakını ortaya çıkar.<br><span>QuizJet'le oyna.</span>",
@@ -383,7 +381,6 @@
     "copy": {
       "navFeatures": "Funcions",
       "navLanguages": "Idiomes",
-      "navStart": "Obre el bot",
       "languageLabel": "Idioma del lloc",
       "eyebrow": "Quiz multilingüe a Telegram",
       "heroTitle": "Desperta la curiositat.<br><span>Juga amb QuizJet.</span>",
@@ -570,7 +567,6 @@
     "copy": {
       "navFeatures": "Funktionen",
       "navLanguages": "Sprachen",
-      "navStart": "Bot öffnen",
       "languageLabel": "Seitensprache",
       "eyebrow": "Mehrsprachiges Quiz auf Telegram",
       "heroTitle": "Entdecke deine Neugier.<br><span>Spiel mit QuizJet.</span>",
@@ -757,7 +753,6 @@
     "copy": {
       "navFeatures": "Funzioni",
       "navLanguages": "Lingue",
-      "navStart": "Apri il bot",
       "languageLabel": "Lingua del sito",
       "eyebrow": "Quiz multilingue su Telegram",
       "heroTitle": "Dai spazio alla curiosità.<br><span>Gioca con QuizJet.</span>",
@@ -944,7 +939,6 @@
     "copy": {
       "navFeatures": "Ciri-ciri",
       "navLanguages": "Bahasa",
-      "navStart": "Buka bot",
       "languageLabel": "Bahasa laman",
       "eyebrow": "Kuiz berbilang bahasa di Telegram",
       "heroTitle": "Ikuti rasa ingin tahu.<br><span>Main bersama QuizJet.</span>",
@@ -1131,7 +1125,6 @@
     "copy": {
       "navFeatures": "Funkcje",
       "navLanguages": "Języki",
-      "navStart": "Otwórz bota",
       "languageLabel": "Język strony",
       "eyebrow": "Wielojęzyczny quiz na Telegramie",
       "heroTitle": "Rozbudź swoją ciekawość.<br><span>Graj z QuizJet.</span>",
@@ -1318,7 +1311,6 @@
     "copy": {
       "navFeatures": "Возможности",
       "navLanguages": "Языки",
-      "navStart": "Открыть бота",
       "languageLabel": "Язык сайта",
       "eyebrow": "Многоязычная викторина в Telegram",
       "heroTitle": "Дай волю любопытству.<br><span>Играй с QuizJet.</span>",
@@ -1505,7 +1497,6 @@
     "copy": {
       "navFeatures": "Можливості",
       "navLanguages": "Мови",
-      "navStart": "Відкрити бота",
       "languageLabel": "Мова сайту",
       "eyebrow": "Багатомовна вікторина в Telegram",
       "heroTitle": "Дай волю цікавості.<br><span>Грай із QuizJet.</span>",
@@ -1692,7 +1683,6 @@
     "copy": {
       "navFeatures": "المميزات",
       "navLanguages": "اللغات",
-      "navStart": "افتح البوت",
       "languageLabel": "لغة الموقع",
       "eyebrow": "مسابقة متعددة اللغات على تيليجرام",
       "heroTitle": "أطلق العنان لفضولك.<br><span>العب مع QuizJet.</span>",
@@ -1879,7 +1869,6 @@
     "copy": {
       "navFeatures": "Functies",
       "navLanguages": "Talen",
-      "navStart": "Bot openen",
       "languageLabel": "Taal van de website",
       "eyebrow": "Meertalige quiz op Telegram",
       "heroTitle": "Geef nieuwsgierigheid de ruimte.<br><span>Speel met QuizJet.</span>",
@@ -2066,7 +2055,6 @@
     "copy": {
       "navFeatures": "Fonctionnalités",
       "navLanguages": "Langues",
-      "navStart": "Ouvrir le bot",
       "languageLabel": "Langue du site",
       "eyebrow": "Un quiz multilingue sur Telegram",
       "heroTitle": "Laisse parler ta curiosité.<br><span>Joue avec QuizJet.</span>",
@@ -2253,7 +2241,6 @@
     "copy": {
       "navFeatures": "Fitur",
       "navLanguages": "Bahasa",
-      "navStart": "Buka bot",
       "languageLabel": "Bahasa situs",
       "eyebrow": "Kuis multibahasa di Telegram",
       "heroTitle": "Ikuti rasa ingin tahumu.<br><span>Main bersama QuizJet.</span>",
@@ -2440,7 +2427,6 @@
     "copy": {
       "navFeatures": "특징",
       "navLanguages": "언어",
-      "navStart": "봇 열기",
       "languageLabel": "사이트 언어",
       "eyebrow": "텔레그램 다국어 퀴즈",
       "heroTitle": "호기심을 깨워 보세요.<br><span>QuizJet과 함께 플레이해요.</span>",
@@ -2627,7 +2613,6 @@
     "copy": {
       "navFeatures": "ویژگی‌ها",
       "navLanguages": "زبان‌ها",
-      "navStart": "باز کردن ربات",
       "languageLabel": "زبان سایت",
       "eyebrow": "مسابقه چندزبانه در تلگرام",
       "heroTitle": "کنجکاوی‌ات را دنبال کن.<br><span>با QuizJet بازی کن.</span>",
@@ -2814,7 +2799,6 @@
     "copy": {
       "navFeatures": "Recursos",
       "navLanguages": "Idiomas",
-      "navStart": "Abrir bot",
       "languageLabel": "Idioma do site",
       "eyebrow": "Quiz multilíngue no Telegram",
       "heroTitle": "Dê asas à curiosidade.<br><span>Jogue com o QuizJet.</span>",
@@ -3001,7 +2985,6 @@
     "copy": {
       "navFeatures": "Funciones",
       "navLanguages": "Idiomas",
-      "navStart": "Abrir bot",
       "languageLabel": "Idioma del sitio",
       "eyebrow": "Un quiz multilingüe en Telegram",
       "heroTitle": "Despierta tu curiosidad.<br><span>Juega con QuizJet.</span>",
@@ -3188,7 +3171,6 @@
     "copy": {
       "navFeatures": "Imkoniyatlar",
       "navLanguages": "Tillar",
-      "navStart": "Botni ochish",
       "languageLabel": "Sayt tili",
       "eyebrow": "Telegram'da ko‘p tilli viktorina",
       "heroTitle": "Qiziquvchanligingni uyg‘ot.<br><span>QuizJet bilan o‘yna.</span>",

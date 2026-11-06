@@ -149,6 +149,7 @@ def reader_page(locale: dict[str, object], pre: str, book: dict[str, object]) ->
         <h1 lang="{e(title_lang)}" dir="{title_dir}">{e(book["title"])}</h1>
         <p class="rd-meta"><span lang="en" dir="ltr">{e(book["author"])}</span> · {e(c["bkLevel"])}: {e(book["level"])}</p>
         <p class="quiz-note">{source_html}</p>
+        <p class="rd-tip" id="rd-tip">{e(c["bkTip"])}</p>
         <div class="rd-tools">
           <label class="sr-only" for="rd-ch">{e(c["bkChapter"])}</label>
           <select id="rd-ch" lang="en" dir="ltr">{options}</select>
@@ -160,7 +161,6 @@ def reader_page(locale: dict[str, object], pre: str, book: dict[str, object]) ->
           <p class="rd-progress" id="rd-progress" dir="{locale["dir"]}"></p>
           <button type="button" class="rd-icon" id="rd-pg-next" aria-label="{e(c["bkNextPage"])}">›</button>
         </div>
-        <p class="rd-tip" id="rd-tip">{e(c["bkTip"])}</p>
         <article class="rd-text" id="rd-text" lang="en" dir="ltr">
           {static_text(book, c)}
         </article>

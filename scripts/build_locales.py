@@ -352,7 +352,6 @@ def render_page(template: str, locale: dict[str, object], locales: list[dict[str
         count=1,
         flags=re.DOTALL,
     )
-    page = re.sub(r'\s*<script src="script\.js" defer></script>', "", page)
     if route:
         page = re.sub(r'((?:href|src)=")(assets/|styles\.css)', r"\1/\2", page)
     if route:
@@ -362,6 +361,9 @@ def render_page(template: str, locale: dict[str, object], locales: list[dict[str
         page = page.replace('href="/news/"', f'href="/{route}/news/"')
     if route in legal_routes:
         page = re.sub(r'href="/(privacy|terms|support)\.html"', rf'href="/{route}/\1.html"', page)
+    elif route:
+        # the legal pages exist in English and Turkish only: the other languages link the English text and say so
+        page = re.sub(r'(<a href="/(?:privacy|terms|support)\.html">[^<]*)(</a>)', r"\1 (EN)\2", page)
     css_version = stylesheet_version()
     page = re.sub(
         r'(<link rel="stylesheet" href=")/?styles\.css(?:\?v=[^"]*)?(")',
