@@ -67,3 +67,7 @@ jobs:
 
       - id: deploy
         uses: actions/deploy-pages@v4
+        with:
+          # Pages sat in "syncing_files" for the whole default 10 minutes on 2026-11-06 and the deploy was
+          # cancelled, so the merged reader never went live. A slow sync now gets 20 minutes.
+          timeout: 1200000
