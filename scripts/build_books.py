@@ -121,6 +121,7 @@ def reader_page(locale: dict[str, object], pre: str, book: dict[str, object]) ->
         <p class="quiz-back"><a href="{pre}/kitaplar/">{back} {e(c["bkBack"])}</a></p>
         <h1 lang="en" dir="ltr">{e(book["title"])}</h1>
         <p class="rd-meta"><span lang="en" dir="ltr">{e(book["author"])}</span> · {e(c["bkLevel"])}: {e(book["level"])}</p>
+        <p class="quiz-note">{e(c["bkSource"])} <a href="{e(book["source"])}" target="_blank" rel="noopener noreferrer">gutenberg.org</a></p>
         <div class="rd-tools">
           <label class="sr-only" for="rd-ch">{e(c["bkChapter"])}</label>
           <select id="rd-ch" lang="en" dir="ltr">{options}</select>
@@ -128,10 +129,14 @@ def reader_page(locale: dict[str, object], pre: str, book: dict[str, object]) ->
           <button type="button" class="rd-icon" id="rd-voice-btn" aria-label="{e(c["bkVoice"])}" title="{e(c["bkVoice"])}"><span aria-hidden="true">🗣</span></button>
           <button type="button" class="rd-icon" id="rd-set-btn" aria-label="{e(c["bkSettings"])}">Aa</button>
         </div>
-        <p class="rd-progress" id="rd-progress"></p>
+        <div class="rd-pager" dir="ltr">
+          <button type="button" class="rd-icon" id="rd-pg-prev" aria-label="{e(c["bkPrevPage"])}">‹</button>
+          <p class="rd-progress" id="rd-progress" dir="{locale["dir"]}"></p>
+          <button type="button" class="rd-icon" id="rd-pg-next" aria-label="{e(c["bkNextPage"])}">›</button>
+        </div>
         <p class="rd-tip" id="rd-tip">{e(c["bkTip"])}</p>
         <article class="rd-text" id="rd-text" lang="en" dir="ltr"><p>{e(c["bkLoading"])}</p></article>
-        <aside class="rd-quiz" id="rd-quiz" hidden>
+        <aside class="rd-quiz" id="rd-quiz" lang="{e(locale["code"])}" dir="{locale["dir"]}" hidden>
           <h2>{e(c["bkQuizTitle"])}</h2>
           <p>{e(c["bkQuizBody"])}</p>
           <div class="quiz-actions">
@@ -139,7 +144,6 @@ def reader_page(locale: dict[str, object], pre: str, book: dict[str, object]) ->
             <a class="button button-light" id="rd-next-ch" href="#">{e(c["bkNextChapter"])} <span aria-hidden="true">→</span></a>
           </div>
         </aside>
-        <p class="quiz-note">{e(c["bkSource"])} <a href="{e(book["source"])}" target="_blank" rel="noopener noreferrer">gutenberg.org</a></p>
         <div class="rd-bar" id="rd-bar" dir="ltr">
           <div class="rd-row">
             <button type="button" id="rd-prev" aria-label="{e(c["bkPrev"])}">‹</button>
