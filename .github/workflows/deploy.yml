@@ -6,7 +6,7 @@ name: Build and deploy site
 #
 # Requires: Settings → Pages → Source = "GitHub Actions".
 # Optional: secret QUIZJET_EXPORT_TOKEN (same value as the bot's MiniApp__DiscoverExportToken).
-# Without the secret the site is published with a "coming soon" /kesfet/ page; with it, a failed
+# Without the secret the site is published with a "coming soon" /discover/ page; with it, a failed
 # catalog fetch stops the run and the last good deployment stays online.
 
 on:

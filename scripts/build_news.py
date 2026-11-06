@@ -1,11 +1,11 @@
-"""News lessons: /haberler/ (the editions) and /haberler/<date>/ (the reader), in all 18 languages.
+"""News lessons: /news/ (the editions) and /news/<date>/ (the reader), in all 18 languages.
 
     python scripts/build_news.py --generate            # writes _data/news/<today>.json (needs OPENAI_API_KEY)
     python scripts/build_news.py --generate --date 2026-11-06
 
 build_discover.build() publishes whatever editions sit in _data/news/. One edition is one "book" for
 assets/reader.js: every article is a chapter, published once, language-neutral, as
-/haberler/<date>/<n>.json with its key words, its four questions (answered on the page) and the
+/news/<date>/<n>.json with its key words, its four questions (answered on the page) and the
 reports it was written from.
 
 Copyright posture — the code below enforces it, keep the two in step:
@@ -215,16 +215,16 @@ def topic_label(locale: dict[str, object], topic: str) -> str:
 
 def chapter_files(edition: dict[str, object]) -> dict[str, str]:
     return {
-        f"haberler/{edition['date']}/{n}.json": json.dumps(a, ensure_ascii=False, separators=(",", ":")) + "\n"
+        f"news/{edition['date']}/{n}.json": json.dumps(a, ensure_ascii=False, separators=(",", ":")) + "\n"
         for n, a in enumerate(edition["articles"], start=1)
     }
 
 
 def list_page(locale: dict[str, object], pre: str, editions: list[dict[str, object]]) -> tuple[str, str, str, str]:
-    """(title, description, body, extra head) of /haberler/."""
+    """(title, description, body, extra head) of /news/."""
     c = locale["copy"]
     rows = "".join(
-        f'        <li><a href="{pre}/haberler/{ed["date"]}/">'
+        f'        <li><a href="{pre}/news/{ed["date"]}/">'
         f'{build_books.cover({"title": ed["date"], "author": "QuizJet", "cover": ["#2a4d3a", "#9ad3a8"]})}<span class="book-info">'
         f'<strong>{e(c["nwEdition"].replace("{date}", str(ed["date"])))}</strong>'
         f'<span lang="en" dir="ltr">{e(" · ".join(str(a["title"]) for a in ed["articles"]))}</span>'
@@ -246,17 +246,17 @@ def edition_book(locale: dict[str, object], pre: str, edition: dict[str, object]
     c, date = locale["copy"], str(edition["date"])
     title = c["nwEdition"].replace("{date}", date)
     return {
-        "slug": f"news-{date}", "base": f"/haberler/{date}/", "title": title, "titleLang": locale["code"],
+        "slug": f"news-{date}", "base": f"/news/{date}/", "title": title, "titleLang": locale["code"],
         "author": "QuizJet", "level": LEVEL, "quiz": "", "chapterQuizzes": {},
         "chapters": [{"title": f"{topic_label(locale, str(a['topic']))}: {a['title']}", "p": a["p"]} for a in edition["articles"]],
-        "back": (f"{pre}/haberler/", c["nwBack"]),
+        "back": (f"{pre}/news/", c["nwBack"]),
         "sourceHtml": e(c["nwSource"]),
         "quizCopy": {"title": c["nwQuizTitle"], "body": c["nwQuizBody"], "cta": c["nwQuizCta"], "next": c["nwNext"]},
         "pageTitle": f'{title} — {c["nwTitle"]}',
         "description": c["nwEditionMeta"].replace("{date}", date),
         "jsonld": {"@context": "https://schema.org", "@type": "LearningResource", "name": title, "inLanguage": "en",
                    "educationalLevel": LEVEL, "isAccessibleForFree": True, "datePublished": date,
-                   "author": {"@type": "Organization", "name": "QuizJet"}, "url": f"{BASE_URL}{pre}/haberler/{date}/"},
+                   "author": {"@type": "Organization", "name": "QuizJet"}, "url": f"{BASE_URL}{pre}/news/{date}/"},
     }
 
 

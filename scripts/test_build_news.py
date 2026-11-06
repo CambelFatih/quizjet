@@ -109,31 +109,31 @@ def run() -> None:
         finally:
             bn.NEWS_DIR = original_dir
 
-        assert sum(1 for _ in out.rglob("haberler/2026-11-06/index.html")) == 18, "one reader per language"
-        assert (out / "haberler" / "2026-11-06" / "1.json").is_file() and not (out / "tr" / "haberler" / "2026-11-06" / "1.json").exists()
-        chapter = json.loads((out / "haberler" / "2026-11-06" / "2.json").read_text(encoding="utf-8"))
+        assert sum(1 for _ in out.rglob("news/2026-11-06/index.html")) == 18, "one reader per language"
+        assert (out / "news" / "2026-11-06" / "1.json").is_file() and not (out / "tr" / "news" / "2026-11-06" / "1.json").exists()
+        chapter = json.loads((out / "news" / "2026-11-06" / "2.json").read_text(encoding="utf-8"))
         assert chapter["quiz"][0]["a"] == 1 and chapter["sources"][0]["u"] == "https://example.com/a" and chapter["words"][0]["w"] == "interest rate"
 
-        tr_reader = (out / "tr" / "haberler" / "2026-11-06" / "index.html").read_text(encoding="utf-8")
-        assert '<html lang="tr" dir="ltr">' in tr_reader and 'href="/tr/haberler/"' in tr_reader and 'href="/tr/kitaplar/"' not in tr_reader.split("<main")[1].split("rd-tools")[0]
-        assert '"base":"/haberler/2026-11-06/"' in tr_reader and '"slug":"news-2026-11-06"' in tr_reader
+        tr_reader = (out / "tr" / "news" / "2026-11-06" / "index.html").read_text(encoding="utf-8")
+        assert '<html lang="tr" dir="ltr">' in tr_reader and 'href="/tr/news/"' in tr_reader and 'href="/tr/books/"' not in tr_reader.split("<main")[1].split("rd-tools")[0]
+        assert '"base":"/news/2026-11-06/"' in tr_reader and '"slug":"news-2026-11-06"' in tr_reader
         assert "<h1 lang=\"tr\" dir=\"ltr\">Haber dersi · 2026-11-06</h1>" in tr_reader
         assert 'id="rd-next-ch" href="#">Sonraki metin ' in tr_reader, "the news framing replaces the book framing on the button"
         assert '"nwCorrect":"Doğru!"' in tr_reader and '"@type":"LearningResource"' in tr_reader and "gutenberg.org" not in tr_reader
         assert "Spor: A striker &lt;b&gt;moves&lt;/b&gt;" in tr_reader, "chapter names are escaped and carry the topic"
-        ar_reader = (out / "ar" / "haberler" / "2026-11-06" / "index.html").read_text(encoding="utf-8")
+        ar_reader = (out / "ar" / "news" / "2026-11-06" / "index.html").read_text(encoding="utf-8")
         assert '<h1 lang="ar" dir="rtl">' in ar_reader
 
-        shelf = (out / "haberler" / "index.html").read_text(encoding="utf-8")
-        assert 'href="/haberler/2026-11-06/"' in shelf and "Business, Sports" in shelf and "Interest rates stay the same for now · A striker &lt;b&gt;moves&lt;/b&gt;" in shelf
+        shelf = (out / "news" / "index.html").read_text(encoding="utf-8")
+        assert 'href="/news/2026-11-06/"' in shelf and "Business, Sports" in shelf and "Interest rates stay the same for now · A striker &lt;b&gt;moves&lt;/b&gt;" in shelf
         assert '<meta name="robots" content="noindex">' not in shelf and "support@quizjet.app" in shelf
         sitemap = (out / "sitemap.xml").read_text(encoding="utf-8")
-        assert "https://quizjet.app/tr/haberler/2026-11-06/" in sitemap and "https://quizjet.app/haberler/" in sitemap
+        assert "https://quizjet.app/tr/news/2026-11-06/" in sitemap and "https://quizjet.app/news/" in sitemap
         landing = (out / "tr" / "index.html").read_text(encoding="utf-8")
-        assert 'href="/tr/haberler/"' in landing and 'href="/haberler/"' not in landing, "the landing menu links the lessons in its own language"
+        assert 'href="/tr/news/"' in landing and 'href="/news/"' not in landing, "the landing menu links the lessons in its own language"
         assert 'id="news-band"' in landing and "Bugünün haberlerini oku" in landing, "the landing band is reachable on phones, where the menu links are hidden"
-        book = (out / "tr" / "kitaplar" / "sherlock-holmes" / "index.html").read_text(encoding="utf-8")
-        assert "gutenberg.org" in book and 'id="rd-next-ch" href="#">Sonraki bölüm ' in book and '"base":"/kitaplar/sherlock-holmes/"' in book, "books keep their framing"
+        book = (out / "tr" / "books" / "sherlock-holmes" / "index.html").read_text(encoding="utf-8")
+        assert "gutenberg.org" in book and 'id="rd-next-ch" href="#">Sonraki bölüm ' in book and '"base":"/books/sherlock-holmes/"' in book, "books keep their framing"
 
         # no edition yet: the page exists for the menu link, unindexed and out of the sitemap; the landing band leaves
         empty = tmp_path / "empty"
@@ -142,9 +142,9 @@ def run() -> None:
             bd.build(empty, None)
         finally:
             bn.NEWS_DIR = original_dir
-        bare = (empty / "haberler" / "index.html").read_text(encoding="utf-8")
+        bare = (empty / "news" / "index.html").read_text(encoding="utf-8")
         assert '<meta name="robots" content="noindex">' in bare and "next daily update" in bare
-        assert "haberler" not in (empty / "sitemap.xml").read_text(encoding="utf-8")
+        assert "news" not in (empty / "sitemap.xml").read_text(encoding="utf-8")
         for landing_page in ("index.html", "ar/index.html"):
             bare_landing = (empty / landing_page).read_text(encoding="utf-8")
             assert 'id="news-band"' not in bare_landing and 'id="books-band"' in bare_landing, "no edition: the News band leaves, the Books band stays"

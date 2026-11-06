@@ -44,11 +44,24 @@ def run() -> None:
             message = bd.build(out, export)
             assert "2 quizzes in 18 languages" in message and "Skipped 1" in message, message
 
+            # URL segments are English: nothing else appears at the top of the tree, and the Turkish names the site
+            # launched with hold nothing but redirects to the English address of the same page
+            top = {p.name for p in out.iterdir() if p.is_dir()}
+            assert top <= {l["route"] for l in bd.LOCALES if l["route"]} | bd.ROUTES | set(bd.LEGACY_ROUTES) | {"assets", "en"}, top  # en: the legacy English URL
+            for old, new in bd.LEGACY_ROUTES.items():
+                moved = (out / "tr" / old / "index.html").read_text(encoding="utf-8")
+                assert f'content="0;url=/tr/{new}/"' in moved and 'content="noindex"' in moved, (old, new)
+                assert f'<link rel="canonical" href="https://quizjet.app/tr/{new}/">' in moved
+                assert {p.name for p in (out / old).rglob("*") if p.is_file()} == {"index.html"}, f"only redirects live under /{old}/"
+            assert 'content="0;url=/books/sherlock-holmes/"' in (out / "kitaplar" / "sherlock-holmes" / "index.html").read_text(encoding="utf-8")
+            assert 'content="0;url=/"' in (out / "en" / "index.html").read_text(encoding="utf-8"), "the old English URL still forwards to the root"
+
             # static pages are copied, private build inputs are not
             assert (out / "index.html").is_file() and (out / "tr" / "privacy.html").is_file()
             assert not (out / "scripts").exists() and not (out / "_data").exists() and not (out / ".github").exists()
+            assert not (out / "CLAUDE.md").exists(), "repo documents are not published"
 
-            catalog = (out / "kesfet" / "index.html").read_text(encoding="utf-8")
+            catalog = (out / "discover" / "index.html").read_text(encoding="utf-8")
             assert "Türkiye &lt;b&gt;coğrafyası&lt;/b&gt;" in catalog, "titles must be escaped"
             assert "<b>coğrafyası</b>" not in catalog
             assert 'data-search="turkiye <b>cografyasi</b> iller & bolgeler"' not in catalog
@@ -67,20 +80,20 @@ def run() -> None:
             assert not (out / "q" / "blocked1").exists() and not any("bad key" in str(p) for p in out.rglob("*"))
 
             sitemap = (out / "sitemap.xml").read_text(encoding="utf-8")
-            assert "https://quizjet.app/kesfet/" in sitemap and "https://quizjet.app/q/good_key-1/" in sitemap
+            assert "https://quizjet.app/discover/" in sitemap and "https://quizjet.app/q/good_key-1/" in sitemap
             assert "https://quizjet.app/tr/" in sitemap, "static pages stay in the sitemap"
 
             data = json.loads((out / "discover.json").read_text(encoding="utf-8"))
             assert data["count"] == 2 and data["items"][0]["startGroup"].endswith("?startgroup=good_key-1")
 
             # every Discover page exists in all 18 languages and keeps the visitor in theirs
-            tr_catalog = (out / "tr" / "kesfet" / "index.html").read_text(encoding="utf-8")
+            tr_catalog = (out / "tr" / "discover" / "index.html").read_text(encoding="utf-8")
             assert '<html lang="tr" dir="ltr">' in tr_catalog and "<h1>Quiz&#x27;leri keşfet</h1>" in tr_catalog
             assert 'href="/tr/q/good_key-1/"' in tr_catalog and 'href="/q/good_key-1/"' not in tr_catalog
-            assert 'href="/de/kesfet/"' in tr_catalog, "language menu switches to the same page in another language"
+            assert 'href="/de/discover/"' in tr_catalog, "language menu switches to the same page in another language"
             assert tr_catalog.count('rel="alternate" hreflang=') == 19, "18 languages + x-default"
             tr_quiz = (out / "tr" / "q" / "good_key-1" / "index.html").read_text(encoding="utf-8")
-            assert 'href="/tr/kesfet/"' in tr_quiz and "Özel sohbette başlat" in tr_quiz
+            assert 'href="/tr/discover/"' in tr_quiz and "Özel sohbette başlat" in tr_quiz
             assert "Soru: 1 · AI ile hazırlandı · Oynanma: 3 · Oyuncu: 12" in tr_quiz
             assert 'href="/tr/privacy.html"' in tr_quiz, "Turkish keeps its own legal pages"
             assert '<bdi dir="ltr">@QuizJetBot</bdi>' in tr_quiz and "{bot}" not in tr_quiz
@@ -90,7 +103,7 @@ def run() -> None:
             assert '<html lang="ar" dir="rtl">' in ar_quiz and "→ " in ar_quiz, "RTL back arrow points right"
             assert sum(1 for _ in out.rglob("q/good_key-1/index.html")) == 18
             landing_tr = (out / "tr" / "index.html").read_text(encoding="utf-8")
-            assert 'href="/tr/kesfet/"' in landing_tr and 'href="/kesfet/"' not in landing_tr
+            assert 'href="/tr/discover/"' in landing_tr and 'href="/discover/"' not in landing_tr
             assert sitemap.count("<loc>") == 18 + 18 * (1 + 2) + 18 * 3, "landing + per language: catalog + 2 quizzes + shelf + 2 books"
             assert "https://quizjet.app/tr/q/good_key-1/" in sitemap
 
@@ -104,31 +117,31 @@ def run() -> None:
             # no export: placeholder page, not indexed, sitemap untouched
             bare = tmp_path / "bare"
             bd.build(bare, None)
-            placeholder = (bare / "kesfet" / "index.html").read_text(encoding="utf-8")
-            assert (bare / "uz" / "kesfet" / "index.html").is_file(), "placeholder exists in every language"
+            placeholder = (bare / "discover" / "index.html").read_text(encoding="utf-8")
+            assert (bare / "uz" / "discover" / "index.html").is_file(), "placeholder exists in every language"
             assert '<meta name="robots" content="noindex">' in placeholder
             for landing in ("index.html", "tr/index.html"):
                 bare_html = (bare / landing).read_text(encoding="utf-8")
                 assert 'id="discover-band"' not in bare_html and "{count}" not in bare_html, "band is removed without a catalog"
-                assert ('href="/tr/kesfet/"' if landing.startswith("tr/") else 'href="/kesfet/"') in bare_html, "hero and menu links stay, in the page's language"
+                assert ('href="/tr/discover/"' if landing.startswith("tr/") else 'href="/discover/"') in bare_html, "hero and menu links stay, in the page's language"
             bare_sitemap = (bare / "sitemap.xml").read_text(encoding="utf-8")
-            assert "kesfet" not in bare_sitemap and "https://quizjet.app/tr/kitaplar/sherlock-holmes/" in bare_sitemap
+            assert "discover" not in bare_sitemap and "https://quizjet.app/tr/books/sherlock-holmes/" in bare_sitemap
 
             # Books: shelf + reader in every language, chapters published once and language-neutral
-            assert sum(1 for _ in bare.rglob("kitaplar/sherlock-holmes/index.html")) == 18
-            chapter = json.loads((bare / "kitaplar" / "sherlock-holmes" / "1.json").read_text(encoding="utf-8"))
+            assert sum(1 for _ in bare.rglob("books/sherlock-holmes/index.html")) == 18
+            chapter = json.loads((bare / "books" / "sherlock-holmes" / "1.json").read_text(encoding="utf-8"))
             assert chapter["title"] == "A Scandal in Bohemia" and chapter["p"][0][0] == "To Sherlock Holmes she is always THE woman."
-            assert not (bare / "tr" / "kitaplar" / "sherlock-holmes" / "1.json").exists()
-            tr_reader = (bare / "tr" / "kitaplar" / "sherlock-holmes" / "index.html").read_text(encoding="utf-8")
-            assert '<html lang="tr" dir="ltr">' in tr_reader and 'href="/tr/kitaplar/"' in tr_reader
+            assert not (bare / "tr" / "books" / "sherlock-holmes" / "1.json").exists()
+            tr_reader = (bare / "tr" / "books" / "sherlock-holmes" / "index.html").read_text(encoding="utf-8")
+            assert '<html lang="tr" dir="ltr">' in tr_reader and 'href="/tr/books/"' in tr_reader
             assert '"lang":"tr"' in tr_reader and "Bu cümle" in tr_reader and "/assets/reader.js?v=" in tr_reader
-            assert 'href="/de/kitaplar/sherlock-holmes/"' in tr_reader, "language menu stays on the book"
+            assert 'href="/de/books/sherlock-holmes/"' in tr_reader, "language menu stays on the book"
             assert '"@type":"Book"' in tr_reader
             assert 'name="autoTr"' in tr_reader and 'id="rd-tip"' in tr_reader and "translate.google.com/?" not in tr_reader
-            shelf = (bare / "kitaplar" / "index.html").read_text(encoding="utf-8")
-            assert 'href="/kitaplar/sherlock-holmes/"' in shelf and "Chapters: 12" in shelf
-            assert 'href="/kitaplar/frankenstein/"' in shelf and "Chapters: 28" in shelf
-            assert 'href="/tr/kitaplar/"' in (bare / "tr" / "index.html").read_text(encoding="utf-8"), "landing links the shelf"
+            shelf = (bare / "books" / "index.html").read_text(encoding="utf-8")
+            assert 'href="/books/sherlock-holmes/"' in shelf and "Chapters: 12" in shelf
+            assert 'href="/books/frankenstein/"' in shelf and "Chapters: 28" in shelf
+            assert 'href="/tr/books/"' in (bare / "tr" / "index.html").read_text(encoding="utf-8"), "landing links the shelf"
 
             # a truncated export is refused
             export.write_text(json.dumps({**EXPORT, "truncated": True}), encoding="utf-8")

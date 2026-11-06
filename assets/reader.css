@@ -1,4 +1,4 @@
-/* Books shelf + reader (loaded only by /kitaplar/ pages). Themes are set on <html data-rd-theme>. */
+/* Books shelf + reader (loaded only by /books/ pages). Themes are set on <html data-rd-theme>. */
 .reader [hidden] { display: none !important; } /* .button and .rd-row set display, which would beat [hidden] */
 .book-list { display: grid; gap: 14px; margin: 0 0 18px; padding: 0; list-style: none; }
 .book-list a { display: flex; gap: 18px; align-items: center; padding: 16px; border: 1px solid var(--line); border-radius: 16px; background: #fff; transition: border-color .2s, box-shadow .2s; }

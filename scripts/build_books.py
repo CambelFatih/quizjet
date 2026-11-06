@@ -1,8 +1,8 @@
-"""Books pages: /kitaplar/ (the shelf) and /kitaplar/<slug>/ (the reader), in all 18 languages.
+"""Books pages: /books/ (the shelf) and /books/<slug>/ (the reader), in all 18 languages.
 
 build_discover.build() calls this and wraps each page in the site frame. Book metadata is
 _data/books.json; the text is _data/books/<slug>.json (made by scripts/import_gutenberg.py). Each
-chapter is published once, language-neutral, as /kitaplar/<slug>/<n>.json and loaded on demand by
+chapter is published once, language-neutral, as /books/<slug>/<n>.json and loaded on demand by
 assets/reader.js; the reader page itself only carries the interface text.
 
 Quiz links ("ekiştirmeli öğrenme"): put the bot quiz key (the code /start takes, the same one the
@@ -62,7 +62,7 @@ def load_books(books_path: Path | None = None, text_dir: Path | None = None) -> 
 def chapter_files(book: dict[str, object]) -> dict[str, str]:
     """Published path (under the site root) → JSON for every chapter of ``book``."""
     return {
-        f"kitaplar/{book['slug']}/{n}.json": json.dumps(chapter, ensure_ascii=False, separators=(",", ":")) + "\n"
+        f"books/{book['slug']}/{n}.json": json.dumps(chapter, ensure_ascii=False, separators=(",", ":")) + "\n"
         for n, chapter in enumerate(book["chapters"], start=1)
     }
 
@@ -78,10 +78,10 @@ def reader_css() -> str:
 
 
 def list_page(locale: dict[str, object], pre: str, books: list[dict[str, object]]) -> tuple[str, str, str, str]:
-    """(title, description, body, extra head) of /kitaplar/."""
+    """(title, description, body, extra head) of /books/."""
     c = locale["copy"]
     rows = "".join(
-        f'        <li><a href="{pre}/kitaplar/{b["slug"]}/">{cover(b)}<span class="book-info">'
+        f'        <li><a href="{pre}/books/{b["slug"]}/">{cover(b)}<span class="book-info">'
         f'<strong lang="en" dir="ltr">{e(b["title"])}</strong><span lang="en" dir="ltr">{e(b["author"])}</span>'
         f'<small>{e(c["bkLevel"])}: {e(b["level"])} · {e(c["bkChapters"])}: {len(b["chapters"])}</small>'
         f'<span class="book-read">{e(c["bkRead"])} <span aria-hidden="true">→</span></span></span></a></li>\n'
@@ -101,11 +101,11 @@ def radios(name: str, options: list[tuple[str, str]]) -> str:
 
 
 def reader_page(locale: dict[str, object], pre: str, book: dict[str, object]) -> tuple[str, str, str, str, str]:
-    """(title, description, body, jsonld, extra head) of /kitaplar/<slug>/."""
+    """(title, description, body, jsonld, extra head) of /books/<slug>/."""
     c, slug = locale["copy"], str(book["slug"])
     back = "→" if locale["dir"] == "rtl" else "←"
     # Optional keys a news edition sets (scripts/build_news.py); a Gutenberg book has none of them.
-    back_href, back_label = book.get("back") or (f"{pre}/kitaplar/", c["bkBack"])
+    back_href, back_label = book.get("back") or (f"{pre}/books/", c["bkBack"])
     quiz_copy = book.get("quizCopy") or {"title": c["bkQuizTitle"], "body": c["bkQuizBody"], "cta": c["bkQuizCta"], "next": c["bkNextChapter"]}
     title_lang = str(book.get("titleLang") or "en")
     title_dir = "ltr" if title_lang == "en" else str(locale["dir"])
@@ -117,7 +117,7 @@ def reader_page(locale: dict[str, object], pre: str, book: dict[str, object]) ->
     target_options = "".join(f'<option value="{e(code)}">{e(name)}</option>' for code, name in targets)
     data = {
         "slug": slug,
-        "base": book.get("base") or f"/kitaplar/{slug}/",
+        "base": book.get("base") or f"/books/{slug}/",
         "lang": locale["code"],
         "bot": BOT,
         "quiz": book.get("quiz") or "",
@@ -201,7 +201,7 @@ def reader_page(locale: dict[str, object], pre: str, book: dict[str, object]) ->
         "inLanguage": book.get("language") or "en",
         "educationalLevel": book["level"],
         "isAccessibleForFree": True,
-        "url": f"{BASE_URL}{pre}/kitaplar/{slug}/",
+        "url": f"{BASE_URL}{pre}/books/{slug}/",
     })
     description = book.get("description") or c["bkReaderMeta"].replace("{title}", str(book["title"])).replace("{author}", str(book["author"]))
     return book.get("pageTitle") or f'{book["title"]} — {c["bkTitle"]}', description, body, jsonld, reader_css()
