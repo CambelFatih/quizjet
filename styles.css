@@ -234,7 +234,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
   .nav-menu > summary::before { content: ""; width: 22px; height: 2px; border-radius: 2px; background: currentColor; box-shadow: 0 -7px 0 currentColor, 0 7px 0 currentColor; }
   .nav-menu[open] > summary { position: fixed; top: 14px; right: 16px; z-index: 12; }
   .nav-menu[open] > summary::before { content: "✕"; width: auto; height: auto; background: none; box-shadow: none; font-size: 24px; font-weight: 700; line-height: 1; }
-  .nav-panel { position: fixed; inset: 0; z-index: 11; padding: 96px 28px 40px; overflow-y: auto; text-align: right; color: #fff; background: radial-gradient(70% 45% at 92% 0%, #3a7fd04d 0%, transparent 60%), radial-gradient(55% 40% at 0% 100%, #6f55d942 0%, transparent 60%), var(--navy); animation: nav-panel-in .3s ease-out; }
+  .nav-panel { position: fixed; inset: 0; z-index: 11; padding: 96px 28px 40px; overflow-y: auto; text-align: left; color: #fff; background: radial-gradient(70% 45% at 92% 0%, #3a7fd04d 0%, transparent 60%), radial-gradient(55% 40% at 0% 100%, #6f55d942 0%, transparent 60%), var(--navy); animation: nav-panel-in .3s ease-out; }
   .nav-panel::before { content: ""; position: absolute; inset: 0; opacity: .16; background-image: radial-gradient(#8badd2 1px, transparent 1px); background-size: 26px 26px; mask-image: linear-gradient(180deg, #000 30%, transparent 90%); pointer-events: none; }
   .nav-panel > * { position: relative; }
   .nav-panel-brand { position: absolute; top: 14px; left: 16px; }
