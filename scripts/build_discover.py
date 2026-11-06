@@ -149,9 +149,7 @@ def shell(locale: dict[str, object], title: str, description: str, suffix: str, 
         f'      <nav class="navigation page-width" aria-label="{e(c["navMainLabel"])}">\n'
         f'        <a class="brand" href="{pre}/"><img src="/assets/logo-96.png" alt="" width="44" height="44"><span>quizjet</span></a>\n'
         f'        <div class="nav-links">{links}</div>\n'
-        f'        <div class="nav-actions">{language_menu(locale, LOCALES, suffix)}'
-        f'<a class="button button-small button-light" href="https://t.me/QuizJetBot" target="_blank" rel="noopener noreferrer">'
-        f'{e(c["navStart"])} <span aria-hidden="true">↗</span></a></div>\n'
+        f'        <div class="nav-actions">{language_menu(locale, LOCALES, suffix)}</div>\n'
         "      </nav>\n"
         "    </header>\n"
         f'    <main class="discover page-width" id="top">\n{body}    </main>\n'

@@ -58,7 +58,6 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
 .language-current { flex: 0 0 auto; margin-inline-start: auto; font-size: 13px; font-weight: 700; }
 .button { min-height: 52px; display: inline-flex; align-items: center; justify-content: center; gap: 14px; padding: 0 22px; border-radius: 12px; font-size: 14px; font-weight: 700; transition: transform .2s, box-shadow .2s, background .2s; }
 .button:hover { transform: translateY(-2px); }
-.button-small { min-height: 40px; padding: 0 15px; border-radius: 9px; font-size: 12px; }
 .button-light { color: #14243b; background: #fff; }
 .button-light:hover { background: #eaf2ff; }
 .button-primary { color: #fff; background: #438fe0; box-shadow: 0 10px 28px #347fc74a; }
@@ -252,7 +251,6 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
   .language-menu summary { font-size: 12px; }
   .language-picker { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .language-menu[open] .language-picker { top: calc(100% + 8px); inset-inline: 16px; width: auto; max-width: none; max-height: calc(100vh - 144px); max-height: min(420px, calc(100dvh - 144px)); }
-  .button-small { min-height: 36px; padding-inline: 11px; font-size: 12px; }
   .hero-grid { padding-top: 46px; }
   .hero h1 { font-size: clamp(37px, 11vw, 50px); }
   .hero-lead { font-size: 14px; }
