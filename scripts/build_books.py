@@ -126,8 +126,7 @@ def reader_page(locale: dict[str, object], pre: str, book: dict[str, object]) ->
           <label class="sr-only" for="rd-ch">{e(c["bkChapter"])}</label>
           <select id="rd-ch" lang="en" dir="ltr">{options}</select>
           <button type="button" class="rd-icon" id="rd-words-btn" aria-label="{e(c["bkWords"])}"><span aria-hidden="true">★</span> <span id="rd-words-n">0</span></button>
-          <button type="button" class="rd-icon" id="rd-voice-btn" aria-label="{e(c["bkVoice"])}" title="{e(c["bkVoice"])}"><span aria-hidden="true">🗣</span></button>
-          <button type="button" class="rd-icon" id="rd-set-btn" aria-label="{e(c["bkSettings"])}">Aa</button>
+          <button type="button" class="rd-icon" id="rd-set-btn" aria-label="{e(c["bkSettings"])}" title="{e(c["bkSettings"])}"><span aria-hidden="true">⚙︎</span></button>
         </div>
         <div class="rd-pager" dir="ltr">
           <button type="button" class="rd-icon" id="rd-pg-prev" aria-label="{e(c["bkPrevPage"])}">‹</button>
