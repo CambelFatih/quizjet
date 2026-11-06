@@ -1,6 +1,6 @@
 """News lessons: /haberler/ (the editions) and /haberler/<date>/ (the reader), in all 18 languages.
 
-    python scripts/build_news.py --generate            # writes _data/news/<today>.json (needs the two keys)
+    python scripts/build_news.py --generate            # writes _data/news/<today>.json (needs OPENAI_API_KEY)
     python scripts/build_news.py --generate --date 2026-11-06
 
 build_discover.build() publishes whatever editions sit in _data/news/. One edition is one "book" for
@@ -10,14 +10,15 @@ reports it was written from.
 
 Copyright posture — the code below enforces it, keep the two in step:
 - Facts and the news of the day are not protected (Berne Convention art. 2(8)); the wording of a
-  report is. So the model never rewrites one article: it gets short snippets from several reports
-  (Tavily, the same search the bot grounds with) and writes an ORIGINAL learner text in its own words.
-- Nothing is published that shares a run of eight words with any snippet (overlap() below). A text
-  that fails is dropped, not retried: a retry bills a second generation for a story that read too close.
+  report is. So the text is written in a clean room, in two calls: research() lets OpenAI's hosted
+  web_search read the reports and return FACTS as fragments of at most MAX_FACT_WORDS words plus the
+  report links (a longer "fact" is dropped as a lifted sentence); write_lesson() then gets those
+  fragments and nothing else, no tools, so the wording of a report never reaches what is published.
 - Every lesson links the reports it was written from (a link is outside the EU press publishers'
-  right, DSM Directive art. 15(1)); no photos, no quotes longer than a few words.
-- Generation runs in the deploy workflow once a day, only when OPENAI_API_KEY and TAVILY_API_KEY are
-  set and today's file does not exist yet; without the keys the site builds without news.
+  right, DSM Directive art. 15(1)); no photos, no quotations.
+- Generation runs in the deploy workflow once a day, only when OPENAI_API_KEY is set and today's file
+  does not exist yet; without the key the site builds without news. A topic with fewer than 5 facts
+  or 2 reports is skipped, never padded.
 """
 from __future__ import annotations
 
@@ -41,23 +42,39 @@ DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 LEVEL = "B1"
 TOPICS = [("politics", "world politics"), ("business", "business and finance"), ("sports", "sports"),
           ("science", "science and technology")]
-MODEL = os.environ.get("NEWS_MODEL", "gpt-5.6-sol")  # the bot's quality tier; ~4 short texts a day cost cents
-SHINGLE = 8
+RESEARCH_MODEL = os.environ.get("NEWS_RESEARCH_MODEL", "gpt-5.6-luna")  # the bot's grounding tier: searches, lists facts
+MODEL = os.environ.get("NEWS_MODEL", "gpt-5.6-sol")  # the bot's quality tier writes the text; ~4 a day cost cents
+MAX_FACT_WORDS = 12  # a "fact" longer than this is a sentence lifted from a page, not a fact
 
-SYSTEM = f"""You write short news texts for adult English learners (CEFR {LEVEL}).
-You get numbered snippets from several news reports on one topic. Pick the ONE story that at least two
-snippets support and that will still make sense tomorrow. Write an ORIGINAL text in your own words:
-never copy or lightly rephrase a sentence from the snippets, no quotation longer than six words, no
-claim the snippets do not support, neutral tone, names of people, places and organisations as in the
-snippets. 180 to 220 words in 4 or 5 short paragraphs of plain sentences ({LEVEL} vocabulary and
-grammar, no headline fragments). The title is a plain sentence, not a headline pun.
-Then: 6 key words or phrases from your text with simple English definitions; 4 multiple-choice
-comprehension questions, each with 4 options, the correct option repeated in "answer" exactly, and a
-one-sentence explanation; and the snippet numbers you used."""
+RESEARCH = f"""You are a research assistant for an English-learning site. Search the web for the main news on the
+given topic from the last two days. Pick the ONE story that at least two independent reports cover and
+that will still make sense tomorrow. Report it as FACTS ONLY: 8 to 14 short fragments of at most
+{MAX_FACT_WORDS} words each (who, what, where, when, numbers, what happens next), each in your own words,
+never a sentence or phrase copied from a page. List every report you used, with its title and URL."""
 
-SCHEMA = {
+FACTS_SCHEMA = {
     "type": "object", "additionalProperties": False,
-    "required": ["title", "paragraphs", "words", "quiz", "sources"],
+    "required": ["story", "facts", "sources"],
+    "properties": {
+        "story": {"type": "string"},
+        "facts": {"type": "array", "items": {"type": "string"}},
+        "sources": {"type": "array", "items": {"type": "object", "additionalProperties": False, "required": ["title", "url"],
+                                               "properties": {"title": {"type": "string"}, "url": {"type": "string"}}}},
+    },
+}
+
+WRITER = f"""You write short news texts for adult English learners (CEFR {LEVEL}). You get a list of facts about one
+news story and nothing else. Write an ORIGINAL text from these facts only: no claim the facts do not
+support, no quotations, neutral tone, names of people, places and organisations as given. 180 to 220
+words in 4 or 5 short paragraphs of plain sentences ({LEVEL} vocabulary and grammar, no headline
+fragments). The title is a plain sentence, not a headline pun.
+Then: 6 key words or phrases from your text with simple English definitions, and 4 multiple-choice
+comprehension questions, each with 4 options, the correct option repeated in "answer" exactly, and a
+one-sentence explanation."""
+
+LESSON_SCHEMA = {
+    "type": "object", "additionalProperties": False,
+    "required": ["title", "paragraphs", "words", "quiz"],
     "properties": {
         "title": {"type": "string"},
         "paragraphs": {"type": "array", "items": {"type": "string"}},
@@ -67,7 +84,6 @@ SCHEMA = {
                                             "required": ["q", "o", "answer", "why"],
                                             "properties": {"q": {"type": "string"}, "o": {"type": "array", "items": {"type": "string"}},
                                                            "answer": {"type": "string"}, "why": {"type": "string"}}}},
-        "sources": {"type": "array", "items": {"type": "integer"}},
     },
 }
 
@@ -85,57 +101,51 @@ def post_json(url: str, body: dict[str, object], headers: dict[str, str], timeou
         return json.load(resp)
 
 
-def search(query: str, key: str) -> list[dict[str, str]]:
-    """Fresh reports on ``query``: title, url and Tavily's snippet (input for the model, never published)."""
-    body = {"api_key": key, "query": f"{query} news", "topic": "news", "days": 2, "search_depth": "basic",
-            "max_results": 8, "include_answer": False}
-    found = post_json("https://api.tavily.com/search", body, {}, timeout=30).get("results") or []
-    return [{"t": clean(str(r.get("title") or "")), "u": str(r["url"]), "c": clean(str(r.get("content") or ""))[:1200]}
-            for r in found if str(r.get("url") or "").startswith(("http://", "https://"))]  # the url is published as a link
-
-
-def write_lesson(query: str, snippets: list[dict[str, str]], key: str) -> dict[str, object]:
-    numbered = "\n\n".join(f"[{i}] {s['t']}\n{s['c']}" for i, s in enumerate(snippets, start=1))
-    body = {
-        "model": MODEL,
-        "input": [{"role": "system", "content": SYSTEM}, {"role": "user", "content": f"Topic: {query}\n\n{numbered}"}],
-        "text": {"format": {"type": "json_schema", "name": "news_lesson", "strict": True, "schema": SCHEMA}},
-        # Low effort: a 200-word text needs no long deliberation, and reasoning tokens are billed as output.
-        # The cap must leave room for them too: a text cut off mid-JSON is a skipped topic, not a cheaper one.
-        "reasoning": {"effort": "low"},
-        "max_output_tokens": 8000,
-    }
-    resp = post_json("https://api.openai.com/v1/responses", body, {"Authorization": f"Bearer {key}"})
+def responses(body: dict[str, object], key: str, timeout: int = 120) -> dict[str, object]:
+    """One Responses API call with a strict JSON schema; returns the parsed JSON of the message text."""
+    resp = post_json("https://api.openai.com/v1/responses", {"store": False, **body}, {"Authorization": f"Bearer {key}"}, timeout)
     text = "".join(part.get("text", "") for item in resp.get("output") or [] if item.get("type") == "message"
                    for part in item.get("content") or [] if part.get("type") == "output_text")
     return json.loads(text)
 
 
-def shingles(text: str, n: int = SHINGLE) -> set[str]:
-    words = re.findall(r"[a-z0-9']+", text.lower())
-    return {" ".join(words[i:i + n]) for i in range(len(words) - n + 1)}
+def research(query: str, key: str) -> dict[str, object]:
+    """Call 1: the hosted web_search reads the reports and hands back facts and links, never their wording.
+
+    Shape as the bot's OpenAiWebSearchProvider sends it (tool + strict schema, tool_choice required, low
+    effort); a hosted search is a model turn, so the budget is minutes, not the seconds of a search API."""
+    out = responses({
+        "model": RESEARCH_MODEL, "instructions": RESEARCH, "input": f"Topic: {query}",
+        "tools": [{"type": "web_search", "search_context_size": "low"}], "tool_choice": "required",
+        "reasoning": {"effort": "low"}, "max_output_tokens": 4000,
+        "text": {"format": {"type": "json_schema", "name": "news_facts", "strict": True, "schema": FACTS_SCHEMA}},
+    }, key, timeout=180)
+    facts = [clean(str(f)) for f in out["facts"] if 1 <= len(str(f).split()) <= MAX_FACT_WORDS]
+    sources, seen = [], set()
+    for src in out["sources"]:
+        url = str(src.get("url") or "")
+        if url.startswith(("http://", "https://")) and url not in seen:  # the url is published as a link
+            seen.add(url)
+            sources.append({"t": clean(str(src.get("title") or "")), "u": url})
+    return {"story": clean(str(out["story"])), "facts": facts, "sources": sources}
 
 
-def overlap(text: str, sources: list[str], n: int = SHINGLE) -> str:
-    """The first run of ``n`` words that ``text`` shares with any source, or "" when it shares none."""
-    mine = shingles(text, n)
-    for source in sources:
-        shared = mine & shingles(source, n)
-        if shared:
-            return min(shared)
-    return ""
+def write_lesson(facts: list[str], key: str) -> dict[str, object]:
+    """Call 2: the writer gets the facts and nothing else: no tools, no page text, so it cannot copy any."""
+    return responses({
+        "model": MODEL, "instructions": WRITER, "input": "Facts:\n" + "\n".join(f"- {f}" for f in facts),
+        # Low effort: a 200-word text needs no long deliberation, and reasoning tokens are billed as output.
+        # The cap must leave room for them too: a text cut off mid-JSON is a skipped topic, not a cheaper one.
+        "reasoning": {"effort": "low"}, "max_output_tokens": 8000,
+        "text": {"format": {"type": "json_schema", "name": "news_lesson", "strict": True, "schema": LESSON_SCHEMA}},
+    }, key)
 
 
-def article(lesson: dict[str, object], snippets: list[dict[str, str]], topic: str) -> dict[str, object]:
-    """Checked, reader-shaped article; raises ValueError for anything thin or too close to a source."""
+def article(lesson: dict[str, object], found: dict[str, object], topic: str) -> dict[str, object]:
+    """Checked, reader-shaped article; raises ValueError for anything thin."""
     paragraphs = [clean(str(p)) for p in lesson["paragraphs"] if str(p).strip()]
-    used = sorted({int(i) for i in lesson["sources"] if 1 <= int(i) <= len(snippets)})
-    if len(paragraphs) < 3 or len(used) < 2:
+    if len(paragraphs) < 3 or len(found["sources"]) < 2:
         raise ValueError("thin lesson")
-    title = clean(str(lesson["title"]))
-    shared = overlap(f"{title} {' '.join(paragraphs)}", [f"{s['t']} {s['c']}" for s in snippets])
-    if shared:
-        raise ValueError(f"copies a source: {shared!r}")
     quiz = []
     for q in lesson["quiz"]:
         options = [clean(str(o)) for o in q["o"]]
@@ -144,9 +154,9 @@ def article(lesson: dict[str, object], snippets: list[dict[str, str]], topic: st
     words = [{"w": clean(str(w["w"])), "d": clean(str(w["d"]))} for w in lesson["words"] if str(w["w"]).strip()]
     if len(quiz) < 3 or len(words) < 3:
         raise ValueError("thin quiz")
-    return {"topic": topic, "title": title, "level": LEVEL,
+    return {"topic": topic, "title": clean(str(lesson["title"])), "level": LEVEL,
             "p": [split_sentences(p) for p in paragraphs], "words": words[:8], "quiz": quiz[:4],
-            "sources": [{"t": snippets[i - 1]["t"], "u": snippets[i - 1]["u"]} for i in used]}
+            "sources": found["sources"]}
 
 
 def generate(date: str, news_dir: Path | None = None) -> Path:
@@ -155,14 +165,14 @@ def generate(date: str, news_dir: Path | None = None) -> Path:
     if path.exists():
         print(f"{path.name} exists; nothing generated.")
         return path
-    openai_key, tavily_key = os.environ["OPENAI_API_KEY"], os.environ["TAVILY_API_KEY"]
+    key = os.environ["OPENAI_API_KEY"]
     articles = []
     for topic, query in TOPICS:
         try:
-            snippets = search(query, tavily_key)
-            if len(snippets) < 3:
-                raise ValueError(f"only {len(snippets)} reports")
-            articles.append(article(write_lesson(query, snippets, openai_key), snippets, topic))
+            found = research(query, key)
+            if len(found["facts"]) < 5 or len(found["sources"]) < 2:
+                raise ValueError(f"only {len(found['facts'])} facts from {len(found['sources'])} reports")
+            articles.append(article(write_lesson(found["facts"], key), found, topic))
         except Exception as exc:  # noqa: BLE001 — one topic failing never loses the others
             print(f"{topic}: skipped ({exc})", file=sys.stderr)
     if not articles:
@@ -243,7 +253,7 @@ def edition_book(locale: dict[str, object], pre: str, edition: dict[str, object]
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Generate today's news lesson.")
-    parser.add_argument("--generate", action="store_true", help="write _data/news/<date>.json (needs OPENAI_API_KEY and TAVILY_API_KEY)")
+    parser.add_argument("--generate", action="store_true", help="write _data/news/<date>.json (needs OPENAI_API_KEY)")
     parser.add_argument("--date", default=dt.datetime.now(dt.timezone.utc).date().isoformat())
     args = parser.parse_args()
     if not DATE_RE.match(args.date):
