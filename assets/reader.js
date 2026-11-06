@@ -253,10 +253,9 @@
     if (spans.length) goPage(pageOf(spans[anchor] || spans[0]), true);
   }
   function pageCount() { return Math.max(1, Math.round((text.scrollWidth + stride - text.clientWidth) / stride)); }
-  function pageOf(el) {
-    const r = el.getClientRects()[0];
-    return r ? Math.floor((r.left - text.getBoundingClientRect().left + text.scrollLeft + 1) / stride) : page;
-  }
+  function pageAt(r) { return Math.floor((r.left - text.getBoundingClientRect().left + text.scrollLeft + 1) / stride); }
+  function pageOf(el) { const r = el.getClientRects()[0]; return r ? pageAt(r) : page; }
+  function onPage(el) { return [...el.getClientRects()].some((r) => pageAt(r) === page); }
   function goPage(n, instant) {
     page = Math.max(0, Math.min(n, pageCount() - 1));
     text.scrollTo({ left: page * stride, behavior: instant ? "auto" : "smooth" });
@@ -390,7 +389,9 @@
   });
 
   /* ---------- controls ---------- */
-  function current() { return active >= 0 ? active : topSentence(); }
+  // The highlighted sentence while it is on the page in view; after paging away from it, the first sentence of this
+  // page. Translate, ▶ and ‹ › act on what the reader is looking at, not on a sentence pages behind.
+  function current() { return active >= 0 && onPage(spans[active]) ? active : topSentence(); }
   prevBtn.addEventListener("click", () => step(-1));
   nextBtn.addEventListener("click", () => step(1));
   function step(d) {
@@ -527,7 +528,10 @@
     line.lang = prefs.target;
     line.dir = "auto";
     spans[i].after(line);
-    fill(line, sentences[i]);
+    // A line asked for under the page's last sentence starts on the next page: turn to it so it is seen.
+    const seen = () => { if (!auto && line.isConnected && pageOf(line) > page) goPage(pageOf(line)); else savePos(); };
+    fill(line, sentences[i], seen);
+    seen();
     updateTrButton();
   }
   function refreshLines(all) {
