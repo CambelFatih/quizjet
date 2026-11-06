@@ -150,7 +150,9 @@ def shell(locale: dict[str, object], title: str, description: str, suffix: str, 
         f'        <a class="brand" href="{pre}/"><img src="/assets/logo-96.png" alt="" width="44" height="44"><span>quizjet</span></a>\n'
         f'        <div class="nav-links">{links}</div>\n'
         f'        <div class="nav-actions">{language_menu(locale, LOCALES, suffix)}'
-        f'<details class="nav-menu"><summary aria-label="{e(c["navMenu"])}"></summary><div class="nav-panel">{links}</div></details></div>\n'
+        f'<details class="nav-menu"><summary aria-label="{e(c["navMenu"])}"></summary><div class="nav-panel">'
+        f'<a class="brand nav-panel-brand" href="{pre}/"><img src="/assets/logo-96.png" alt="" width="44" height="44"><span>quizjet</span></a>'
+        f'{links}</div></details></div>\n'
         "      </nav>\n"
         "    </header>\n"
         f'    <main class="discover page-width" id="top">\n{body}    </main>\n'
