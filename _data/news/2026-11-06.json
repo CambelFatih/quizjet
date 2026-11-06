@@ -1,0 +1,460 @@
+{
+ "date": "2026-11-06",
+ "model": "gpt-5.6-sol",
+ "articles": [
+  {
+   "topic": "politics",
+   "title": "Democrats won control of both chambers of Congress.",
+   "level": "B1",
+   "p": [
+    [
+     "Democrats won control of both chambers of Congress in elections held on Tuesday, November 3, 2026.",
+     "The result marked a major political change in Washington.",
+     "Republicans suffered major losses after they campaigned on President Trump's agenda during the election."
+    ],
+    [
+     "Economic concerns were important to many voters.",
+     "They also expressed dissatisfaction with the president's leadership.",
+     "These concerns helped Democrats take control of both the House of Representatives and the Senate, changing the balance of power for the remainder of Trump's term."
+    ],
+    [
+     "The election result will limit Trump's legislative power.",
+     "Congressional Democrats will now control legislative priorities, investigations, and oversight of the administration.",
+     "This gives them greater power to decide which proposed laws move forward and to examine the work of the government."
+    ],
+    [
+     "World leaders reacted to the result with a mixture of relief and caution.",
+     "Some hoped that Washington might make policy changes, while foreign governments expected possible shifts in its international approach.",
+     "Republican leaders now face debates about their strategy and future direction.",
+     "The political consequences of the result will continue through the 2028 presidential campaign."
+    ]
+   ],
+   "words": [
+    {
+     "w": "chambers",
+     "d": "the two parts of a law-making body, such as the House and Senate"
+    },
+    {
+     "w": "agenda",
+     "d": "a set of plans or political goals"
+    },
+    {
+     "w": "dissatisfaction",
+     "d": "the feeling that something is not good enough"
+    },
+    {
+     "w": "legislative power",
+     "d": "the ability to make or influence laws"
+    },
+    {
+     "w": "oversight",
+     "d": "the work of watching and checking an organization or government"
+    },
+    {
+     "w": "political consequences",
+     "d": "the effects that an event has on politics"
+    }
+   ],
+   "quiz": [
+    {
+     "q": "When did the congressional elections take place?",
+     "o": [
+      "Tuesday, November 3, 2026",
+      "Tuesday, November 3, 2028",
+      "Monday, November 3, 2026",
+      "Tuesday, December 3, 2026"
+     ],
+     "a": 0,
+     "why": "The elections were held on Tuesday, November 3, 2026."
+    },
+    {
+     "q": "What concerns did voters cite?",
+     "o": [
+      "Education and health care",
+      "Economic issues and presidential leadership",
+      "Foreign wars and immigration",
+      "Climate policy and taxes"
+     ],
+     "a": 1,
+     "why": "Voters cited economic concerns and dissatisfaction with the president's leadership."
+    },
+    {
+     "q": "How will the result affect President Trump's power?",
+     "o": [
+      "It will increase his legislative power.",
+      "It will end his term immediately.",
+      "It will limit his legislative power.",
+      "It will give him control of Congress."
+     ],
+     "a": 2,
+     "why": "Democratic control of Congress limits Trump's ability to move his legislative plans forward."
+    },
+    {
+     "q": "What do foreign governments expect?",
+     "o": [
+      "Possible shifts in Washington's international approach",
+      "No changes in Washington's policies",
+      "A new presidential election in 2027",
+      "Republican control of investigations"
+     ],
+     "a": 0,
+     "why": "Foreign governments believe Washington's international approach may change."
+    }
+   ],
+   "sources": [
+    {
+     "t": "The Latest: Voters give Democrats control of Congress in rebuke to Trump",
+     "u": "https://apnews.com/article/ef6199e25927a9ac9f4c18eae0e497cd"
+    },
+    {
+     "t": "2026 midterms: JD Vance, frustrated by his party's defeat, sparks debate among Republicans",
+     "u": "https://www.lemonde.fr/en/international/article/2026/11/05/midterms-2026-jd-vance-frustrated-by-his-party-s-defeat-sparks-debate-among-republicans_6772406_4.html"
+    },
+    {
+     "t": "World leaders who sparred with Trump express relief mixed with caution at Republican election rout",
+     "u": "https://apnews.com/article/7b404b759381379067a52f42e5be578d"
+    }
+   ]
+  },
+  {
+   "topic": "business",
+   "title": "U.S. technology shares lead a steep market decline.",
+   "level": "B1",
+   "p": [
+    [
+     "U.S. stocks suffered their steepest decline in months on Thursday.",
+     "The S&P 500 dropped 4.4 percent, with technology shares leading the losses.",
+     "Semiconductor companies were hit especially hard during the sell-off."
+    ],
+    [
+     "Investor concerns focused on whether spending on artificial intelligence will produce strong enough returns.",
+     "Intel's weaker outlook increased doubts about future demand for chips.",
+     "This added to wider questions about the technology industry's growth expectations."
+    ],
+    [
+     "Companies linked to AI had previously helped drive major gains in the market.",
+     "After Thursday's sharp fall, investors are now reassessing the value of technology companies.",
+     "They are also considering whether earlier expectations for growth were too high."
+    ],
+    [
+     "The U.S. sell-off spread to markets overseas.",
+     "Global markets fell, and European indexes declined during Friday trading.",
+     "The market reaction may continue to influence trading through Friday as investors respond to concerns about technology and AI spending."
+    ],
+    [
+     "Analysts are closely watching upcoming earnings reports from technology companies.",
+     "They will also study company forecasts for signs about future growth and chip demand.",
+     "These reports may provide more information about the strength of the technology industry."
+    ]
+   ],
+   "words": [
+    {
+     "w": "steepest decline",
+     "d": "the largest and fastest fall"
+    },
+    {
+     "w": "technology shares",
+     "d": "parts of technology companies that investors can buy"
+    },
+    {
+     "w": "semiconductor companies",
+     "d": "businesses that make or develop computer chips"
+    },
+    {
+     "w": "returns",
+     "d": "money earned from an investment"
+    },
+    {
+     "w": "outlook",
+     "d": "an expectation about what will happen in the future"
+    },
+    {
+     "w": "reassessing",
+     "d": "considering something again to decide its value or importance"
+    }
+   ],
+   "quiz": [
+    {
+     "q": "How much did the S&P 500 fall on Thursday?",
+     "o": [
+      "2.4 percent",
+      "3.4 percent",
+      "4.4 percent",
+      "5.4 percent"
+     ],
+     "a": 2,
+     "why": "The facts state that the S&P 500 dropped 4.4 percent."
+    },
+    {
+     "q": "Which part of the market led the losses?",
+     "o": [
+      "Energy shares",
+      "Technology shares",
+      "Bank shares",
+      "Retail shares"
+     ],
+     "a": 1,
+     "why": "Technology shares led the market's decline."
+    },
+    {
+     "q": "What increased doubts about demand for chips?",
+     "o": [
+      "European trading",
+      "Intel's weaker outlook",
+      "Higher market values",
+      "Strong company forecasts"
+     ],
+     "a": 1,
+     "why": "Intel's weaker outlook added to investor concerns about chip demand."
+    },
+    {
+     "q": "What are analysts watching next?",
+     "o": [
+      "Government elections",
+      "Oil production reports",
+      "Technology earnings and forecasts",
+      "Changes in European currencies"
+     ],
+     "a": 2,
+     "why": "Analysts are watching upcoming technology earnings reports and company forecasts."
+    }
+   ],
+   "sources": [
+    {
+     "t": "A brutal sell-off for AI stocks sends Wall Street reeling, and the S&P 500 tumbles 4.4%",
+     "u": "https://apnews.com/article/7ee9c212805aa5e70cf34d25aab7a36e"
+    },
+    {
+     "t": "Global shares skid after AI worries send Wall Street tumbling",
+     "u": "https://apnews.com/article/bba6f0bf9035a6e6b1c4fef3e8230b89"
+    },
+    {
+     "t": "On Wall Street, Democrats' midterm victory bursts the AI bubble",
+     "u": "https://www.lemonde.fr/en/economy/article/2026/11/06/on-wall-street-democrats-midterm-victory-bursts-the-ai-bubble_6773164_19.html"
+    }
+   ]
+  },
+  {
+   "topic": "sports",
+   "title": "Baltimore places Lamar Jackson on injured reserve",
+   "level": "B1",
+   "p": [
+    [
+     "Baltimore placed quarterback Lamar Jackson on injured reserve on Thursday, November 5.",
+     "Jackson has an injury to his right thumb and needs surgery.",
+     "The team has not said when it expects him to return."
+    ],
+    [
+     "Jackson suffered the injury during Sunday's loss against Buffalo.",
+     "Under injured-reserve rules, he must miss at least four games.",
+     "This means Baltimore will need to play several games without its regular quarterback, even if his recovery goes well."
+    ],
+    [
+     "Quarterback Tyler Huntley was also placed on injured reserve.",
+     "He has a toe injury that also happened in the game against Buffalo.",
+     "With both Jackson and Huntley unavailable, Baltimore made changes to its group of quarterbacks before its next game."
+    ],
+    [
+     "The team signed quarterback Austin Reed to its active roster.",
+     "The Ravens also elevated emergency players before Thursday night's game.",
+     "These moves gave the team more available players after the two injuries.",
+     "However, Baltimore has shared no further details about Jackson's recovery or a possible return date.",
+     "For now, the injured-reserve rule gives a minimum period for his absence, but it does not show exactly how long he will be out."
+    ]
+   ],
+   "words": [
+    {
+     "w": "injured reserve",
+     "d": "A list for players who cannot play because they are injured."
+    },
+    {
+     "w": "thumb",
+     "d": "The short, thick finger on the side of the hand."
+    },
+    {
+     "w": "surgery",
+     "d": "Medical treatment in which a doctor operates on the body."
+    },
+    {
+     "w": "recovery",
+     "d": "The process of becoming healthy again after an injury."
+    },
+    {
+     "w": "active roster",
+     "d": "The official list of players who are available to play for a team."
+    },
+    {
+     "w": "elevated",
+     "d": "Moved a player to a higher team list for a game."
+    }
+   ],
+   "quiz": [
+    {
+     "q": "What injury does Lamar Jackson have?",
+     "o": [
+      "A right-thumb injury",
+      "A left-hand injury",
+      "A knee injury",
+      "A toe injury"
+     ],
+     "a": 0,
+     "why": "Jackson injured his right thumb and requires surgery."
+    },
+    {
+     "q": "When did Jackson and Huntley suffer their injuries?",
+     "o": [
+      "During Thursday night's game",
+      "During practice on November 5",
+      "During Sunday's loss against Buffalo",
+      "During a win against Buffalo"
+     ],
+     "a": 2,
+     "why": "Both injuries happened in Baltimore's Sunday loss against Buffalo."
+    },
+    {
+     "q": "How many games must Jackson miss at minimum?",
+     "o": [
+      "One game",
+      "Two games",
+      "Three games",
+      "Four games"
+     ],
+     "a": 3,
+     "why": "Injured-reserve rules require Jackson to miss at least four games."
+    },
+    {
+     "q": "Which quarterback did Baltimore sign to its active roster?",
+     "o": [
+      "Tyler Huntley",
+      "Austin Reed",
+      "Lamar Jackson",
+      "A Buffalo player"
+     ],
+     "a": 1,
+     "why": "Baltimore added quarterback Austin Reed to its active roster."
+    }
+   ],
+   "sources": [
+    {
+     "t": "Ravens Place Lamar Jackson and Tyler Huntley on Injured Reserve",
+     "u": "https://www.baltimoreravens.com/news/lamar-jackson-tyler-huntley-injured-reserve-austin-reed-adisa-isaac-jake-moody"
+    },
+    {
+     "t": "Ravens officially place Lamar Jackson, Tyler Huntley on injured reserve",
+     "u": "https://sports.yahoo.com/nfl/breaking-news/article/ravens-officially-place-lamar-jackson-tyler-huntley-on-injured-reserve-212439146.html"
+    }
+   ]
+  },
+  {
+   "topic": "science",
+   "title": "NASA's Swift telescope returned to Earth after a long mission.",
+   "level": "B1",
+   "p": [
+    [
+     "NASA's Swift space telescope reentered Earth's atmosphere on November 4, 2026.",
+     "The reentry happened above northern Sumatra in Indonesia.",
+     "The telescope weighed about 1,450 kilograms.",
+     "A private rescue spacecraft had failed to raise Swift's orbit before its return to Earth."
+    ],
+    [
+     "NASA launched Swift in November 2004.",
+     "Its original mission was to search for and study gamma-ray bursts.",
+     "These were the main target of the observatory, but Swift also studied several other kinds of objects and events in space."
+    ],
+    [
+     "During its years in space, Swift recorded more than 2,000 gamma-ray bursts.",
+     "It also observed about 1,400 supernovas.",
+     "In addition, the telescope studied black holes, asteroids, and comets.",
+     "These observations made its work cover many different areas of space research."
+    ],
+    [
+     "The failed effort to raise Swift's orbit involved a private rescue spacecraft.",
+     "Although this attempt did not save Swift, NASA is considering possible future assistance for another important space telescope, Hubble.",
+     "No decision about such assistance is included in the available information."
+    ]
+   ],
+   "words": [
+    {
+     "w": "reentered",
+     "d": "came back into a place after leaving it"
+    },
+    {
+     "w": "atmosphere",
+     "d": "the layer of gases around Earth"
+    },
+    {
+     "w": "orbit",
+     "d": "the curved path of an object around a planet or star"
+    },
+    {
+     "w": "gamma-ray burst",
+     "d": "a very powerful and short event in space that produces gamma rays"
+    },
+    {
+     "w": "observatory",
+     "d": "a place or machine used to study space"
+    },
+    {
+     "w": "supernova",
+     "d": "a powerful explosion of a star"
+    }
+   ],
+   "quiz": [
+    {
+     "q": "When did Swift reenter Earth's atmosphere?",
+     "o": [
+      "November 4, 2026",
+      "November 4, 2004",
+      "November 14, 2026",
+      "November 24, 2004"
+     ],
+     "a": 0,
+     "why": "The text says Swift reentered Earth's atmosphere on November 4, 2026."
+    },
+    {
+     "q": "Where did Swift reenter the atmosphere?",
+     "o": [
+      "Above northern Sumatra",
+      "Above northern Europe",
+      "Above southern Africa",
+      "Above western Australia"
+     ],
+     "a": 0,
+     "why": "The reentry happened above northern Sumatra in Indonesia."
+    },
+    {
+     "q": "What was Swift's original mission target?",
+     "o": [
+      "Gamma-ray bursts",
+      "Asteroids",
+      "Comets",
+      "Black holes"
+     ],
+     "a": 0,
+     "why": "Swift's original mission was to search for and study gamma-ray bursts."
+    },
+    {
+     "q": "How many supernovas did Swift observe?",
+     "o": [
+      "About 1,400",
+      "About 2,000",
+      "About 1,450",
+      "About 200"
+     ],
+     "a": 0,
+     "why": "The telescope observed approximately 1,400 supernovas during its operations."
+    }
+   ],
+   "sources": [
+    {
+     "t": "NASA space telescope plunges to Earth after failed rescue mission",
+     "u": "https://apnews.com/article/swift-observatory-telescope-hubble-5c19afdd7867dc88d68ea61dba1fbaee"
+    },
+    {
+     "t": "NASA's Swift space telescope crashes back to Earth after failed rescue attempt",
+     "u": "https://www.space.com/space-exploration/missions/nasa-swift-space-telescope-crashes-to-earth"
+    }
+   ]
+  }
+ ]
+}
