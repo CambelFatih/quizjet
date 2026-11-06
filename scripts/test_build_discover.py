@@ -7,6 +7,7 @@ from pathlib import Path
 
 import build_books
 import build_discover as bd
+import build_news
 import import_gutenberg as ig
 
 EXPORT = {
@@ -28,12 +29,13 @@ EXPORT = {
 
 
 def run() -> None:
-    original_blocklist = bd.BLOCKLIST_PATH
+    original_blocklist, original_news = bd.BLOCKLIST_PATH, build_news.NEWS_DIR
     with tempfile.TemporaryDirectory() as tmp:
         tmp_path = Path(tmp)
         blocklist = tmp_path / "blocklist.json"
         blocklist.write_text('["blocked1"]', encoding="utf-8")
         bd.BLOCKLIST_PATH = blocklist
+        build_news.NEWS_DIR = tmp_path / "no-news"  # the repo carries real editions once the workflow has run; this check counts pages without them
         try:
             export = tmp_path / "export.json"
             export.write_text(json.dumps(EXPORT), encoding="utf-8")
@@ -144,6 +146,7 @@ def run() -> None:
                 pass
         finally:
             bd.BLOCKLIST_PATH = original_blocklist
+            build_news.NEWS_DIR = original_news
     check_books(Path(tempfile.mkdtemp()))
     print("build_discover self-check passed.")
 

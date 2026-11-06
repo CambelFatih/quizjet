@@ -46,11 +46,16 @@ RESEARCH_MODEL = os.environ.get("NEWS_RESEARCH_MODEL", "gpt-5.6-luna")  # the bo
 MODEL = os.environ.get("NEWS_MODEL", "gpt-5.6-sol")  # the bot's quality tier writes the text; ~4 a day cost cents
 MAX_FACT_WORDS = 12  # a "fact" longer than this is a sentence lifted from a page, not a fact
 
-RESEARCH = f"""You are a research assistant for an English-learning site. Search the web for the main news on the
-given topic from the last two days. Pick the ONE story that at least two independent reports cover and
-that will still make sense tomorrow. Report it as FACTS ONLY: 8 to 14 short fragments of at most
-{MAX_FACT_WORDS} words each (who, what, where, when, numbers, what happens next), each in your own words,
-never a sentence or phrase copied from a page. List every report you used, with its title and URL."""
+FRESH_DAYS = 2
+# The model has no idea what day it is: the date comes from the runner's clock and goes into the prompt,
+# and every report's publication date comes back so research() can drop the stale ones itself.
+RESEARCH = f"""You are a research assistant for an English-learning site. Today is {{today}} (UTC). Search the web
+for the main news on the given topic published on {{earliest}} or later; check each report's publication
+date and ignore older reports and undated evergreen pages. Pick the ONE story that at least two
+independent reports from that period cover and that will still make sense tomorrow. Report it as FACTS
+ONLY: 8 to 14 short fragments of at most {MAX_FACT_WORDS} words each (who, what, where, when, numbers,
+what happens next), each in your own words, never a sentence or phrase copied from a page. List every
+report you used, with its title, URL and publication date as YYYY-MM-DD (empty if the page shows none)."""
 
 FACTS_SCHEMA = {
     "type": "object", "additionalProperties": False,
@@ -58,8 +63,8 @@ FACTS_SCHEMA = {
     "properties": {
         "story": {"type": "string"},
         "facts": {"type": "array", "items": {"type": "string"}},
-        "sources": {"type": "array", "items": {"type": "object", "additionalProperties": False, "required": ["title", "url"],
-                                               "properties": {"title": {"type": "string"}, "url": {"type": "string"}}}},
+        "sources": {"type": "array", "items": {"type": "object", "additionalProperties": False, "required": ["title", "url", "published"],
+                                               "properties": {"title": {"type": "string"}, "url": {"type": "string"}, "published": {"type": "string"}}}},
     },
 }
 
@@ -109,13 +114,15 @@ def responses(body: dict[str, object], key: str, timeout: int = 120) -> dict[str
     return json.loads(text)
 
 
-def research(query: str, key: str) -> dict[str, object]:
+def research(query: str, key: str, date: str) -> dict[str, object]:
     """Call 1: the hosted web_search reads the reports and hands back facts and links, never their wording.
 
     Shape as the bot's OpenAiWebSearchProvider sends it (tool + strict schema, tool_choice required, low
     effort); a hosted search is a model turn, so the budget is minutes, not the seconds of a search API."""
+    earliest = (dt.date.fromisoformat(date) - dt.timedelta(days=FRESH_DAYS)).isoformat()
     out = responses({
-        "model": RESEARCH_MODEL, "instructions": RESEARCH, "input": f"Topic: {query}",
+        "model": RESEARCH_MODEL, "instructions": RESEARCH.replace("{today}", date).replace("{earliest}", earliest),
+        "input": f"Topic: {query}",
         "tools": [{"type": "web_search", "search_context_size": "low"}], "tool_choice": "required",
         "reasoning": {"effort": "low"}, "max_output_tokens": 4000,
         "text": {"format": {"type": "json_schema", "name": "news_facts", "strict": True, "schema": FACTS_SCHEMA}},
@@ -123,7 +130,9 @@ def research(query: str, key: str) -> dict[str, object]:
     facts = [clean(str(f)) for f in out["facts"] if 1 <= len(str(f).split()) <= MAX_FACT_WORDS]
     sources, seen = [], set()
     for src in out["sources"]:
-        url = str(src.get("url") or "")
+        url, published = str(src.get("url") or ""), str(src.get("published") or "").strip()
+        if DATE_RE.match(published) and published < earliest:
+            continue  # the model was told, but a stale report is dropped here too, not trusted to the prompt
         if url.startswith(("http://", "https://")) and url not in seen:  # the url is published as a link
             seen.add(url)
             sources.append({"t": clean(str(src.get("title") or "")), "u": url})
@@ -169,7 +178,7 @@ def generate(date: str, news_dir: Path | None = None) -> Path:
     articles = []
     for topic, query in TOPICS:
         try:
-            found = research(query, key)
+            found = research(query, key, date)
             if len(found["facts"]) < 5 or len(found["sources"]) < 2:
                 raise ValueError(f"only {len(found['facts'])} facts from {len(found['sources'])} reports")
             articles.append(article(write_lesson(found["facts"], key), found, topic))
