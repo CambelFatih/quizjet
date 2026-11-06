@@ -22,6 +22,12 @@
   const playBtn = $("rd-play"), speedBtn = $("rd-speed"), prevBtn = $("rd-prev"), nextBtn = $("rd-next"), trBtn = $("rd-tr");
   const panel = $("rd-panel"), panelBody = $("rd-panel-body"), setDlg = $("rd-set"), wordsDlg = $("rd-words");
   const quizBox = $("rd-quiz"), tools = root.querySelector(".rd-tools"), pgPrev = $("rd-pg-prev"), pgNext = $("rd-pg-next");
+  const tbox = document.createElement("div"); // the sentence translation: an info box over the text, never in it
+  tbox.className = "rd-tbox";
+  tbox.hidden = true;
+  tbox.innerHTML = '<button type="button" class="rd-x" data-close aria-label="' + esc(C.bkClose) + '">×</button><p></p>';
+  root.append(tbox);
+  const tboxText = tbox.querySelector("p");
 
   function load(key, fallback) { try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback; } catch (_) { return fallback; } }
   function store(key, value) { try { localStorage.setItem(key, JSON.stringify(value)); } catch (_) { /* private mode or full: keep going */ } }
@@ -66,10 +72,10 @@
     layout(); // font, spacing, view and the tip all change what fits on a page
   }
   $("rd-set-form").addEventListener("change", (ev) => {
-    const el = ev.target, oldTarget = prefs.target;
+    const el = ev.target;
     setPref(el.name, el.type === "checkbox" ? el.checked : el.value);
     applyPrefs();
-    if (el.name === "target" || el.name === "autoTr") refreshLines(oldTarget !== prefs.target);
+    if (el.name === "target" || el.name === "autoTr") refreshTr();
     if (el.name === "voice") { pickVoice(); speakFrom(current(), playing && continuous); } // let them hear it
   });
   $("rd-set-form").addEventListener("click", (ev) => {
@@ -230,14 +236,12 @@
     pos.textContent = i + 1 + " / " + spans.length;
     prevBtn.disabled = i === 0;
     nextBtn.disabled = i === spans.length - 1;
-    if (prefs.autoTr && prefs.target) {
-      text.querySelectorAll(".tl.auto").forEach((x) => { if (Number(x.dataset.i) !== i) x.remove(); });
-      if (!lineFor(i)) showLine(i, true);
-    }
-    updateTrButton();
+    if (!tbox.hidden && Number(tbox.dataset.i) !== i) hideTr(); // the box belongs to one sentence
     // follow: 0 = never turn the page (the reader tapped it), 1 = only if the reader isn't paging by hand, 2 = always.
-    if (follow === 2 || (follow === 1 && Date.now() - userScrollAt > 4000)) goPage(pageOf(spans[i]));
+    if (follow === 2 || (follow === 1 && Date.now() - userScrollAt > 4000)) { wholeThrough(i); goPage(pageOf(spans[i])); }
     else savePos();
+    if (prefs.autoTr && prefs.target) showTr(i, true);
+    updateTrButton();
   }
 
   /* ---------- pages ---------- */
@@ -245,18 +249,61 @@
   // column, and turning it is a plain smooth scrollTo sideways. Nothing is measured per page: the browser paginates.
   let page = 0, stride = 1, anchor = 0; // anchor: first sentence of the page, kept across re-layouts (font, rotation)
   function layout() {
+    text.querySelectorAll(".pb").forEach((x) => x.remove());
     text.style.height = Math.max(220, innerHeight - bar.offsetHeight - (text.getBoundingClientRect().top - tools.getBoundingClientRect().top) - 34) + "px";
     const w = text.getBoundingClientRect().width;
     text.style.columnWidth = w + "px";
     stride = w + parseFloat(getComputedStyle(text).columnGap);
-    if (spans.length) goPage(pageOf(spans[anchor] || spans[0]), true);
+    wholeAt = 1;
+    const run = ++wholeRun;
+    if (spans.length) {
+      wholeThrough(Math.min(anchor, spans.length - 1));
+      goPage(pageOf(spans[anchor] || spans[0]), true);
+      setTimeout(() => wholeLater(run), 50);
+    }
+    placeTr();
+  }
+  // Every sentence on one page: one that would run over a page end starts the next page instead (an empty block with a
+  // forced column break goes in front of it). Only a sentence longer than a whole page still continues, from a page top.
+  // Each break costs a re-layout of the chapter (~7 ms in Chromium for the longest, 650 sentences), so pages are made
+  // whole from the front, only as far as needed now (the page in view and the next), and the rest between frames.
+  // A browser without forced column breaks (older Firefox) is detected on the first try and keeps the plain flow, where
+  // narration still turns the page mid-sentence.
+  let wholeAt = 1, wholeRun = 0; // sentences before wholeAt are done
+  function keepWhole(lastPage) {
+    for (; wholeAt < spans.length; wholeAt++) {
+      const r = spans[wholeAt].getClientRects();
+      if (!r.length) continue;
+      const p = pageAt(r[0]);
+      if (p > lastPage) return;
+      if (p === pageAt(r[r.length - 1])) continue;
+      const prev = spans[wholeAt - 1].getClientRects();
+      if (!prev.length || pageAt(prev[prev.length - 1]) !== p) continue; // already first on its page
+      const pb = document.createElement("span");
+      pb.className = "pb";
+      spans[wholeAt].before(pb);
+      if (pageAt(spans[wholeAt].getClientRects()[0]) === p) { pb.remove(); wholeAt = spans.length; return; }
+    }
+  }
+  function wholeThrough(i) { // sentence i and everything before it settled, and the page after it too
+    while (wholeAt <= i && wholeAt < spans.length) keepWhole(pageOf(spans[wholeAt]));
+    keepWhole(pageOf(spans[i]) + 1);
+  }
+  function wholeLater(run) {
+    if (run !== wholeRun) return; // a newer layout took over
+    if (wholeAt >= spans.length) { savePos(); return; } // done: the page count is final
+    keepWhole(pageOf(spans[wholeAt]));
+    setTimeout(() => wholeLater(run), 16);
   }
   function pageCount() { return Math.max(1, Math.round((text.scrollWidth + stride - text.clientWidth) / stride)); }
   function pageAt(r) { return Math.floor((r.left - text.getBoundingClientRect().left + text.scrollLeft + 1) / stride); }
   function pageOf(el) { const r = el.getClientRects()[0]; return r ? pageAt(r) : page; }
   function onPage(el) { return [...el.getClientRects()].some((r) => pageAt(r) === page); }
   function goPage(n, instant) {
-    page = Math.max(0, Math.min(n, pageCount() - 1));
+    keepWhole(n + 1);
+    n = Math.max(0, Math.min(n, pageCount() - 1));
+    if (n !== page) hideTr(); // the box belongs to the page it was opened on
+    page = n;
     text.scrollTo({ left: page * stride, behavior: instant ? "auto" : "smooth" });
     const t = tools.getBoundingClientRect().top; // keep the toolbar at the top so the page fills the screen
     if (Math.abs(t - 8) > 2) scrollBy(0, t - 8);
@@ -264,6 +311,7 @@
   }
   function turn(d) {
     userScrollAt = Date.now();
+    keepWhole(page + d + 1);
     if (page + d >= pageCount()) { if (chapter < D.chapters.length) location.hash = chapter + 1; return; }
     goPage(page + d);
   }
@@ -352,6 +400,7 @@
   }
   function loadChapter(n) {
     stop();
+    hideTr();
     chapter = n;
     chSel.value = String(n);
     active = -1;
@@ -400,7 +449,7 @@
     if (playing) speakFrom(i, continuous);
   }
   $("rd-this").addEventListener("click", () => speakFrom(current(), false));
-  trBtn.addEventListener("click", () => { setActive(current(), 0); showLine(active, false); });
+  trBtn.addEventListener("click", () => { setActive(current(), 0); showTr(active, false); });
   playBtn.addEventListener("click", () => {
     if (playing && continuous) { stop(); return; }
     userScrollAt = 0; // pressing play means "turn the pages with the voice", even right after paging by hand
@@ -420,7 +469,7 @@
     if (!s) return;
     const i = Number(s.dataset.i);
     const btn = ev.target.closest(".sb");
-    if (btn) { setActive(i, 0); btn.classList.contains("sb-play") ? speakFrom(i, false) : showLine(i, false); return; }
+    if (btn) { setActive(i, 0); btn.classList.contains("sb-play") ? speakFrom(i, false) : showTr(i, false); return; }
     const w = ev.target.closest(".w");
     if (w) { openWord(w, i); return; } // the word panel never moves the reading position
     setActive(i, 0);
@@ -498,7 +547,12 @@
     el.hidden = false;
     el.textContent = C.bkLoading;
     el.trQuery = [q, done];
-    translate(q).then((res) => { el.textContent = res.text; if (done) done(res); }, (err) => {
+    translate(q).then((res) => {
+      if (el.trQuery[0] !== q) return; // the box moved on to another sentence meanwhile
+      el.textContent = res.text;
+      if (done) done(res);
+    }, (err) => {
+      if (el.trQuery[0] !== q) return;
       el.innerHTML = esc(C.bkTrError) + ' <button type="button" class="rd-mini" data-retry>' + esc(C.bkRetry) + "</button>" + why(err);
     });
   }
@@ -512,33 +566,52 @@
     fill(el, ...el.trQuery);
     return true;
   }
-  // Inline translation line right under a sentence (EWA-style), toggled by 文A; "auto" lines follow the highlight.
-  function lineFor(i) {
-    const n = spans[i] && spans[i].nextElementSibling;
-    return n && n.classList.contains("tl") ? n : null;
-  }
-  function showLine(i, auto) {
+  // The translation of one sentence shows in an info box over the text, just under the sentence (above it when there
+  // is no room below). It never goes into the text, so it cannot push anything onto another page. 文A toggles it,
+  // × or a tap on another sentence closes it, and so does a page turn; "auto" boxes follow the highlight.
+  function showTr(i, auto) {
     if (!prefs.target) { if (!setDlg.open) setDlg.showModal(); return; } // English page: pick a language first
-    const old = lineFor(i);
-    if (old) { if (!auto) old.remove(); updateTrButton(); return; }
-    const line = document.createElement("span");
-    line.className = auto ? "tl auto" : "tl";
-    line.dataset.i = i;
-    line.lang = prefs.target;
-    line.dir = "auto";
-    spans[i].after(line);
-    // A line asked for under the page's last sentence starts on the next page: turn to it so it is seen.
-    const seen = () => { if (!auto && line.isConnected && pageOf(line) > page) goPage(pageOf(line)); else savePos(); };
-    fill(line, sentences[i], seen);
-    seen();
+    if (!tbox.hidden && Number(tbox.dataset.i) === i) { if (!auto) hideTr(); return; }
+    hideTr();
+    tbox.dataset.i = i;
+    tbox.lang = prefs.target;
+    tbox.dir = "auto";
+    tbox.hidden = false;
+    spans[i].classList.add("tr");
+    fill(tboxText, sentences[i], placeTr);
+    placeTr();
     updateTrButton();
   }
-  function refreshLines(all) {
-    text.querySelectorAll(all ? ".tl" : ".tl.auto").forEach((x) => x.remove());
-    if (prefs.autoTr && prefs.target && active >= 0) showLine(active, true);
+  function hideTr() {
+    if (tbox.hidden) return;
+    tbox.hidden = true;
+    if (spans[Number(tbox.dataset.i)]) spans[Number(tbox.dataset.i)].classList.remove("tr");
     updateTrButton();
   }
-  function updateTrButton() { trBtn.setAttribute("aria-pressed", String(active >= 0 && !!lineFor(active))); }
+  function placeTr() {
+    if (tbox.hidden) return;
+    const s = spans[Number(tbox.dataset.i)], p = s ? pageOf(s) : -1;
+    // Only the vertical position is read: it does not change while a page slides sideways.
+    const rs = s ? [...s.getClientRects()].filter((r) => pageAt(r) === p) : [];
+    if (!rs.length) { hideTr(); return; }
+    const box = text.getBoundingClientRect(), base = root.getBoundingClientRect();
+    const top = Math.min(...rs.map((r) => r.top)), bottom = Math.max(...rs.map((r) => r.bottom));
+    tbox.style.left = box.left - base.left + "px";
+    tbox.style.width = box.width + "px";
+    tbox.style.maxHeight = Math.round(box.height / 2) + "px";
+    const h = tbox.offsetHeight;
+    let y = bottom + 6;
+    if (y + h > box.bottom) y = top - 6 - h >= box.top ? top - 6 - h : box.bottom - h;
+    tbox.style.top = y - base.top + "px";
+  }
+  tbox.addEventListener("click", (ev) => { if (ev.target.closest("[data-close]")) hideTr(); else retried(ev); });
+  function refreshTr() {
+    const open = tbox.hidden ? -1 : Number(tbox.dataset.i);
+    hideTr();
+    const i = open >= 0 ? open : prefs.autoTr ? active : -1;
+    if (prefs.target && i >= 0) showTr(i, true);
+  }
+  function updateTrButton() { trBtn.setAttribute("aria-pressed", String(!tbox.hidden && Number(tbox.dataset.i) === active)); }
 
   /* ---------- dictionary ---------- */
   const defCache = new Map();
