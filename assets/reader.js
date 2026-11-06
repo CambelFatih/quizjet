@@ -26,7 +26,7 @@
   function store(key, value) { try { localStorage.setItem(key, JSON.stringify(value)); } catch (_) { /* private mode or full: keep going */ } }
 
   const POS_KEY = "qj.book." + D.slug, PREFS_KEY = "qj.reader", WORDS_KEY = "qj.words", TR_KEY = "qj.tr";
-  const RATES = [0.6, 0.8, 1, 1.2];
+  const RATES = [0.6, 0.8, 1, 1.2, 1.5];
   const dark = window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches;
   // Only what the reader explicitly chose is stored; everything else is a default worked out on each load.
   // The first version stored every default on the first visit, so a visit to the English page froze an
@@ -34,7 +34,7 @@
   const chosen = load(PREFS_KEY, {});
   if (chosen.v !== 2) { delete chosen.target; chosen.v = 2; }
   const prefs = Object.assign({ font: 19, spacing: "1.8", theme: dark ? "dark" : "light", view: "book", rate: 1,
-    target: defaultTarget(), autoTr: false, tipSeen: false }, chosen);
+    target: defaultTarget(), autoTr: false, tipSeen: false, voice: "" }, chosen);
   function setPref(name, value) { prefs[name] = value; chosen[name] = value; store(PREFS_KEY, chosen); }
   // The page language, or on the English page the phone's own language when the reader offers it.
   function defaultTarget() {
@@ -48,7 +48,7 @@
     return "";
   }
   let words = load(WORDS_KEY, []);
-  let chapter = 1, sentences = [], spans = [], active = -1, playing = false, continuous = false, run = 0, userScrollAt = 0;
+  let chapter = 1, sentences = [], spans = [], paraStarts = new Set(), active = -1, playing = false, continuous = false, run = 0, userScrollAt = 0;
 
   /* ---------- settings ---------- */
   function applyPrefs() {
@@ -68,6 +68,7 @@
     setPref(el.name, el.type === "checkbox" ? el.checked : el.value);
     applyPrefs();
     if (el.name === "target" || el.name === "autoTr") refreshLines(oldTarget !== prefs.target);
+    if (el.name === "voice") { pickVoice(); speakFrom(current(), playing && continuous); } // let them hear it
   });
   $("rd-set-form").addEventListener("click", (ev) => {
     const b = ev.target.closest("[data-font]");
@@ -77,11 +78,22 @@
 
   /* ---------- speech ---------- */
   const synth = window.speechSynthesis;
-  let voice = null;
+  // macOS/iOS list joke and robot voices as English; they must never read a book.
+  const NOVELTY = /^(albert|bad news|bahh|bells|boing|bubbles|cellos|good news|jester|organ|superstar|trinoids|whisper|wobble|zarvox|fred|junior|kathy|ralph|eddy|flo|grandma|grandpa|reed|rocko|sandy|shelley)\b/i;
+  // ponytail: the Web Speech API reports no quality, so this reads the names (Edge "Online (Natural)",
+  // Apple "...enhanced/premium..." in voiceURI, Chrome "Google ..."); the reader can override it in settings.
+  function score(v) {
+    const id = v.name + " " + v.voiceURI;
+    return (/natural|neural|premium|enhanced/i.test(id) ? 40 : 0) + (/google/i.test(id) ? 20 : 0) + (/GB/i.test(v.lang) ? 5 : 0)
+      + (v.localService ? 2 : 0) - (/compact/i.test(id) ? 10 : 0) - (NOVELTY.test(v.name) || /espeak/i.test(id) ? 50 : 0);
+  }
+  let voice = null, voices = [], utterance = null; // utterance: Chrome drops onend when the object is garbage-collected
   function pickVoice() {
-    const en = synth.getVoices().filter((v) => /^en([-_]|$)/i.test(v.lang));
-    // Local voices first: Chrome's network voices stop mid-sentence after ~15 s.
-    voice = en.find((v) => /GB/i.test(v.lang) && v.localService) || en.find((v) => v.localService) || en[0] || null;
+    voices = synth.getVoices().filter((v) => /^en([-_]|$)/i.test(v.lang)).sort((a, b) => score(b) - score(a));
+    voice = voices.find((v) => v.voiceURI === prefs.voice) || voices[0] || null;
+    $("rd-set-form").elements.voice.replaceChildren(new Option(C.bkVoiceAuto, ""),
+      ...voices.filter((v) => score(v) > -40).map((v) => new Option(v.name + " (" + v.lang + ")", v.voiceURI)));
+    $("rd-set-form").elements.voice.value = voice && voice.voiceURI === prefs.voice ? prefs.voice : "";
   }
   if (synth && window.SpeechSynthesisUtterance) {
     pickVoice();
@@ -89,15 +101,30 @@
     else synth.onvoiceschanged = pickVoice;
   } else {
     $("rd-player").hidden = true;
+    $("rd-voice").hidden = true;
     $("rd-this").disabled = true;
     $("rd-novoice").hidden = false;
   }
   function utter(textToSay) {
-    const u = new SpeechSynthesisUtterance(textToSay);
+    const u = utterance = new SpeechSynthesisUtterance(textToSay);
     u.lang = voice ? voice.lang : "en-GB";
     if (voice) u.voice = voice;
     u.rate = prefs.rate;
     return u;
+  }
+  // Chrome's network voices go silent about 15 s into an utterance, so a long sentence reaches them in
+  // clause-sized parts (start offsets into the sentence). Local voices get the whole sentence: better intonation.
+  function partsOf(s) {
+    const starts = [0], max = Math.round(180 * Math.min(prefs.rate, 1));
+    if (!voice || voice.localService) return starts;
+    for (let from = 0; s.length - from > max;) {
+      const win = s.slice(from, from + max);
+      let cut = Math.max(win.lastIndexOf("; "), win.lastIndexOf(": "), win.lastIndexOf(", "), win.lastIndexOf("—"));
+      if (cut < max / 3) cut = win.lastIndexOf(" ");
+      from += cut > 0 ? cut + 1 : max;
+      starts.push(from);
+    }
+    return starts;
   }
   function stop() {
     run++;
@@ -115,20 +142,30 @@
     continuous = all;
     setActive(i, 1);
     updatePlay();
-    const u = utter(sentences[i]);
-    u.onboundary = (ev) => { if (mine === run && ev.name !== "sentence") markWord(ev.charIndex); };
-    u.onend = () => {
-      if (mine !== run) return; // a newer command already took over
-      markWord(-1);
-      if (continuous && i + 1 < sentences.length) { speakFrom(i + 1, true); return; }
-      playing = false;
-      updatePlay();
-      if (continuous) $("rd-quiz").scrollIntoView({ block: "center", behavior: "smooth" }); // chapter done: offer the quiz
+    const s = sentences[i], starts = partsOf(s);
+    const say = (k) => {
+      const u = utter(s.slice(starts[k], starts[k + 1]));
+      u.onboundary = (ev) => { if (mine === run && ev.name !== "sentence") markWord(starts[k] + ev.charIndex); };
+      u.onend = () => {
+        if (mine !== run) return; // a newer command already took over
+        if (k + 1 < starts.length) { say(k + 1); return; }
+        markWord(-1);
+        if (continuous && i + 1 < sentences.length) {
+          // A narrator breathes between paragraphs; back-to-back sentences across one sound rushed.
+          if (paraStarts.has(i + 1)) setTimeout(() => { if (mine === run) speakFrom(i + 1, true); }, 450 / prefs.rate);
+          else speakFrom(i + 1, true);
+          return;
+        }
+        playing = false;
+        updatePlay();
+        if (continuous) $("rd-quiz").scrollIntoView({ block: "center", behavior: "smooth" }); // chapter done: offer the quiz
+      };
+      u.onerror = () => { if (mine === run) { playing = false; updatePlay(); } };
+      synth.speak(u);
     };
-    u.onerror = () => { if (mine === run) { playing = false; updatePlay(); } };
     // Safari can drop an utterance queued in the same tick as cancel(); a short gap avoids it.
-    if (busy) setTimeout(() => { if (mine === run) synth.speak(u); }, 60);
-    else synth.speak(u);
+    if (busy) setTimeout(() => { if (mine === run) say(0); }, 60);
+    else say(0);
   }
   function sayWord(w) { if (!synth) return; stop(); synth.speak(utter(w)); }
   function updatePlay() {
@@ -205,7 +242,9 @@
     const frag = document.createDocumentFragment();
     sentences = [];
     spans = [];
+    paraStarts = new Set();
     for (const para of data.p) {
+      paraStarts.add(sentences.length);
       const p = document.createElement("p");
       for (const s of para) {
         const span = document.createElement("span");

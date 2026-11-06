@@ -165,6 +165,8 @@ def reader_page(locale: dict[str, object], pre: str, book: dict[str, object]) ->
           <fieldset><legend>{e(c["bkSpacing"])}</legend>{radios("spacing", [("1.5", "1.5"), ("1.8", "1.8"), ("2.1", "2.1")])}</fieldset>
           <fieldset><legend>{e(c["bkTheme"])}</legend>{radios("theme", [("light", c["bkLight"]), ("sepia", c["bkSepia"]), ("dark", c["bkDark"])])}</fieldset>
           <fieldset><legend>{e(c["bkView"])}</legend>{radios("view", [("book", c["bkViewBook"]), ("study", c["bkViewStudy"])])}</fieldset>
+          <div id="rd-voice"><label class="rd-field">{e(c["bkVoice"])} <select name="voice" dir="ltr"><option value="">{e(c["bkVoiceAuto"])}</option></select></label>
+          <p class="rd-hint">{e(c["bkVoiceHint"])}</p></div>
           <label class="rd-field">{e(c["bkTarget"])} <select name="target">{target_options}</select></label>
           <label class="rd-check"><input type="checkbox" name="autoTr"> {e(c["bkAutoTr"])}</label>
         </form></dialog>
