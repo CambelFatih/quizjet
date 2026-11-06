@@ -113,7 +113,8 @@ def run() -> None:
             de_quiz = (out / "de" / "q" / "good_key-1" / "index.html").read_text(encoding="utf-8")
             assert 'href="/privacy.html"' in de_quiz and 'href="/de/privacy.html"' not in de_quiz, "legal pages stay EN/TR"
             assert "Datenschutz (EN)</a>" in de_quiz and " (EN)</a>" not in tr_quiz and " (EN)</a>" not in quiz, "and the other languages say so"
-            assert " (EN)</a>" in (out / "de" / "index.html").read_text(encoding="utf-8") and " (EN)</a>" not in landing_tr
+            assert " (EN)</a>" in (out / "de" / "index.html").read_text(encoding="utf-8")
+            assert " (EN)</a>" not in (out / "tr" / "index.html").read_text(encoding="utf-8")
             ar_quiz = (out / "ar" / "q" / "good_key-1" / "index.html").read_text(encoding="utf-8")
             assert '<html lang="ar" dir="rtl">' in ar_quiz and "→ " in ar_quiz, "RTL back arrow points right"
             assert sum(1 for _ in out.rglob("q/good_key-1/index.html")) == 18
