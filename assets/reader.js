@@ -288,6 +288,8 @@
   });
   let resizeTimer = 0;
   addEventListener("resize", () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(layout, 150); });
+  // The web fonts can arrive after the first layout and re-wrap the title, pushing the page under the bottom bar.
+  if (document.fonts) document.fonts.ready.then(() => { if (spans.length) layout(); });
   ["wheel", "touchmove", "keydown"].forEach((t) => addEventListener(t, () => { userScrollAt = Date.now(); }, { passive: true }));
 
   /* ---------- chapter loading ---------- */
