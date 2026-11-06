@@ -7,22 +7,38 @@
     <meta name="robots" content="noindex">
     <title>Page not found — QuizJet</title>
     <link rel="icon" type="image/png" href="/assets/logo-96.png">
-    <link rel="stylesheet" href="/styles.css?v=2bd10d4a0048">
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+    <link rel="manifest" href="/manifest.webmanifest">
+    <link rel="preload" href="/assets/fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/assets/fonts/manrope-700-latin.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="/styles.css?v=46ccbccfabb8">
   </head>
   <body>
     <header class="site-header">
-      <nav class="navigation page-width">
+      <nav class="navigation page-width" aria-label="Main menu">
         <a class="brand" href="/"><img src="/assets/logo-96.png" alt="" width="44" height="44"><span>quizjet</span></a>
       </nav>
     </header>
-    <main class="discover page-width">
-      <h1>Page not found</h1>
-      <p class="discover-lead">This page does not exist or is no longer public. A quiz leaves quizjet.app when its owner turns Discover off.</p>
+    <main class="discover page-width" id="top">
+      <h1 id="nf-title">Page not found</h1>
+      <p class="discover-lead" id="nf-body">This page does not exist or is no longer public. A quiz leaves quizjet.app when its owner turns Discover off.</p>
       <div class="quiz-actions">
-        <a class="button button-dark" href="/discover/">Browse quizzes</a>
-        <a class="button button-light" href="/books/">Browse books</a>
-        <a class="button button-light" href="/news/">News</a>
+        <a class="button button-dark" id="nf-quizzes" href="/discover/">Browse quizzes</a>
+        <a class="button button-light" id="nf-books" href="/books/">Browse books</a>
+        <a class="button button-light" id="nf-news" href="/news/">News</a>
       </div>
     </main>
+    <script type="application/json" id="nf-i18n">{"tr":{"lang":"tr","dir":"ltr","title":"Sayfa bulunamadı","body":"Bu sayfa yok ya da artık herkese açık değil. Sahibi Keşfet'i kapattığında quiz quizjet.app'ten kalkar.","quizzes":"Quiz'lere göz at","books":"Kitaplara göz at","news":"Haberler"},"ca":{"lang":"ca","dir":"ltr","title":"Pàgina no trobada","body":"Aquesta pàgina no existeix o ja no és pública. Un qüestionari desapareix de quizjet.app quan el seu creador desactiva Descobreix.","quizzes":"Explora els qüestionaris","books":"Explora els llibres","news":"Notícies"},"de":{"lang":"de","dir":"ltr","title":"Seite nicht gefunden","body":"Diese Seite existiert nicht oder ist nicht mehr öffentlich. Ein Quiz verschwindet von quizjet.app, wenn sein Ersteller Entdecken ausschaltet.","quizzes":"Quizze durchstöbern","books":"Bücher ansehen","news":"Nachrichten"},"it":{"lang":"it","dir":"ltr","title":"Pagina non trovata","body":"Questa pagina non esiste o non è più pubblica. Un quiz sparisce da quizjet.app quando chi l'ha creato disattiva Scopri.","quizzes":"Sfoglia i quiz","books":"Sfoglia i libri","news":"Notizie"},"ms":{"lang":"ms","dir":"ltr","title":"Halaman tidak ditemui","body":"Halaman ini tidak wujud atau tidak lagi umum. Kuiz hilang dari quizjet.app apabila pemiliknya mematikan Teroka.","quizzes":"Layari kuiz","books":"Lihat buku","news":"Berita"},"pl":{"lang":"pl","dir":"ltr","title":"Nie znaleziono strony","body":"Ta strona nie istnieje lub nie jest już publiczna. Quiz znika z quizjet.app, gdy jego autor wyłączy Odkrywaj.","quizzes":"Przeglądaj quizy","books":"Przeglądaj książki","news":"Wiadomości"},"ru":{"lang":"ru","dir":"ltr","title":"Страница не найдена","body":"Этой страницы нет или она больше не публичная. Квиз исчезает с quizjet.app, когда его автор выключает «Каталог».","quizzes":"Смотреть квизы","books":"Смотреть книги","news":"Новости"},"uk":{"lang":"uk","dir":"ltr","title":"Сторінку не знайдено","body":"Цієї сторінки немає або вона більше не публічна. Вікторина зникає з quizjet.app, коли її автор вимикає «Каталог».","quizzes":"Переглянути вікторини","books":"Переглянути книжки","news":"Новини"},"ar":{"lang":"ar","dir":"rtl","title":"الصفحة غير موجودة","body":"هذه الصفحة غير موجودة أو لم تعد عامة. يختفي الاختبار من quizjet.app عندما يوقف صاحبه خاصية «اكتشف».","quizzes":"تصفّح الاختبارات","books":"تصفح الكتب","news":"الأخبار"},"nl":{"lang":"nl","dir":"ltr","title":"Pagina niet gevonden","body":"Deze pagina bestaat niet of is niet meer openbaar. Een quiz verdwijnt van quizjet.app zodra de maker Ontdek uitzet.","quizzes":"Bekijk quizzen","books":"Bekijk boeken","news":"Nieuws"},"fr":{"lang":"fr","dir":"ltr","title":"Page introuvable","body":"Cette page n'existe pas ou n'est plus publique. Un quiz disparaît de quizjet.app quand son auteur désactive Découvrir.","quizzes":"Parcourir les quiz","books":"Parcourir les livres","news":"Actualités"},"id":{"lang":"id","dir":"ltr","title":"Halaman tidak ditemukan","body":"Halaman ini tidak ada atau sudah tidak publik. Kuis hilang dari quizjet.app saat pembuatnya mematikan Jelajahi.","quizzes":"Jelajahi kuis","books":"Lihat buku","news":"Berita"},"ko":{"lang":"ko","dir":"ltr","title":"페이지를 찾을 수 없습니다","body":"이 페이지는 존재하지 않거나 더 이상 공개되지 않습니다. 퀴즈는 만든 사람이 둘러보기를 끄면 quizjet.app에서 사라집니다.","quizzes":"퀴즈 둘러보기","books":"책 둘러보기","news":"뉴스"},"fa":{"lang":"fa","dir":"rtl","title":"صفحه پیدا نشد","body":"این صفحه وجود ندارد یا دیگر عمومی نیست. وقتی سازندهٔ آزمون گزینهٔ «کشف کنید» را خاموش کند، آزمون از quizjet.app حذف می‌شود.","quizzes":"مرور آزمون‌ها","books":"دیدن کتاب‌ها","news":"اخبار"},"pt-br":{"lang":"pt-BR","dir":"ltr","title":"Página não encontrada","body":"Esta página não existe ou não é mais pública. Um quiz some do quizjet.app quando o criador desativa Descobrir.","quizzes":"Ver quizzes","books":"Ver livros","news":"Notícias"},"es":{"lang":"es","dir":"ltr","title":"Página no encontrada","body":"Esta página no existe o ya no es pública. Un quiz desaparece de quizjet.app cuando su creador desactiva Descubrir.","quizzes":"Explorar quizzes","books":"Ver libros","news":"Noticias"},"uz":{"lang":"uz","dir":"ltr","title":"Sahifa topilmadi","body":"Bu sahifa mavjud emas yoki endi ochiq emas. Muallif «Kashf qilish» funksiyasini oʻchirsa, viktorina quizjet.app dan yoʻqoladi.","quizzes":"Viktorinalarni ko‘rish","books":"Kitoblarni ko'rish","news":"Yangiliklar"}}</script>
+    <script>(function () {
+  var seg = location.pathname.split("/")[1] || "", all = JSON.parse(document.getElementById("nf-i18n").textContent), t = all[seg];
+  if (!t) return;
+  var pre = "/" + seg, root = document.documentElement;
+  root.lang = t.lang; root.dir = t.dir; document.title = t.title + " — QuizJet";
+  document.getElementById("nf-title").textContent = t.title;
+  document.getElementById("nf-body").textContent = t.body;
+  [["nf-quizzes", "quizzes", "/discover/"], ["nf-books", "books", "/books/"], ["nf-news", "news", "/news/"]].forEach(function (x) {
+    var a = document.getElementById(x[0]); a.textContent = t[x[1]]; a.href = pre + x[2];
+  });
+})();</script>
   </body>
 </html>

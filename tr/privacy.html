@@ -11,16 +11,21 @@
     <link rel="alternate" hreflang="tr" href="https://quizjet.app/tr/privacy.html">
     <link rel="alternate" hreflang="x-default" href="https://quizjet.app/privacy.html">
     <link rel="icon" type="image/png" href="/assets/logo-96.png">
-    <link rel="stylesheet" href="/styles.css?v=2bd10d4a0048">
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+    <link rel="manifest" href="/manifest.webmanifest">
+    <link rel="preload" href="/assets/fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/assets/fonts/manrope-700-latin.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="/styles.css?v=46ccbccfabb8">
   </head>
   <body>
+    <a class="skip-link" href="#top">İçeriğe atla</a>
     <header class="site-header">
-      <nav class="navigation page-width">
+      <nav class="navigation page-width" aria-label="Ana menü">
         <a class="brand" href="/tr/"><img src="/assets/logo-96.png" alt="" width="44" height="44"><span>quizjet</span></a>
         <div class="nav-actions legal-switch"><a href="/privacy.html" lang="en" hreflang="en">EN</a></div>
       </nav>
     </header>
-    <main class="legal page-width">
+    <main class="legal page-width" id="top">
       <p class="legal-updated">Son güncelleme: <time datetime="2026-11-06">2026-11-06</time></p>
       <h1>Gizlilik Politikası</h1>
       <p>Bu politika, QuizJet Telegram botunun (<a href="https://t.me/QuizJetBot">@QuizJetBot</a>), Mini App'in ve bu web sitesinin (quizjet.app) hangi verileri neden işlediğini ve sizin hangi seçeneklere sahip olduğunuzu açıklar. Sorularınız için: <a href="mailto:support@quizjet.app">support@quizjet.app</a>.</p>
@@ -79,7 +84,7 @@
       <p>QuizJet, ülkesinde Telegram'ı kullanmak için gereken asgari yaşın altındaki kişilere yönelik değildir.</p>
 
       <h2>8. Bu web sitesi</h2>
-      <p>quizjet.app, GitHub Pages üzerinde barındırılan statik bir web sitesidir. Çerez kullanmaz ve analiz aracı çalıştırmaz. Yazı tiplerini Google Fonts'tan yükler; bu yüzden bir sayfayı açtığınızda tarayıcınız IP adresinizi Google'a gönderir. Barındırıcı olarak GitHub teknik istek verilerini kaydedebilir.</p>
+      <p>quizjet.app, GitHub Pages üzerinde barındırılan statik bir web sitesidir. Çerez kullanmaz ve analiz aracı çalıştırmaz. Yazı tipleri üçüncü bir taraftan değil, quizjet.app'in kendisinden yüklenir. Barındırıcı olarak GitHub teknik istek verilerini kaydedebilir.</p>
       <p>Kitaplar ve Haberler sayfalarındaki okuyucu (quizjet.app/books/ ve quizjet.app/news/) okuma konumunuzu, ayarlarınızı, kaydettiğiniz kelimeleri ve son çevirileri yalnızca tarayıcınızın yerel depolamasında tutar; bunlar QuizJet'e ulaşmaz. Bir kelimeye baktığınızda ya da bir cümleyi çevirdiğinizde tarayıcınız o kelimeyi veya cümleyi IP adresinizle birlikte ücretsiz sözlük hizmeti dictionaryapi.dev'e ve çeviri hizmeti Google Çeviri'ye gönderir. Google yanıt vermezse, tarayıcınızda kuruluysa cihaz içi çevirmen (Chrome'un bazı sürümleri) kullanılır ve metin cihazınızdan çıkmaz; o da yoksa metin MyMemory'ye (translated.net) gider. Sesli okuma cihazınızın kendi konuşma motorunu kullanır; bazı cihazlarda bu, tarayıcınızın ya da işletim sisteminizin çevrimiçi bir hizmeti olabilir. Her haber dersi yazılırken yararlanılan haberlere bağlantı verir; bir bağlantıyı açtığınızda o yayıncının sitesine, onun gizlilik politikasına tabi olarak gidersiniz.</p>
 
       <h2>9. Değişiklikler</h2>
@@ -88,7 +93,7 @@
     <footer class="site-footer">
       <div class="footer-inner page-width">
         <a class="brand footer-brand" href="/tr/"><img src="/assets/logo-96.png" alt="" width="36" height="36"><span>quizjet</span></a>
-        <nav class="footer-legal"><a href="/tr/privacy.html" aria-current="page">Gizlilik</a><a href="/tr/terms.html">Kullanım şartları</a><a href="/tr/support.html">Destek</a></nav>
+        <nav class="footer-legal" aria-label="Yasal"><a href="/tr/privacy.html" aria-current="page">Gizlilik</a><a href="/tr/terms.html">Kullanım şartları</a><a href="/tr/support.html">Destek</a></nav>
       </div>
     </footer>
   </body>

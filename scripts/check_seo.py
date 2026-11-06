@@ -7,7 +7,9 @@ import sys
 import xml.etree.ElementTree as ET
 from html.parser import HTMLParser
 from pathlib import Path
-from urllib.parse import unquote, urljoin, urlsplit
+from urllib.parse import parse_qs, unquote, urljoin, urlsplit
+
+from build_locales import START_PAYLOADS
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -206,11 +208,31 @@ def check() -> list[str]:
                 alternates[hreflang] = href
         all_hreflang[path] = alternates
 
+        # One structured-data block per landing page (it was dropped once in a template rewrite and nobody noticed).
+        if len(parser.jsonld) != 1:
+            fail(errors, path, f"expected exactly one JSON-LD block, found {len(parser.jsonld)}")
         for jsonld in parser.jsonld:
             try:
-                json.loads(jsonld)
-            except json.JSONDecodeError as exc:
+                graph = json.loads(jsonld).get("@graph", [])
+                types = {item.get("@type") for item in graph if isinstance(item, dict)}
+                if not {"WebSite", "Organization", "SoftwareApplication"} <= types:
+                    fail(errors, path, f"JSON-LD graph must describe WebSite, Organization and SoftwareApplication, got {sorted(filter(None, types))}")
+            except (json.JSONDecodeError, AttributeError) as exc:
                 fail(errors, path, f"invalid JSON-LD: {exc}")
+        title_length, description_length = len(parser.title.strip()), len(parser.meta.get("description", [""])[0])
+        if not 25 <= title_length <= 70:
+            fail(errors, path, f"title is {title_length} characters, expected 25–70")
+        if not 50 <= description_length <= 160:
+            fail(errors, path, f"meta description is {description_length} characters, expected 50–160")
+        for href in parser.anchors:
+            link = urlsplit(href)
+            if link.netloc.lower() in {"t.me", "telegram.me"}:
+                query = parse_qs(link.query)
+                if "startgroup" in query:
+                    fail(errors, path, f"{href!r}: the bot treats a startgroup payload as a quiz key; no startgroup links until it has a reserved one")
+                for payload in query.get("start", []):
+                    if payload not in START_PAYLOADS:
+                        fail(errors, path, f"{href!r}: unknown start payload (the bot answers \"Quiz not found.\"); allowed: {sorted(START_PAYLOADS)}")
         if "script.js" in parser.resources:
             fail(errors, path, "localized pages must not depend on client-side translation")
         stylesheets = [href for rel, _, href, in_head in parser.links if "stylesheet" in rel.split() and in_head]
@@ -227,10 +249,11 @@ def check() -> list[str]:
             )
             if expected_label not in page_html:
                 fail(errors, path, f"language menu must show the {display_code} language code and native name")
-        if page_html.count('aria-current="page"') != 1 or (
+        # once in the language menu (with the check mark), once in the language grid
+        if page_html.count('aria-current="page"') != 2 or (
             '<span class="language-current" aria-hidden="true">✓</span>' not in page_html
         ):
-            fail(errors, path, "language menu must mark exactly the current language with a check")
+            fail(errors, path, "language menu and language grid must each mark exactly the current language")
         current_code = str(current_locale["code"]).upper()
         if f'<span class="language-code" aria-hidden="true" dir="ltr">{current_code}</span>' not in page_html:
             fail(errors, path, "language selector summary must show the current language code")
@@ -333,7 +356,7 @@ def check_legal_pages() -> list[str]:
                 target, issue = internal_target(urljoin(url, href))
                 if issue:
                     fail(errors, path, f"invalid local reference {href!r}: {issue}")
-                elif target is not None and not target.is_file():
+                elif target is not None and not target.is_file() and not GENERATED_ROUTE_RE.match(urlsplit(urljoin(url, href)).path):
                     fail(errors, path, f"local reference does not exist: {href!r}")
     return errors
 

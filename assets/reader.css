@@ -5,15 +5,15 @@
 .book-list a:hover, .book-list a:focus-visible { border-color: #b9d6f3; box-shadow: 0 8px 22px #14243b12; }
 .book-cover { flex: none; width: 104px; height: 150px; display: flex; flex-direction: column; justify-content: space-between; padding: 12px 10px; border-radius: 6px 10px 10px 6px; color: #fff; background: linear-gradient(160deg, var(--c1), #0d1b2c 85%); box-shadow: inset 6px 0 0 #0003, 0 8px 18px #14243b2e; font-family: Georgia, serif; }
 .book-cover b { font-size: 13px; line-height: 1.25; }
-.book-cover i { color: var(--c2); font-size: 11px; }
+.book-cover i { color: var(--c2); font-size: 12px; }
 .book-info { display: grid; gap: 4px; }
 .book-info strong { font-size: 18px; }
 .book-info span, .book-info small { color: var(--muted); font-size: 14px; }
 .book-info .book-read { margin-top: 6px; color: var(--blue); font-weight: 700; }
 
-.reader { position: relative; --rd-bg: #fff; --rd-ink: #1b2a40; --rd-muted: #66758b; --rd-line: #dce4ee; --rd-soft: #eef4f9; --rd-on: #dff3fc; --rd-edge: #168bc6; --rd-word: #ffe39a; --rd-font: 19px; --rd-lh: 1.8; color: var(--rd-ink); }
-:root[data-rd-theme="sepia"] body, :root[data-rd-theme="sepia"] .reader { --rd-bg: #f6efe0; --rd-ink: #3b2f22; --rd-muted: #7c6a55; --rd-line: #e3d6bd; --rd-soft: #ece1cb; --rd-on: #f0dcb4; --rd-edge: #a8742b; --rd-word: #f7c96b; }
-:root[data-rd-theme="dark"] body, :root[data-rd-theme="dark"] .reader { --rd-bg: #1c1d23; --rd-ink: #eef1f5; --rd-muted: #9aa5b4; --rd-line: #3a414d; --rd-soft: #292c34; --rd-on: #00344d; --rd-edge: #20a6f5; --rd-word: #7a5b00; }
+.reader { position: relative; --rd-bg: #fff; --rd-ink: #1b2a40; --rd-muted: #66758b; --rd-line: #dce4ee; --rd-soft: #eef4f9; --rd-on: #dff3fc; --rd-edge: #168bc6; --rd-edge-ink: #0f6a98; --rd-word: #ffe39a; --rd-font: 19px; --rd-lh: 1.8; color: var(--rd-ink); }
+:root[data-rd-theme="sepia"] body, :root[data-rd-theme="sepia"] .reader { --rd-bg: #f6efe0; --rd-ink: #3b2f22; --rd-muted: #7c6a55; --rd-line: #e3d6bd; --rd-soft: #ece1cb; --rd-on: #f0dcb4; --rd-edge: #a8742b; --rd-edge-ink: #7d5418; --rd-word: #f7c96b; }
+:root[data-rd-theme="dark"] body, :root[data-rd-theme="dark"] .reader { --rd-bg: #1c1d23; --rd-ink: #eef1f5; --rd-muted: #9aa5b4; --rd-line: #3a414d; --rd-soft: #292c34; --rd-on: #00344d; --rd-edge: #20a6f5; --rd-edge-ink: #20a6f5; --rd-word: #7a5b00; }
 :root[data-rd-theme] body { background: var(--rd-bg, var(--paper)); }
 :root[data-rd-theme="dark"] .reader a:not(.button), :root[data-rd-theme="dark"] .reader .quiz-back a { color: #7cc4ff; }
 .reader h1 { margin-bottom: 4px; }
@@ -26,7 +26,10 @@
 
 /* Paged: one column per screen, turned by reader.js; height is set there to fill the screen above the bar.
    touch-action: a finger on the text never scrolls the page up or down, it only swipes pages (pinch-zoom stays). */
-.rd-text { height: 60vh; margin: 12px 0; overflow: hidden; column-fill: auto; column-gap: 40px; touch-action: none; touch-action: pinch-zoom; font: var(--rd-font) / var(--rd-lh) Georgia, "Times New Roman", serif; overflow-wrap: break-word; }
+.rd-text { margin: 12px 0; font: var(--rd-font) / var(--rd-lh) Georgia, "Times New Roman", serif; overflow-wrap: break-word; }
+.rd-ready .rd-text { height: 60vh; overflow: hidden; column-fill: auto; column-gap: 40px; touch-action: none; touch-action: pinch-zoom; }
+.rd-text h2 { margin: 1.4em 0 .5em; font: 700 20px/1.3 "DM Sans", system-ui, sans-serif; } /* the inlined texts, before the script runs */
+.rd-src { font: 14px/1.5 "DM Sans", system-ui, sans-serif; color: var(--rd-muted); }
 .rd-text .pb { display: block; -webkit-column-break-before: always; break-before: column; } /* see keepWhole() */
 .rd-tbox { position: absolute; z-index: 1; overflow: auto; padding: 10px 46px 10px 14px; border: 1px solid var(--rd-edge); border-radius: 12px; color: var(--rd-ink); background: var(--rd-bg); box-shadow: 0 8px 24px #0003; font: calc(var(--rd-font) * .82) / 1.5 "DM Sans", system-ui, sans-serif; }
 .rd-tbox p { margin: 0; }
@@ -106,7 +109,7 @@
 
 /* News lessons: key words, questions answered on the page, the reports used (assets/reader.js extras()). */
 .rd-text .rd-box { break-inside: avoid; margin: 0 0 1em; padding: 14px 16px; border: 1px solid var(--rd-line); border-radius: 12px; font: 15px/1.5 "DM Sans", system-ui, sans-serif; }
-.rd-box h3 { margin: 0 0 8px; font-size: 16px; }
+.rd-box h2 { margin: 0 0 8px; font-size: 16px; }
 .rd-box dl, .rd-box ul { margin: 0; }
 .rd-box dt { font-weight: 700; }
 .rd-box dd { margin: 0 0 6px; color: var(--rd-muted); }
@@ -118,3 +121,5 @@
 :root[data-rd-theme="dark"] .rd-opt.ok { background: #1e3a2a; }
 :root[data-rd-theme="dark"] .rd-opt.no { background: #3a1e1e; }
 .rd-fb { margin: 6px 0 0; color: var(--rd-muted); }
+/* Text in the accent colour (the edge of a highlight is fine at 3:1, text is not): a darker ink per theme. */
+.reader #rd-this, .reader .rd-text.study .sb, .book-info .book-read { color: var(--rd-edge-ink, var(--blue)); }

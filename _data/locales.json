@@ -168,7 +168,22 @@
       "nwTopicSports": "Sports",
       "nwTopicScience": "Science",
       "nwBandBody": "A short, original news text every day at B1 level, with read-aloud, word translation and four questions.",
-      "nwBrowse": "Read today's news"
+      "nwBrowse": "Read today's news",
+      "skipToContent": "Skip to content",
+      "navMainLabel": "Main menu",
+      "footerLegalLabel": "Legal",
+      "discUpdated": "The catalog is rebuilt once a day. Last update: {date}",
+      "discSort": "Sort by",
+      "discSortNew": "Newest first",
+      "discSortPlays": "Most played",
+      "discSortQuestions": "Most questions",
+      "discFilterAll": "All",
+      "discShowMore": "Show more",
+      "nfTitle": "Page not found",
+      "nfBody": "This page does not exist or is no longer public. A quiz leaves quizjet.app when its owner turns Discover off.",
+      "bkQuizSoon": "The quiz for this book is on its way. Until then, open QuizJet on Telegram and play other quizzes.",
+      "seoTitle": "QuizJet — Telegram quiz bot in {languages} languages",
+      "seoDescription": "Play public quizzes on Telegram or create your own with AI. Learn English with classic books and a daily news text. Free, in {languages} languages."
     }
   },
   {
@@ -340,7 +355,22 @@
       "nwTopicSports": "Spor",
       "nwTopicScience": "Bilim",
       "nwBandBody": "Her gün B1 seviyesinde kısa, özgün bir haber metni: sesli okuma, kelime çevirisi ve dört soru.",
-      "nwBrowse": "Bugünün haberlerini oku"
+      "nwBrowse": "Bugünün haberlerini oku",
+      "skipToContent": "İçeriğe atla",
+      "navMainLabel": "Ana menü",
+      "footerLegalLabel": "Yasal",
+      "discUpdated": "Katalog günde bir kez yeniden derlenir. Son güncelleme: {date}",
+      "discSort": "Sırala",
+      "discSortNew": "Önce en yeni",
+      "discSortPlays": "En çok oynanan",
+      "discSortQuestions": "En çok soru",
+      "discFilterAll": "Tümü",
+      "discShowMore": "Daha fazla göster",
+      "nfTitle": "Sayfa bulunamadı",
+      "nfBody": "Bu sayfa yok ya da artık herkese açık değil. Sahibi Keşfet'i kapattığında quiz quizjet.app'ten kalkar.",
+      "bkQuizSoon": "Bu kitabın quiz'i yolda. O zamana kadar Telegram'da QuizJet'i aç ve başka quiz'ler oyna.",
+      "seoTitle": "QuizJet — {languages} dilde Telegram quiz botu",
+      "seoDescription": "Telegram'da herkese açık quiz'leri oyna ya da AI ile kendi quiz'ini hazırla. Klasik kitaplar ve günlük bir haber metniyle İngilizce öğren. Ücretsiz, {languages} dilde."
     }
   },
   {
@@ -512,7 +542,22 @@
       "nwTopicSports": "Esports",
       "nwTopicScience": "Ciència",
       "nwBandBody": "Cada dia un text de notícies curt i original de nivell B1, amb lectura en veu alta, traducció de paraules i quatre preguntes.",
-      "nwBrowse": "Llegeix les notícies d'avui"
+      "nwBrowse": "Llegeix les notícies d'avui",
+      "skipToContent": "Ves al contingut",
+      "navMainLabel": "Menú principal",
+      "footerLegalLabel": "Legal",
+      "discUpdated": "El catàleg es regenera un cop al dia. Última actualització: {date}",
+      "discSort": "Ordena per",
+      "discSortNew": "Més recents primer",
+      "discSortPlays": "Més jugats",
+      "discSortQuestions": "Més preguntes",
+      "discFilterAll": "Tots",
+      "discShowMore": "Mostra'n més",
+      "nfTitle": "Pàgina no trobada",
+      "nfBody": "Aquesta pàgina no existeix o ja no és pública. Un qüestionari desapareix de quizjet.app quan el seu creador desactiva Descobreix.",
+      "bkQuizSoon": "El qüestionari d'aquest llibre és en camí. Mentrestant, obre QuizJet a Telegram i juga a altres qüestionaris.",
+      "seoTitle": "QuizJet — bot de qüestionaris per a Telegram en {languages} idiomes",
+      "seoDescription": "Juga a qüestionaris públics a Telegram o crea'n de propis amb IA. Aprèn anglès amb llibres clàssics i un text de notícies diari. Gratuït, en {languages} idiomes."
     }
   },
   {
@@ -684,7 +729,22 @@
       "nwTopicSports": "Sport",
       "nwTopicScience": "Wissenschaft",
       "nwBandBody": "Jeden Tag ein kurzer, eigener Nachrichtentext auf Niveau B1, mit Vorlesen, Wortübersetzung und vier Fragen.",
-      "nwBrowse": "Die Nachrichten von heute lesen"
+      "nwBrowse": "Die Nachrichten von heute lesen",
+      "skipToContent": "Zum Inhalt springen",
+      "navMainLabel": "Hauptmenü",
+      "footerLegalLabel": "Rechtliches",
+      "discUpdated": "Der Katalog wird einmal täglich neu erstellt. Letzte Aktualisierung: {date}",
+      "discSort": "Sortieren nach",
+      "discSortNew": "Neueste zuerst",
+      "discSortPlays": "Am häufigsten gespielt",
+      "discSortQuestions": "Meiste Fragen",
+      "discFilterAll": "Alle",
+      "discShowMore": "Mehr anzeigen",
+      "nfTitle": "Seite nicht gefunden",
+      "nfBody": "Diese Seite existiert nicht oder ist nicht mehr öffentlich. Ein Quiz verschwindet von quizjet.app, wenn sein Ersteller Entdecken ausschaltet.",
+      "bkQuizSoon": "Das Quiz zu diesem Buch ist in Arbeit. Bis dahin: Öffne QuizJet auf Telegram und spiel andere Quizze.",
+      "seoTitle": "QuizJet — Telegram-Quiz-Bot in {languages} Sprachen",
+      "seoDescription": "Öffentliche Quizze auf Telegram spielen oder eigene mit KI erstellen. Englisch lernen mit Klassikern und einer täglichen Nachricht. Kostenlos, in {languages} Sprachen."
     }
   },
   {
@@ -856,7 +916,22 @@
       "nwTopicSports": "Sport",
       "nwTopicScience": "Scienza",
       "nwBandBody": "Ogni giorno un breve testo di notizie originale di livello B1, con lettura ad alta voce, traduzione delle parole e quattro domande.",
-      "nwBrowse": "Leggi le notizie di oggi"
+      "nwBrowse": "Leggi le notizie di oggi",
+      "skipToContent": "Vai al contenuto",
+      "navMainLabel": "Menu principale",
+      "footerLegalLabel": "Note legali",
+      "discUpdated": "Il catalogo viene rigenerato una volta al giorno. Ultimo aggiornamento: {date}",
+      "discSort": "Ordina per",
+      "discSortNew": "Più recenti",
+      "discSortPlays": "Più giocati",
+      "discSortQuestions": "Più domande",
+      "discFilterAll": "Tutti",
+      "discShowMore": "Mostra altri",
+      "nfTitle": "Pagina non trovata",
+      "nfBody": "Questa pagina non esiste o non è più pubblica. Un quiz sparisce da quizjet.app quando chi l'ha creato disattiva Scopri.",
+      "bkQuizSoon": "Il quiz di questo libro è in arrivo. Nel frattempo apri QuizJet su Telegram e gioca ad altri quiz.",
+      "seoTitle": "QuizJet — bot di quiz per Telegram in {languages} lingue",
+      "seoDescription": "Gioca ai quiz pubblici su Telegram o creane di tuoi con l'IA. Impara l'inglese con i classici e un testo di notizie al giorno. Gratis, in {languages} lingue."
     }
   },
   {
@@ -1028,7 +1103,22 @@
       "nwTopicSports": "Sukan",
       "nwTopicScience": "Sains",
       "nwBandBody": "Setiap hari satu teks berita pendek dan asli pada tahap B1, dengan bacaan bersuara, terjemahan perkataan dan empat soalan.",
-      "nwBrowse": "Baca berita hari ini"
+      "nwBrowse": "Baca berita hari ini",
+      "skipToContent": "Langkau ke kandungan",
+      "navMainLabel": "Menu utama",
+      "footerLegalLabel": "Undang-undang",
+      "discUpdated": "Katalog dibina semula sekali sehari. Kemas kini terakhir: {date}",
+      "discSort": "Susun mengikut",
+      "discSortNew": "Terbaharu dahulu",
+      "discSortPlays": "Paling kerap dimainkan",
+      "discSortQuestions": "Paling banyak soalan",
+      "discFilterAll": "Semua",
+      "discShowMore": "Tunjukkan lagi",
+      "nfTitle": "Halaman tidak ditemui",
+      "nfBody": "Halaman ini tidak wujud atau tidak lagi umum. Kuiz hilang dari quizjet.app apabila pemiliknya mematikan Teroka.",
+      "bkQuizSoon": "Kuiz untuk buku ini sedang disediakan. Sementara itu, buka QuizJet di Telegram dan mainkan kuiz lain.",
+      "seoTitle": "QuizJet — bot kuiz Telegram dalam {languages} bahasa",
+      "seoDescription": "Mainkan kuiz umum di Telegram atau cipta kuiz sendiri dengan AI. Belajar bahasa Inggeris dengan buku klasik dan teks berita harian. Percuma, dalam {languages} bahasa."
     }
   },
   {
@@ -1200,7 +1290,22 @@
       "nwTopicSports": "Sport",
       "nwTopicScience": "Nauka",
       "nwBandBody": "Codziennie krótki, autorski tekst wiadomości na poziomie B1, z czytaniem na głos, tłumaczeniem słów i czterema pytaniami.",
-      "nwBrowse": "Przeczytaj dzisiejsze wiadomości"
+      "nwBrowse": "Przeczytaj dzisiejsze wiadomości",
+      "skipToContent": "Przejdź do treści",
+      "navMainLabel": "Menu główne",
+      "footerLegalLabel": "Informacje prawne",
+      "discUpdated": "Katalog jest odświeżany raz dziennie. Ostatnia aktualizacja: {date}",
+      "discSort": "Sortuj według",
+      "discSortNew": "Od najnowszych",
+      "discSortPlays": "Najczęściej grane",
+      "discSortQuestions": "Najwięcej pytań",
+      "discFilterAll": "Wszystkie",
+      "discShowMore": "Pokaż więcej",
+      "nfTitle": "Nie znaleziono strony",
+      "nfBody": "Ta strona nie istnieje lub nie jest już publiczna. Quiz znika z quizjet.app, gdy jego autor wyłączy Odkrywaj.",
+      "bkQuizSoon": "Quiz do tej książki jest w przygotowaniu. Do tego czasu otwórz QuizJet w Telegramie i zagraj w inne quizy.",
+      "seoTitle": "QuizJet — bot quizowy na Telegramie w {languages} językach",
+      "seoDescription": "Graj w publiczne quizy na Telegramie albo twórz własne z AI. Ucz się angielskiego na klasykach i codziennym tekście z wiadomości. Za darmo, w {languages} językach."
     }
   },
   {
@@ -1372,7 +1477,22 @@
       "nwTopicSports": "Спорт",
       "nwTopicScience": "Наука",
       "nwBandBody": "Каждый день короткий оригинальный новостной текст уровня B1 с чтением вслух, переводом слов и четырьмя вопросами.",
-      "nwBrowse": "Читать сегодняшние новости"
+      "nwBrowse": "Читать сегодняшние новости",
+      "skipToContent": "Перейти к содержимому",
+      "navMainLabel": "Главное меню",
+      "footerLegalLabel": "Правовая информация",
+      "discUpdated": "Каталог пересобирается раз в день. Последнее обновление: {date}",
+      "discSort": "Сортировать",
+      "discSortNew": "Сначала новые",
+      "discSortPlays": "Самые популярные",
+      "discSortQuestions": "Больше всего вопросов",
+      "discFilterAll": "Все",
+      "discShowMore": "Показать ещё",
+      "nfTitle": "Страница не найдена",
+      "nfBody": "Этой страницы нет или она больше не публичная. Квиз исчезает с quizjet.app, когда его автор выключает «Каталог».",
+      "bkQuizSoon": "Квиз к этой книге готовится. А пока откройте QuizJet в Telegram и сыграйте в другие квизы.",
+      "seoTitle": "QuizJet — квиз-бот для Telegram на {languages} языках",
+      "seoDescription": "Играйте в публичные квизы в Telegram или создавайте свои с ИИ. Учите английский по классике и ежедневному новостному тексту. Бесплатно, на {languages} языках."
     }
   },
   {
@@ -1544,7 +1664,22 @@
       "nwTopicSports": "Спорт",
       "nwTopicScience": "Наука",
       "nwBandBody": "Щодня короткий оригінальний новинний текст рівня B1 з читанням вголос, перекладом слів і чотирма запитаннями.",
-      "nwBrowse": "Читати сьогоднішні новини"
+      "nwBrowse": "Читати сьогоднішні новини",
+      "skipToContent": "Перейти до вмісту",
+      "navMainLabel": "Головне меню",
+      "footerLegalLabel": "Правова інформація",
+      "discUpdated": "Каталог оновлюється раз на день. Останнє оновлення: {date}",
+      "discSort": "Сортувати",
+      "discSortNew": "Спочатку нові",
+      "discSortPlays": "Найпопулярніші",
+      "discSortQuestions": "Найбільше запитань",
+      "discFilterAll": "Усі",
+      "discShowMore": "Показати ще",
+      "nfTitle": "Сторінку не знайдено",
+      "nfBody": "Цієї сторінки немає або вона більше не публічна. Вікторина зникає з quizjet.app, коли її автор вимикає «Каталог».",
+      "bkQuizSoon": "Вікторина до цієї книги готується. А поки відкрийте QuizJet у Telegram і зіграйте в інші вікторини.",
+      "seoTitle": "QuizJet — бот-вікторина для Telegram {languages} мовами",
+      "seoDescription": "Грайте в публічні вікторини в Telegram або створюйте власні зі ШІ. Вивчайте англійську за класикою та щоденним новинним текстом. Безкоштовно, {languages} мовами."
     }
   },
   {
@@ -1716,7 +1851,22 @@
       "nwTopicSports": "رياضة",
       "nwTopicScience": "علوم",
       "nwBandBody": "كل يوم نص إخباري قصير وأصلي بمستوى B1، مع قراءة بصوت عالٍ وترجمة الكلمات وأربعة أسئلة.",
-      "nwBrowse": "اقرأ أخبار اليوم"
+      "nwBrowse": "اقرأ أخبار اليوم",
+      "skipToContent": "الانتقال إلى المحتوى",
+      "navMainLabel": "القائمة الرئيسية",
+      "footerLegalLabel": "قانوني",
+      "discUpdated": "يُعاد بناء الكتالوج مرة واحدة يوميًا. آخر تحديث: {date}",
+      "discSort": "ترتيب حسب",
+      "discSortNew": "الأحدث أولًا",
+      "discSortPlays": "الأكثر لعبًا",
+      "discSortQuestions": "الأكثر أسئلة",
+      "discFilterAll": "الكل",
+      "discShowMore": "عرض المزيد",
+      "nfTitle": "الصفحة غير موجودة",
+      "nfBody": "هذه الصفحة غير موجودة أو لم تعد عامة. يختفي الاختبار من quizjet.app عندما يوقف صاحبه خاصية «اكتشف».",
+      "bkQuizSoon": "اختبار هذا الكتاب قيد الإعداد. حتى ذلك الحين، افتح QuizJet على تيليجرام والعب اختبارات أخرى.",
+      "seoTitle": "QuizJet — بوت اختبارات على تيليجرام بـ{languages} لغة",
+      "seoDescription": "العب اختبارات عامة على تيليجرام أو أنشئ اختباراتك بالذكاء الاصطناعي. تعلّم الإنجليزية مع كتب كلاسيكية ونص إخباري يومي. مجانًا، بـ{languages} لغة."
     }
   },
   {
@@ -1888,7 +2038,22 @@
       "nwTopicSports": "Sport",
       "nwTopicScience": "Wetenschap",
       "nwBandBody": "Elke dag een korte, eigen nieuwstekst op niveau B1, met voorlezen, woordvertaling en vier vragen.",
-      "nwBrowse": "Lees het nieuws van vandaag"
+      "nwBrowse": "Lees het nieuws van vandaag",
+      "skipToContent": "Naar de inhoud",
+      "navMainLabel": "Hoofdmenu",
+      "footerLegalLabel": "Juridisch",
+      "discUpdated": "De catalogus wordt één keer per dag opnieuw opgebouwd. Laatste update: {date}",
+      "discSort": "Sorteren op",
+      "discSortNew": "Nieuwste eerst",
+      "discSortPlays": "Meest gespeeld",
+      "discSortQuestions": "Meeste vragen",
+      "discFilterAll": "Alle",
+      "discShowMore": "Meer tonen",
+      "nfTitle": "Pagina niet gevonden",
+      "nfBody": "Deze pagina bestaat niet of is niet meer openbaar. Een quiz verdwijnt van quizjet.app zodra de maker Ontdek uitzet.",
+      "bkQuizSoon": "De quiz bij dit boek is onderweg. Open intussen QuizJet op Telegram en speel andere quizzen.",
+      "seoTitle": "QuizJet — Telegram-quizbot in {languages} talen",
+      "seoDescription": "Speel openbare quizzen op Telegram of maak je eigen quiz met AI. Leer Engels met klassieke boeken en een dagelijkse nieuwstekst. Gratis, in {languages} talen."
     }
   },
   {
@@ -2060,7 +2225,22 @@
       "nwTopicSports": "Sport",
       "nwTopicScience": "Science",
       "nwBandBody": "Chaque jour, un court texte d'actualité original de niveau B1, avec lecture à voix haute, traduction des mots et quatre questions.",
-      "nwBrowse": "Lire l'actualité du jour"
+      "nwBrowse": "Lire l'actualité du jour",
+      "skipToContent": "Aller au contenu",
+      "navMainLabel": "Menu principal",
+      "footerLegalLabel": "Mentions légales",
+      "discUpdated": "Le catalogue est reconstruit une fois par jour. Dernière mise à jour : {date}",
+      "discSort": "Trier par",
+      "discSortNew": "Plus récents d'abord",
+      "discSortPlays": "Les plus joués",
+      "discSortQuestions": "Le plus de questions",
+      "discFilterAll": "Tous",
+      "discShowMore": "Afficher plus",
+      "nfTitle": "Page introuvable",
+      "nfBody": "Cette page n'existe pas ou n'est plus publique. Un quiz disparaît de quizjet.app quand son auteur désactive Découvrir.",
+      "bkQuizSoon": "Le quiz de ce livre arrive bientôt. En attendant, ouvrez QuizJet sur Telegram et jouez à d'autres quiz.",
+      "seoTitle": "QuizJet — bot de quiz Telegram en {languages} langues",
+      "seoDescription": "Jouez à des quiz publics sur Telegram ou créez les vôtres avec l'IA. Apprenez l'anglais avec des classiques et une actualité par jour. Gratuit, en {languages} langues."
     }
   },
   {
@@ -2232,7 +2412,22 @@
       "nwTopicSports": "Olahraga",
       "nwTopicScience": "Sains",
       "nwBandBody": "Setiap hari satu teks berita pendek dan orisinal di level B1, dengan bacaan bersuara, terjemahan kata, dan empat pertanyaan.",
-      "nwBrowse": "Baca berita hari ini"
+      "nwBrowse": "Baca berita hari ini",
+      "skipToContent": "Lewati ke konten",
+      "navMainLabel": "Menu utama",
+      "footerLegalLabel": "Hukum",
+      "discUpdated": "Katalog dibangun ulang sekali sehari. Pembaruan terakhir: {date}",
+      "discSort": "Urutkan",
+      "discSortNew": "Terbaru dulu",
+      "discSortPlays": "Paling sering dimainkan",
+      "discSortQuestions": "Soal terbanyak",
+      "discFilterAll": "Semua",
+      "discShowMore": "Tampilkan lebih banyak",
+      "nfTitle": "Halaman tidak ditemukan",
+      "nfBody": "Halaman ini tidak ada atau sudah tidak publik. Kuis hilang dari quizjet.app saat pembuatnya mematikan Jelajahi.",
+      "bkQuizSoon": "Kuis untuk buku ini sedang disiapkan. Sementara itu, buka QuizJet di Telegram dan mainkan kuis lain.",
+      "seoTitle": "QuizJet — bot kuis Telegram dalam {languages} bahasa",
+      "seoDescription": "Mainkan kuis publik di Telegram atau buat kuismu sendiri dengan AI. Belajar bahasa Inggris lewat buku klasik dan teks berita harian. Gratis, dalam {languages} bahasa."
     }
   },
   {
@@ -2404,7 +2599,22 @@
       "nwTopicSports": "스포츠",
       "nwTopicScience": "과학",
       "nwBandBody": "매일 B1 수준의 짧고 독창적인 뉴스 글 한 편, 소리 내어 읽기와 단어 번역, 네 가지 질문과 함께.",
-      "nwBrowse": "오늘의 뉴스 읽기"
+      "nwBrowse": "오늘의 뉴스 읽기",
+      "skipToContent": "본문으로 건너뛰기",
+      "navMainLabel": "주 메뉴",
+      "footerLegalLabel": "법적 고지",
+      "discUpdated": "카탈로그는 하루에 한 번 다시 만들어집니다. 마지막 업데이트: {date}",
+      "discSort": "정렬",
+      "discSortNew": "최신순",
+      "discSortPlays": "많이 플레이한 순",
+      "discSortQuestions": "문제 많은 순",
+      "discFilterAll": "전체",
+      "discShowMore": "더 보기",
+      "nfTitle": "페이지를 찾을 수 없습니다",
+      "nfBody": "이 페이지는 존재하지 않거나 더 이상 공개되지 않습니다. 퀴즈는 만든 사람이 둘러보기를 끄면 quizjet.app에서 사라집니다.",
+      "bkQuizSoon": "이 책의 퀴즈를 준비하고 있습니다. 그동안 텔레그램에서 QuizJet을 열고 다른 퀴즈를 즐겨 보세요.",
+      "seoTitle": "QuizJet — {languages}개 언어로 즐기는 텔레그램 퀴즈 봇",
+      "seoDescription": "텔레그램에서 공개 퀴즈를 풀거나 AI로 나만의 퀴즈를 만들어 보세요. 고전 책과 매일의 뉴스 텍스트로 영어를 배울 수 있습니다. 무료, {languages}개 언어 지원."
     }
   },
   {
@@ -2576,7 +2786,22 @@
       "nwTopicSports": "ورزش",
       "nwTopicScience": "علم",
       "nwBandBody": "هر روز یک متن خبری کوتاه و اصیل در سطح B1، با خوانش صوتی، ترجمهٔ واژه‌ها و چهار پرسش.",
-      "nwBrowse": "خواندن اخبار امروز"
+      "nwBrowse": "خواندن اخبار امروز",
+      "skipToContent": "پرش به محتوا",
+      "navMainLabel": "منوی اصلی",
+      "footerLegalLabel": "حقوقی",
+      "discUpdated": "کاتالوگ روزی یک بار دوباره ساخته می‌شود. آخرین به‌روزرسانی: {date}",
+      "discSort": "مرتب‌سازی بر اساس",
+      "discSortNew": "جدیدترین‌ها اول",
+      "discSortPlays": "بیشترین بازی",
+      "discSortQuestions": "بیشترین سؤال",
+      "discFilterAll": "همه",
+      "discShowMore": "نمایش بیشتر",
+      "nfTitle": "صفحه پیدا نشد",
+      "nfBody": "این صفحه وجود ندارد یا دیگر عمومی نیست. وقتی سازندهٔ آزمون گزینهٔ «کشف کنید» را خاموش کند، آزمون از quizjet.app حذف می‌شود.",
+      "bkQuizSoon": "آزمون این کتاب در راه است. تا آن زمان، QuizJet را در تلگرام باز کنید و آزمون‌های دیگر را بازی کنید.",
+      "seoTitle": "QuizJet — ربات آزمون تلگرام به {languages} زبان",
+      "seoDescription": "در تلگرام آزمون‌های عمومی را بازی کنید یا با هوش مصنوعی آزمون خودتان را بسازید. با کتاب‌های کلاسیک و یک متن خبری روزانه انگلیسی یاد بگیرید. رایگان، به {languages} زبان."
     }
   },
   {
@@ -2748,7 +2973,22 @@
       "nwTopicSports": "Esportes",
       "nwTopicScience": "Ciência",
       "nwBandBody": "Todo dia um texto de notícia curto e original no nível B1, com leitura em voz alta, tradução de palavras e quatro perguntas.",
-      "nwBrowse": "Ler as notícias de hoje"
+      "nwBrowse": "Ler as notícias de hoje",
+      "skipToContent": "Pular para o conteúdo",
+      "navMainLabel": "Menu principal",
+      "footerLegalLabel": "Jurídico",
+      "discUpdated": "O catálogo é refeito uma vez por dia. Última atualização: {date}",
+      "discSort": "Ordenar por",
+      "discSortNew": "Mais recentes primeiro",
+      "discSortPlays": "Mais jogados",
+      "discSortQuestions": "Mais perguntas",
+      "discFilterAll": "Todos",
+      "discShowMore": "Mostrar mais",
+      "nfTitle": "Página não encontrada",
+      "nfBody": "Esta página não existe ou não é mais pública. Um quiz some do quizjet.app quando o criador desativa Descobrir.",
+      "bkQuizSoon": "O quiz deste livro está a caminho. Enquanto isso, abra o QuizJet no Telegram e jogue outros quizzes.",
+      "seoTitle": "QuizJet — bot de quiz para Telegram em {languages} idiomas",
+      "seoDescription": "Jogue quizzes públicos no Telegram ou crie os seus com IA. Aprenda inglês com livros clássicos e um texto de notícias por dia. Grátis, em {languages} idiomas."
     }
   },
   {
@@ -2920,7 +3160,22 @@
       "nwTopicSports": "Deportes",
       "nwTopicScience": "Ciencia",
       "nwBandBody": "Cada día un texto de noticias breve y original de nivel B1, con lectura en voz alta, traducción de palabras y cuatro preguntas.",
-      "nwBrowse": "Leer las noticias de hoy"
+      "nwBrowse": "Leer las noticias de hoy",
+      "skipToContent": "Saltar al contenido",
+      "navMainLabel": "Menú principal",
+      "footerLegalLabel": "Legal",
+      "discUpdated": "El catálogo se regenera una vez al día. Última actualización: {date}",
+      "discSort": "Ordenar por",
+      "discSortNew": "Más recientes primero",
+      "discSortPlays": "Más jugados",
+      "discSortQuestions": "Más preguntas",
+      "discFilterAll": "Todos",
+      "discShowMore": "Mostrar más",
+      "nfTitle": "Página no encontrada",
+      "nfBody": "Esta página no existe o ya no es pública. Un quiz desaparece de quizjet.app cuando su creador desactiva Descubrir.",
+      "bkQuizSoon": "El quiz de este libro está en camino. Mientras tanto, abre QuizJet en Telegram y juega a otros quizzes.",
+      "seoTitle": "QuizJet — bot de quiz para Telegram en {languages} idiomas",
+      "seoDescription": "Juega a quizzes públicos en Telegram o crea los tuyos con IA. Aprende inglés con libros clásicos y un texto de noticias diario. Gratis, en {languages} idiomas."
     }
   },
   {
@@ -3092,7 +3347,22 @@
       "nwTopicSports": "Sport",
       "nwTopicScience": "Fan",
       "nwBandBody": "Har kuni B1 darajasida qisqa va original yangilik matni: ovozli o'qish, so'z tarjimasi va to'rtta savol.",
-      "nwBrowse": "Bugungi yangiliklarni o'qing"
+      "nwBrowse": "Bugungi yangiliklarni o'qing",
+      "skipToContent": "Kontentga oʻtish",
+      "navMainLabel": "Asosiy menyu",
+      "footerLegalLabel": "Huquqiy",
+      "discUpdated": "Katalog kuniga bir marta qayta tuziladi. Oxirgi yangilanish: {date}",
+      "discSort": "Saralash",
+      "discSortNew": "Avval yangilari",
+      "discSortPlays": "Eng koʻp oʻynalgan",
+      "discSortQuestions": "Eng koʻp savol",
+      "discFilterAll": "Hammasi",
+      "discShowMore": "Koʻproq koʻrsatish",
+      "nfTitle": "Sahifa topilmadi",
+      "nfBody": "Bu sahifa mavjud emas yoki endi ochiq emas. Muallif «Kashf qilish» funksiyasini oʻchirsa, viktorina quizjet.app dan yoʻqoladi.",
+      "bkQuizSoon": "Bu kitob uchun viktorina tayyorlanmoqda. Ungacha Telegramda QuizJet ni oching va boshqa viktorinalarni oʻynang.",
+      "seoTitle": "QuizJet — {languages} tilda Telegram viktorina boti",
+      "seoDescription": "Telegramda ochiq viktorinalar oʻynang yoki AI bilan oʻzingiznikini yarating. Klassik kitoblar va kunlik yangilik bilan ingliz tilini oʻrganing. Bepul, {languages} tilda."
     }
   }
 ]

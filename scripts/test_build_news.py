@@ -55,10 +55,11 @@ def fake_api(calls: list[dict[str, object]]):
 
 
 def run() -> None:
-    original_post, original_env, original_dir = bn.post_json, dict(os.environ), bn.NEWS_DIR
+    original_post, original_env, original_dir, original_min = bn.post_json, dict(os.environ), bn.NEWS_DIR, bn.MIN_WORDS
     calls: list[dict[str, object]] = []
     bn.post_json = fake_api(calls)
     os.environ["OPENAI_API_KEY"] = "o-key"
+    bn.MIN_WORDS = 0  # the fixture lesson is deliberately short; the length rule has its own case below
     try:
         # the clean room: research keeps short facts and real links; the writer sees facts only
         found = bn.research("business and finance", "o-key", "2026-11-06")
@@ -82,6 +83,14 @@ def run() -> None:
             raise AssertionError("one report is not enough")
         except ValueError:
             pass
+        bn.MIN_WORDS = 150
+        try:
+            bn.article(lesson, found, "business")
+            raise AssertionError("a text far below the length the writer was asked for is thin and is skipped")
+        except ValueError as exc:
+            assert "words" in str(exc)
+        finally:
+            bn.MIN_WORDS = 0
 
         # the whole generation: one research and one writer call per topic, one file, a second run bills nothing
         calls.clear()
@@ -94,6 +103,7 @@ def run() -> None:
             assert len(calls) == 2 * len(bn.TOPICS), "an existing edition is never regenerated"
     finally:
         bn.post_json = original_post
+        bn.MIN_WORDS = original_min
         os.environ.clear()
         os.environ.update(original_env)
 
@@ -102,6 +112,7 @@ def run() -> None:
         news = tmp_path / "news"
         news.mkdir()
         (news / "2026-11-06.json").write_text(json.dumps({"date": "2026-11-06", "model": "test", "articles": [art, dict(art, topic="sports", title="A striker <b>moves</b>")]}), encoding="utf-8")
+        (news / "2026-10-30.json").write_text(json.dumps({"date": "2026-10-30", "model": "test", "articles": [art]}), encoding="utf-8")
         bn.NEWS_DIR = news
         try:
             out = tmp_path / "site"
@@ -121,12 +132,19 @@ def run() -> None:
         assert 'id="rd-next-ch" href="#">Sonraki metin ' in tr_reader, "the news framing replaces the book framing on the button"
         assert '"nwCorrect":"Doğru!"' in tr_reader and '"@type":"LearningResource"' in tr_reader and "gutenberg.org" not in tr_reader
         assert "Spor: A striker &lt;b&gt;moves&lt;/b&gt;" in tr_reader, "chapter names are escaped and carry the topic"
+        assert "A big bank that controls money in the country decided not to change interest rates this week." in tr_reader, \
+            "the texts are in the HTML for crawlers and readers without JavaScript"
+        assert 'href="https://example.com/a"' in tr_reader and 'type="application/atom+xml"' in tr_reader
+        feed = (out / "news" / "feed.xml").read_text(encoding="utf-8")
+        assert feed.count("<entry>") == 2 and "https://quizjet.app/news/2026-11-06/" in feed and "Interest rates stay the same for now" in feed
+        assert "https://example.com/a" in feed and "<b>" not in feed, "the feed carries the text and its reports, escaped"
         ar_reader = (out / "ar" / "news" / "2026-11-06" / "index.html").read_text(encoding="utf-8")
         assert '<h1 lang="ar" dir="rtl">' in ar_reader
 
         shelf = (out / "news" / "index.html").read_text(encoding="utf-8")
         assert 'href="/news/2026-11-06/"' in shelf and "Business, Sports" in shelf and "Interest rates stay the same for now · A striker &lt;b&gt;moves&lt;/b&gt;" in shelf
         assert '<meta name="robots" content="noindex">' not in shelf and "support@quizjet.app" in shelf
+        assert 'class="nw-month"' in shelf and ">2026-10<" in shelf and 'type="application/atom+xml"' in shelf, "two months: grouped by month, feed linked"
         sitemap = (out / "sitemap.xml").read_text(encoding="utf-8")
         assert "https://quizjet.app/tr/news/2026-11-06/" in sitemap and "https://quizjet.app/news/" in sitemap
         landing = (out / "tr" / "index.html").read_text(encoding="utf-8")
@@ -145,6 +163,7 @@ def run() -> None:
         bare = (empty / "news" / "index.html").read_text(encoding="utf-8")
         assert '<meta name="robots" content="noindex">' in bare and "next daily update" in bare
         assert "news" not in (empty / "sitemap.xml").read_text(encoding="utf-8")
+        assert not (empty / "news" / "feed.xml").exists() and 'type="application/atom+xml"' not in bare
         for landing_page in ("index.html", "ar/index.html"):
             bare_landing = (empty / landing_page).read_text(encoding="utf-8")
             assert 'id="news-band"' not in bare_landing and 'id="books-band"' in bare_landing, "no edition: the News band leaves, the Books band stays"

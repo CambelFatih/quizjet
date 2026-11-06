@@ -22,6 +22,24 @@ VOID_ELEMENTS = {
     "area", "base", "br", "col", "embed", "hr", "img", "input", "link",
     "meta", "param", "source", "track", "wbr",
 }
+LOCALES_BY_CODE = {locale["code"]: locale for locale in json.loads(LOCALES_PATH.read_text(encoding="utf-8"))}
+ICON_LINKS = (
+    '    <link rel="icon" type="image/png" href="/assets/logo-96.png">\n'
+    '    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">\n'
+    '    <link rel="manifest" href="/manifest.webmanifest">\n'
+)
+# The two faces every page paints first (body text, headings); the other subsets load by unicode-range when needed.
+FONT_PRELOADS = "".join(
+    f'    <link rel="preload" href="/assets/fonts/{name}" as="font" type="font/woff2" crossorigin>\n'
+    for name in ("dm-sans-latin.woff2", "manrope-700-latin.woff2")
+)
+# Deep-link payloads the bot maps to commands (quizjet-bot MiniAppCommandDeepLink.Map). Any other ?start= payload is
+# looked up as a quiz key and answers "Quiz not found."; ?startgroup= treats its payload the same way. check_seo pins this.
+START_PAYLOADS = {"cmd_newquiz", "cmd_aiquiz", "cmd_premium"}
+
+
+def head_links() -> str:
+    return ICON_LINKS + FONT_PRELOADS
 
 
 def absolute_position(line_offsets: list[int], position: tuple[int, int]) -> int:
@@ -150,17 +168,37 @@ def language_menu(locale: dict[str, object], locales: list[dict[str, object]], s
     )
 
 
-def language_grid(locales: list[dict[str, object]]) -> str:
+def language_grid(locales: list[dict[str, object]], current: str) -> str:
+    """The "pick your language" grid: one link per language page (it used to be plain divs that did nothing on click)."""
     chips = []
     for locale in locales:
-        direction = locale["dir"]
         code = html.escape(locale["code"], quote=True)
-        name = html.escape(locale["name"])
+        href = f'/{locale["route"]}/' if locale["route"] else "/"
+        active = ' aria-current="page"' if locale["code"] == current else ""
         chips.append(
-            f'<div class="language-chip" lang="{code}" dir="{direction}">'
-            f'<span class="language-flag" aria-hidden="true">{locale["flag"]}</span><span>{name}</span></div>'
+            f'<a class="language-chip" href="{href}" lang="{code}" hreflang="{code}" dir="{locale["dir"]}"{active}>'
+            f'<span class="language-flag" aria-hidden="true">{locale["flag"]}</span><span>{html.escape(locale["name"])}</span></a>'
         )
     return "\n          ".join(chips)
+
+
+def landing_jsonld(locale: dict[str, object], description: str) -> str:
+    """WebSite + Organization + SoftwareApplication for a landing page; check_seo requires exactly this block."""
+    url = BASE_URL + (f'/{locale["route"]}/' if locale["route"] else "/")
+    graph = {
+        "@context": "https://schema.org",
+        "@graph": [
+            {"@type": "WebSite", "@id": f"{BASE_URL}/#website", "url": f"{BASE_URL}/", "name": "QuizJet",
+             "inLanguage": locale["code"], "publisher": {"@id": f"{BASE_URL}/#organization"}},
+            {"@type": "Organization", "@id": f"{BASE_URL}/#organization", "name": "QuizJet", "url": f"{BASE_URL}/",
+             "logo": f"{BASE_URL}/assets/logo.png", "email": "support@quizjet.app", "sameAs": ["https://t.me/QuizJetBot"]},
+            {"@type": "SoftwareApplication", "name": "QuizJet", "url": url, "applicationCategory": "EducationalApplication",
+             "operatingSystem": "Telegram", "inLanguage": locale["code"], "description": description,
+             "isAccessibleForFree": True, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
+             "publisher": {"@id": f"{BASE_URL}/#organization"}},
+        ],
+    }
+    return json.dumps(graph, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
 
 
 def stylesheet_version() -> str:
@@ -179,6 +217,7 @@ def render_legal_page(meta: dict[str, object], code: str, page: str, body: str) 
     info = language["pages"][page]
     home = f"/{route}/" if route else "/"
     title = f'{info["title"]} — QuizJet'
+    ui = LOCALES_BY_CODE[code]["copy"]
     alternates = "".join(
         f'    <link rel="alternate" hreflang="{other}" href="{legal_url(data["route"], page)}">\n'
         for other, data in meta["languages"].items()
@@ -206,17 +245,18 @@ def render_legal_page(meta: dict[str, object], code: str, page: str, body: str) 
         f'    <meta name="description" content="{html.escape(info["description"], quote=True)}">\n'
         f'    <link rel="canonical" href="{legal_url(route, page)}">\n'
         f"{alternates}"
-        '    <link rel="icon" type="image/png" href="/assets/logo-96.png">\n'
+        f"{head_links()}"
         f'    <link rel="stylesheet" href="/styles.css?v={stylesheet_version()}">\n'
         "  </head>\n"
         "  <body>\n"
+        f'    <a class="skip-link" href="#top">{html.escape(ui["skipToContent"])}</a>\n'
         '    <header class="site-header">\n'
-        '      <nav class="navigation page-width">\n'
+        f'      <nav class="navigation page-width" aria-label="{html.escape(ui["navMainLabel"], quote=True)}">\n'
         f'        <a class="brand" href="{home}"><img src="/assets/logo-96.png" alt="" width="44" height="44"><span>quizjet</span></a>\n'
         f'        <div class="nav-actions legal-switch">{switch}</div>\n'
         "      </nav>\n"
         "    </header>\n"
-        '    <main class="legal page-width">\n'
+        '    <main class="legal page-width" id="top">\n'
         f'      <p class="legal-updated">{html.escape(language["updatedLabel"])}: '
         f'<time datetime="{meta["updated"]}">{meta["updated"]}</time></p>\n'
         f"{body.rstrip()}\n"
@@ -224,7 +264,7 @@ def render_legal_page(meta: dict[str, object], code: str, page: str, body: str) 
         '    <footer class="site-footer">\n'
         '      <div class="footer-inner page-width">\n'
         f'        <a class="brand footer-brand" href="{home}"><img src="/assets/logo-96.png" alt="" width="36" height="36"><span>quizjet</span></a>\n'
-        f'        <nav class="footer-legal">{links}</nav>\n'
+        f'        <nav class="footer-legal" aria-label="{html.escape(ui["footerLegalLabel"], quote=True)}">{links}</nav>\n'
         "      </div>\n"
         "    </footer>\n"
         "  </body>\n"
@@ -247,10 +287,11 @@ def render_page(template: str, locale: dict[str, object], locales: list[dict[str
     copy = locale["copy"]
     code = locale["code"]
     route = locale["route"]
-    title_text = html.unescape(re.sub(r"<[^>]*>", " ", copy["heroTitle"]))
-    title_text = " ".join(title_text.split())
-    title = f"QuizJet — {title_text}"
-    description = copy["heroLead"]
+    # <title> and the description are search copy of their own (seoTitle/seoDescription), not the hero slogan;
+    # {languages} is the live count so the strings never carry a number that drifts.
+    languages = str(len(locales))
+    title = copy["seoTitle"].replace("{languages}", languages)
+    description = copy["seoDescription"].replace("{languages}", languages)
 
     page = CopyReplacer(template, copy).localized_source()
     page = re.sub(r'<html lang="[^"]*">', f'<html lang="{html.escape(code, quote=True)}" dir="{locale["dir"]}">', page, count=1)
@@ -277,6 +318,11 @@ def render_page(template: str, locale: dict[str, object], locales: list[dict[str
     )
     alternates += f'    <link rel="alternate" hreflang="x-default" href="{BASE_URL}/">\n'
     page = page.replace(f'<link rel="canonical" href="{canonical}">\n', f'<link rel="canonical" href="{canonical}">\n{alternates}', 1)
+    page = page.replace(
+        '    <meta property="og:locale"',
+        f'    <script type="application/ld+json">{landing_jsonld(locale, description)}</script>\n    <meta property="og:locale"',
+        1,
+    )
 
     page = re.sub(
         r'<nav class="language-picker"[^>]*>.*?</nav>',
@@ -286,14 +332,14 @@ def render_page(template: str, locale: dict[str, object], locales: list[dict[str
         flags=re.DOTALL,
     )
     page = re.sub(
-        r'(<div class="language-grid" id="language-grid"[^>]*>).*?(</div>)',
-        lambda match: match.group(1) + "\n          " + language_grid(locales) + "\n        " + match.group(2),
+        r'(<nav class="language-grid" id="language-grid"[^>]*>).*?(</nav>)',
+        lambda match: match.group(1) + "\n          " + language_grid(locales, code) + "\n        " + match.group(2),
         page,
         count=1,
         flags=re.DOTALL,
     )
     page = re.sub(
-        r'(<div class="language-grid" id="language-grid"[^>]*aria-label=")[^"]*(")',
+        r'(<nav class="language-grid" id="language-grid"[^>]*aria-label=")[^"]*(")',
         lambda match: match.group(1) + html.escape(copy["languageTitle"], quote=True) + match.group(2),
         page,
         count=1,
@@ -357,37 +403,63 @@ def legacy_redirect_page(target: str, canonical: str = BASE_URL + "/") -> str:
     )
 
 
-def not_found_page(locale: dict[str, object]) -> str:
-    """GitHub Pages serves /404.html for any missing path: a quiz taken out of Discover, a mistyped URL."""
-    c = locale["copy"]
+NOT_FOUND_SCRIPT = """(function () {
+  var seg = location.pathname.split("/")[1] || "", all = JSON.parse(document.getElementById("nf-i18n").textContent), t = all[seg];
+  if (!t) return;
+  var pre = "/" + seg, root = document.documentElement;
+  root.lang = t.lang; root.dir = t.dir; document.title = t.title + " — QuizJet";
+  document.getElementById("nf-title").textContent = t.title;
+  document.getElementById("nf-body").textContent = t.body;
+  [["nf-quizzes", "quizzes", "/discover/"], ["nf-books", "books", "/books/"], ["nf-news", "news", "/news/"]].forEach(function (x) {
+    var a = document.getElementById(x[0]); a.textContent = t[x[1]]; a.href = pre + x[2];
+  });
+})();"""
+
+
+def not_found_page(locales: list[dict[str, object]]) -> str:
+    """GitHub Pages serves one /404.html for every missing path: a quiz taken out of Discover, a mistyped URL.
+
+    The HTML is English; a few lines of script switch it to the language of the path prefix (/tr/q/gone/ → Turkish,
+    links kept in that language). Without script it stays English, which is what every visitor got before."""
+    en = locales[0]
+    c = en["copy"]
     e = lambda value: html.escape(str(value), quote=True)  # noqa: E731
+    i18n = {
+        str(locale["route"]): {"lang": locale["code"], "dir": locale["dir"], "title": locale["copy"]["nfTitle"],
+                               "body": locale["copy"]["nfBody"], "quizzes": locale["copy"]["browseQuizzes"],
+                               "books": locale["copy"]["bkBrowse"], "news": locale["copy"]["navNews"]}
+        for locale in locales if locale["route"]
+    }
+    blob = json.dumps(i18n, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
     return (
         "<!doctype html>\n"
-        f'<html lang="{e(locale["code"])}" dir="{e(locale["dir"])}">\n'
+        f'<html lang="{e(en["code"])}" dir="{e(en["dir"])}">\n'
         "  <head>\n"
         '    <meta charset="utf-8">\n'
         '    <meta name="viewport" content="width=device-width, initial-scale=1">\n'
         '    <meta name="theme-color" content="#101f37">\n'
         '    <meta name="robots" content="noindex">\n'
-        "    <title>Page not found — QuizJet</title>\n"
-        '    <link rel="icon" type="image/png" href="/assets/logo-96.png">\n'
+        f'    <title>{e(c["nfTitle"])} — QuizJet</title>\n'
+        f"{head_links()}"
         f'    <link rel="stylesheet" href="/styles.css?v={stylesheet_version()}">\n'
         "  </head>\n"
         "  <body>\n"
         '    <header class="site-header">\n'
-        '      <nav class="navigation page-width">\n'
+        f'      <nav class="navigation page-width" aria-label="{e(c["navMainLabel"])}">\n'
         '        <a class="brand" href="/"><img src="/assets/logo-96.png" alt="" width="44" height="44"><span>quizjet</span></a>\n'
         "      </nav>\n"
         "    </header>\n"
-        '    <main class="discover page-width">\n'
-        "      <h1>Page not found</h1>\n"
-        '      <p class="discover-lead">This page does not exist or is no longer public. A quiz leaves quizjet.app when its owner turns Discover off.</p>\n'
+        '    <main class="discover page-width" id="top">\n'
+        f'      <h1 id="nf-title">{e(c["nfTitle"])}</h1>\n'
+        f'      <p class="discover-lead" id="nf-body">{e(c["nfBody"])}</p>\n'
         '      <div class="quiz-actions">\n'
-        f'        <a class="button button-dark" href="/discover/">{e(c["browseQuizzes"])}</a>\n'
-        f'        <a class="button button-light" href="/books/">{e(c["bkBrowse"])}</a>\n'
-        f'        <a class="button button-light" href="/news/">{e(c["navNews"])}</a>\n'
+        f'        <a class="button button-dark" id="nf-quizzes" href="/discover/">{e(c["browseQuizzes"])}</a>\n'
+        f'        <a class="button button-light" id="nf-books" href="/books/">{e(c["bkBrowse"])}</a>\n'
+        f'        <a class="button button-light" id="nf-news" href="/news/">{e(c["navNews"])}</a>\n'
         "      </div>\n"
         "    </main>\n"
+        f'    <script type="application/json" id="nf-i18n">{blob}</script>\n'
+        f"    <script>{NOT_FOUND_SCRIPT}</script>\n"
         "  </body>\n"
         "</html>\n"
     )
@@ -400,7 +472,7 @@ def outputs(template: str, locales: list[dict[str, object]], legal_meta: dict[st
         target = ROOT / locale["route"] / "index.html" if locale["route"] else ROOT / "index.html"
         generated[target] = render_page(template, locale, locales, legal_routes)
     generated[ROOT / "en" / "index.html"] = legacy_redirect_page("/")
-    generated[ROOT / "404.html"] = not_found_page(locales[0])
+    generated[ROOT / "404.html"] = not_found_page(locales)
     generated[ROOT / "sitemap.xml"] = sitemap_content(locales)
     generated.update(legal_outputs(legal_meta))
     return generated

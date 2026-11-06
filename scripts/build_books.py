@@ -96,6 +96,22 @@ def list_page(locale: dict[str, object], pre: str, books: list[dict[str, object]
     return f'{c["bkTitle"]} — QuizJet', c["bkMeta"], body, reader_css()
 
 
+def static_text(book: dict[str, object], c: dict[str, str]) -> str:
+    """The text as plain paragraphs inside the page: for search engines and readers without JavaScript; reader.js
+    replaces it with the interactive version when it runs. A book inlines its first chapter, a news edition every
+    text (four short ones) with the reports each was written from."""
+    chapters = book["chapters"] if book.get("inlineAll") else book["chapters"][:1]
+    parts = []
+    for chapter in chapters:
+        if book.get("inlineAll"):
+            parts.append(f"<h2>{e(chapter['title'])}</h2>")
+        parts += [f"<p>{e(' '.join(para))}</p>" for para in chapter["p"]]
+        if chapter.get("sources"):
+            links = " · ".join(f'<a href="{e(s["u"])}" rel="noopener noreferrer">{e(s.get("t") or s["u"])}</a>' for s in chapter["sources"])
+            parts.append(f'<p class="rd-src">{e(c["nwSources"])}: {links}</p>')
+    return "\n          ".join(parts)
+
+
 def radios(name: str, options: list[tuple[str, str]]) -> str:
     return "".join(f'<label><input type="radio" name="{name}" value="{e(v)}"> {e(label)}</label>' for v, label in options)
 
@@ -106,7 +122,10 @@ def reader_page(locale: dict[str, object], pre: str, book: dict[str, object]) ->
     back = "→" if locale["dir"] == "rtl" else "←"
     # Optional keys a news edition sets (scripts/build_news.py); a Gutenberg book has none of them.
     back_href, back_label = book.get("back") or (f"{pre}/books/", c["bkBack"])
-    quiz_copy = book.get("quizCopy") or {"title": c["bkQuizTitle"], "body": c["bkQuizBody"], "cta": c["bkQuizCta"], "next": c["bkNextChapter"]}
+    has_quiz = bool(book.get("quiz")) or bool(book.get("chapterQuizzes"))
+    # No quiz key yet: say so instead of promising a chapter quiz the button cannot open.
+    quiz_copy = book.get("quizCopy") or {"title": c["bkQuizTitle"], "body": c["bkQuizBody"] if has_quiz else c["bkQuizSoon"],
+                                         "cta": c["bkQuizCta"], "next": c["bkNextChapter"]}
     title_lang = str(book.get("titleLang") or "en")
     title_dir = "ltr" if title_lang == "en" else str(locale["dir"])
     source_html = book.get("sourceHtml") or (
@@ -142,15 +161,17 @@ def reader_page(locale: dict[str, object], pre: str, book: dict[str, object]) ->
           <button type="button" class="rd-icon" id="rd-pg-next" aria-label="{e(c["bkNextPage"])}">›</button>
         </div>
         <p class="rd-tip" id="rd-tip">{e(c["bkTip"])}</p>
-        <article class="rd-text" id="rd-text" lang="en" dir="ltr"><p>{e(c["bkLoading"])}</p></article>
-        <aside class="rd-quiz" id="rd-quiz" lang="{e(locale["code"])}" dir="{locale["dir"]}" hidden>
+        <article class="rd-text" id="rd-text" lang="en" dir="ltr">
+          {static_text(book, c)}
+        </article>
+        <section class="rd-quiz" id="rd-quiz" lang="{e(locale["code"])}" dir="{locale["dir"]}" hidden>
           <h2>{e(quiz_copy["title"])}</h2>
           <p>{e(quiz_copy["body"])}</p>
           <div class="quiz-actions">
             <a class="button button-primary" id="rd-quiz-link" href="https://t.me/{BOT}" target="_blank" rel="noopener noreferrer">{e(quiz_copy["cta"])} <span aria-hidden="true">↗</span></a>
             <a class="button button-light" id="rd-next-ch" href="#">{e(quiz_copy["next"])} <span aria-hidden="true">→</span></a>
           </div>
-        </aside>
+        </section>
         <div class="rd-bar" id="rd-bar" dir="ltr">
           <div class="rd-row">
             <button type="button" id="rd-prev" aria-label="{e(c["bkPrev"])}">‹</button>

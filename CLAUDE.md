@@ -44,6 +44,8 @@ the Discover catalog and writes the day's news lesson.
 | Books | `_data/books.json` + `_data/books/<slug>.json` (`scripts/import_gutenberg.py`, Project Gutenberg) | `/books/`, chapters as `/books/<slug>/<n>.json` |
 | News | `_data/news/<date>.json`, written and **committed by the workflow** (`scripts/build_news.py`, secret `OPENAI_API_KEY`) | `/news/`, `/news/<date>/` |
 | Reader | `assets/reader.js`, `assets/reader.css` (books and news share it; copy keys `bk*`, `nw*`) | |
+| Fonts, icons | `assets/fonts/` (DM Sans variable + Manrope 700, SIL OFL, declared in `styles.css`; no third-party request), `assets/og-image.png` 1200×630, `assets/apple-touch-icon.png`, `manifest.webmanifest` | |
+| News feed | written by `build_discover.write_news` from the editions | `/news/feed.xml` (Atom, English), linked from every news page |
 
 ## Rules that the checks enforce
 
@@ -51,6 +53,14 @@ the Discover catalog and writes the day's news lesson.
 - Nothing under `scripts/`, nothing starting with `_` or `.` is published (`build_discover.publishable`).
 - Generated pages carry no `data-copy`, exactly one `h1`, a versioned stylesheet URL, hreflang for all
   18 languages; the committed `sitemap.xml` lists the landing pages only (generated routes are added at build).
+- Every landing page carries one JSON-LD graph (WebSite, Organization, SoftwareApplication), a title of 25–70
+  and a description of 50–160 characters (`seoTitle`/`seoDescription`, `{languages}` = live count), links to all 18
+  language pages from the language grid, and only `t.me` links whose `?start=` payload is in
+  `build_locales.START_PAYLOADS` (anything else answers "Quiz not found." in the bot; `startgroup` never).
+- The deployed sitemap adds `<lastmod>` only where a date is known (news editions, quiz creation dates) and the six
+  legal pages. A creator's description is published without the links in it (`build_discover.URL_RE`).
+- The texts of a book's first chapter and of every news edition are in the HTML (`build_books.static_text`);
+  `reader.js` replaces them when it runs. Keep it so: it is what search engines and readers without JavaScript get.
 - News texts are written in a clean room: a research call (hosted web search) returns facts of at most 12
   words plus report links, dated from the runner's clock; the writer call sees those facts only. The
   copyright posture is the docstring of `scripts/build_news.py`; keep code and docstring in step.

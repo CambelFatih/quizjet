@@ -11,16 +11,21 @@
     <link rel="alternate" hreflang="tr" href="https://quizjet.app/tr/support.html">
     <link rel="alternate" hreflang="x-default" href="https://quizjet.app/support.html">
     <link rel="icon" type="image/png" href="/assets/logo-96.png">
-    <link rel="stylesheet" href="/styles.css?v=2bd10d4a0048">
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+    <link rel="manifest" href="/manifest.webmanifest">
+    <link rel="preload" href="/assets/fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/assets/fonts/manrope-700-latin.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="/styles.css?v=46ccbccfabb8">
   </head>
   <body>
+    <a class="skip-link" href="#top">Skip to content</a>
     <header class="site-header">
-      <nav class="navigation page-width">
+      <nav class="navigation page-width" aria-label="Main menu">
         <a class="brand" href="/"><img src="/assets/logo-96.png" alt="" width="44" height="44"><span>quizjet</span></a>
         <div class="nav-actions legal-switch"><a href="/tr/support.html" lang="tr" hreflang="tr">TR</a></div>
       </nav>
     </header>
-    <main class="legal page-width">
+    <main class="legal page-width" id="top">
       <p class="legal-updated">Last updated: <time datetime="2026-11-06">2026-11-06</time></p>
       <h1>Support</h1>
       <p>Email <a href="mailto:support@quizjet.app">support@quizjet.app</a>. Include your Telegram username or user ID so we can find your account. We answer as soon as we can.</p>
@@ -36,11 +41,23 @@
 
       <h2>Using the bot</h2>
       <p>Send <code>/help</code> to <a href="https://t.me/QuizJetBot">@QuizJetBot</a> to see the commands. Create a quiz with <code>/newquiz</code> or generate one with AI with <code>/aiquiz</code>.</p>
+
+      <h2>Frequently asked questions</h2>
+      <h3>Is QuizJet free?</h3>
+      <p>Yes. Creating, playing and sharing quizzes is free. Premium raises the usage limits and is bought inside Telegram with Telegram Stars; the current packages and limits are shown in the bot.</p>
+      <h3>Which languages does it support?</h3>
+      <p>The bot and this website come in 18 languages. The bot opens in your Telegram language; change it any time with <code>/lang</code>.</p>
+      <h3>How does a quiz work in a group?</h3>
+      <p>Add <a href="https://t.me/QuizJetBot">@QuizJetBot</a> to the group. A group administrator can then start any quiz with its code or from the <a href="/discover/">Discover</a> page; if a quiz does not start, make the bot an administrator and try again. Questions are sent as Telegram quiz polls, and the members of the group see the results and the leaderboard.</p>
+      <h3>Where does my data go?</h3>
+      <p>Messages travel through Telegram, AI requests go to OpenAI as text only, and our servers run on AWS in Frankfurt. The <a href="/privacy.html">Privacy Policy</a> lists every data category, who receives it and how long it is kept.</p>
+      <h3>How do I report a quiz?</h3>
+      <p>Every quiz page on quizjet.app has a report link, and you can always email <a href="mailto:support@quizjet.app">support@quizjet.app</a> with the quiz link or code and what is wrong.</p>
     </main>
     <footer class="site-footer">
       <div class="footer-inner page-width">
         <a class="brand footer-brand" href="/"><img src="/assets/logo-96.png" alt="" width="36" height="36"><span>quizjet</span></a>
-        <nav class="footer-legal"><a href="/privacy.html">Privacy</a><a href="/terms.html">Terms</a><a href="/support.html" aria-current="page">Support</a></nav>
+        <nav class="footer-legal" aria-label="Legal"><a href="/privacy.html">Privacy</a><a href="/terms.html">Terms</a><a href="/support.html" aria-current="page">Support</a></nav>
       </div>
     </footer>
   </body>

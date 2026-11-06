@@ -30,6 +30,7 @@ import os
 import re
 import sys
 import urllib.request
+import xml.etree.ElementTree as ET
 from pathlib import Path
 
 import build_books
@@ -45,6 +46,9 @@ TOPICS = [("politics", "world politics"), ("business", "business and finance"), 
 RESEARCH_MODEL = os.environ.get("NEWS_RESEARCH_MODEL", "gpt-5.6-luna")  # the bot's grounding tier: searches, lists facts
 MODEL = os.environ.get("NEWS_MODEL", "gpt-5.6-sol")  # the bot's quality tier writes the text; ~4 a day cost cents
 MAX_FACT_WORDS = 12  # a "fact" longer than this is a sentence lifted from a page, not a fact
+MIN_WORDS = 150  # the writer is asked for 180–230; a text this far below is thin and is skipped, like a thin quiz
+FEED_PATH = "news/feed.xml"
+FEED_LINK = f'    <link rel="alternate" type="application/atom+xml" href="/{FEED_PATH}" title="QuizJet news lessons">\n'
 
 FRESH_DAYS = 2
 # The model has no idea what day it is: the date comes from the runner's clock and goes into the prompt,
@@ -70,7 +74,7 @@ FACTS_SCHEMA = {
 
 WRITER = f"""You write short news texts for adult English learners (CEFR {LEVEL}). You get a list of facts about one
 news story and nothing else. Write an ORIGINAL text from these facts only: no claim the facts do not
-support, no quotations, neutral tone, names of people, places and organisations as given. 180 to 220
+support, no quotations, neutral tone, names of people, places and organisations as given. at least 180 and at most 230
 words in 4 or 5 short paragraphs of plain sentences ({LEVEL} vocabulary and grammar, no headline
 fragments). The title is a plain sentence, not a headline pun.
 Then: 6 key words or phrases from your text with simple English definitions, and 4 multiple-choice
@@ -153,8 +157,9 @@ def write_lesson(facts: list[str], key: str) -> dict[str, object]:
 def article(lesson: dict[str, object], found: dict[str, object], topic: str) -> dict[str, object]:
     """Checked, reader-shaped article; raises ValueError for anything thin."""
     paragraphs = [clean(str(p)) for p in lesson["paragraphs"] if str(p).strip()]
-    if len(paragraphs) < 3 or len(found["sources"]) < 2:
-        raise ValueError("thin lesson")
+    words = sum(len(p.split()) for p in paragraphs)
+    if len(paragraphs) < 3 or len(found["sources"]) < 2 or words < MIN_WORDS:
+        raise ValueError(f"thin lesson: {len(paragraphs)} paragraphs, {words} words, {len(found['sources'])} reports")
     quiz = []
     for q in lesson["quiz"]:
         options = [clean(str(o)) for o in q["o"]]
@@ -220,25 +225,73 @@ def chapter_files(edition: dict[str, object]) -> dict[str, str]:
     }
 
 
-def list_page(locale: dict[str, object], pre: str, editions: list[dict[str, object]]) -> tuple[str, str, str, str]:
-    """(title, description, body, extra head) of /news/."""
+def edition_row(locale: dict[str, object], pre: str, ed: dict[str, object]) -> str:
     c = locale["copy"]
-    rows = "".join(
+    return (
         f'        <li><a href="{pre}/news/{ed["date"]}/">'
         f'{build_books.cover({"title": ed["date"], "author": "QuizJet", "cover": ["#2a4d3a", "#9ad3a8"]})}<span class="book-info">'
         f'<strong>{e(c["nwEdition"].replace("{date}", str(ed["date"])))}</strong>'
         f'<span lang="en" dir="ltr">{e(" · ".join(str(a["title"]) for a in ed["articles"]))}</span>'
         f'<small>{e(c["bkLevel"])}: {e(LEVEL)} · {e(", ".join(topic_label(locale, str(a["topic"])) for a in ed["articles"]))}</small>'
         f'<span class="book-read">{e(c["bkRead"])} <span aria-hidden="true">→</span></span></span></a></li>\n'
-        for ed in editions
     )
+
+
+def list_page(locale: dict[str, object], pre: str, editions: list[dict[str, object]]) -> tuple[str, str, str, str]:
+    """(title, description, body, extra head) of /news/: one list, or one list per month once there is more than one."""
+    c = locale["copy"]
+    months: dict[str, list[dict[str, object]]] = {}
+    for ed in editions:
+        months.setdefault(str(ed["date"])[:7], []).append(ed)
+    if len(months) > 1:
+        lists = "".join(
+            f'      <h2 class="nw-month" dir="ltr">{e(month)}</h2>\n      <ul class="book-list">\n'
+            + "".join(edition_row(locale, pre, ed) for ed in group) + "      </ul>\n"
+            for month, group in months.items()
+        )
+    elif editions:
+        lists = '      <ul class="book-list">\n' + "".join(edition_row(locale, pre, ed) for ed in editions) + "      </ul>\n"
+    else:
+        lists = f'      <p class="discover-empty">{e(c["nwEmpty"])}</p>\n'
     body = (
         f'      <h1>{e(c["nwTitle"])}</h1>\n'
         f'      <p class="discover-lead">{e(c["nwLead"])}</p>\n'
-        + (f'      <ul class="book-list">\n{rows}      </ul>\n' if rows else f'      <p class="discover-empty">{e(c["nwEmpty"])}</p>\n')
+        + lists
         + f'      <p class="quiz-note">{e(c["nwNote"])}</p>\n'
     )
     return f'{c["nwTitle"]} — QuizJet', c["nwMeta"], body, build_books.reader_css()
+
+
+def feed(editions: list[dict[str, object]], locale: dict[str, object], limit: int = 30) -> str:
+    """Atom feed of the newest editions, in English like the texts; each entry carries the full lesson text and its reports."""
+    atom = "http://www.w3.org/2005/Atom"
+    ET.register_namespace("", atom)
+    c = locale["copy"]
+    root = ET.Element(f"{{{atom}}}feed")
+    ET.SubElement(root, f"{{{atom}}}title").text = str(c["nwTitle"])
+    ET.SubElement(root, f"{{{atom}}}subtitle").text = str(c["nwMeta"])
+    ET.SubElement(root, f"{{{atom}}}id").text = f"{BASE_URL}/news/"
+    ET.SubElement(root, f"{{{atom}}}link", rel="self", href=f"{BASE_URL}/{FEED_PATH}", type="application/atom+xml")
+    ET.SubElement(root, f"{{{atom}}}link", rel="alternate", href=f"{BASE_URL}/news/", type="text/html")
+    ET.SubElement(root, f"{{{atom}}}updated").text = f"{editions[0]['date']}T00:00:00Z"
+    ET.SubElement(ET.SubElement(root, f"{{{atom}}}author"), f"{{{atom}}}name").text = "QuizJet"
+    for ed in editions[:limit]:
+        date = str(ed["date"])
+        entry = ET.SubElement(root, f"{{{atom}}}entry")
+        ET.SubElement(entry, f"{{{atom}}}id").text = f"{BASE_URL}/news/{date}/"
+        ET.SubElement(entry, f"{{{atom}}}title").text = str(c["nwEdition"]).replace("{date}", date)
+        ET.SubElement(entry, f"{{{atom}}}link", rel="alternate", href=f"{BASE_URL}/news/{date}/", type="text/html")
+        ET.SubElement(entry, f"{{{atom}}}published").text = f"{date}T00:00:00Z"
+        ET.SubElement(entry, f"{{{atom}}}updated").text = f"{date}T00:00:00Z"
+        ET.SubElement(entry, f"{{{atom}}}summary").text = " · ".join(str(a["title"]) for a in ed["articles"])
+        content = ET.SubElement(entry, f"{{{atom}}}content", type="text")
+        content.text = "\n\n".join(
+            f"{a['title']}\n\n" + "\n\n".join(" ".join(p) for p in a["p"])
+            + ("\n\n" + str(c["nwSources"]) + ": " + ", ".join(str(s["u"]) for s in a.get("sources") or []) if a.get("sources") else "")
+            for a in ed["articles"]
+        )
+    ET.indent(root, space="  ")
+    return ET.tostring(root, encoding="utf-8", xml_declaration=True).decode("utf-8") + "\n"
 
 
 def edition_book(locale: dict[str, object], pre: str, edition: dict[str, object]) -> dict[str, object]:
@@ -248,7 +301,9 @@ def edition_book(locale: dict[str, object], pre: str, edition: dict[str, object]
     return {
         "slug": f"news-{date}", "base": f"/news/{date}/", "title": title, "titleLang": locale["code"],
         "author": "QuizJet", "level": LEVEL, "quiz": "", "chapterQuizzes": {},
-        "chapters": [{"title": f"{topic_label(locale, str(a['topic']))}: {a['title']}", "p": a["p"]} for a in edition["articles"]],
+        "chapters": [{"title": f"{topic_label(locale, str(a['topic']))}: {a['title']}", "p": a["p"], "sources": a.get("sources") or []}
+                     for a in edition["articles"]],
+        "inlineAll": True,
         "back": (f"{pre}/news/", c["nwBack"]),
         "sourceHtml": e(c["nwSource"]),
         "quizCopy": {"title": c["nwQuizTitle"], "body": c["nwQuizBody"], "cta": c["nwQuizCta"], "next": c["nwNext"]},
