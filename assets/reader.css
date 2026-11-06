@@ -103,3 +103,18 @@
 .rd-check { display: flex; gap: 8px; align-items: center; margin-top: 12px; font-size: 15px; }
 .rd-text.study .s.tr .sb-tr { color: #fff; border-color: var(--rd-edge); background: var(--rd-edge); }
 .reader .rd-why { display: block; margin-top: 4px; color: var(--rd-muted); font: 11px/1.4 ui-monospace, monospace; overflow-wrap: anywhere; }
+
+/* News lessons: key words, questions answered on the page, the reports used (assets/reader.js extras()). */
+.rd-text .rd-box { break-inside: avoid; margin: 0 0 1em; padding: 14px 16px; border: 1px solid var(--rd-line); border-radius: 12px; font: 15px/1.5 "DM Sans", system-ui, sans-serif; }
+.rd-box h3 { margin: 0 0 8px; font-size: 16px; }
+.rd-box dl, .rd-box ul { margin: 0; }
+.rd-box dt { font-weight: 700; }
+.rd-box dd { margin: 0 0 6px; color: var(--rd-muted); }
+.rd-box ul { padding-inline-start: 18px; }
+.rd-opt { display: block; width: 100%; margin: 6px 0; padding: 8px 12px; border: 1px solid var(--rd-line); border-radius: 10px; color: var(--rd-ink); background: var(--rd-bg); font: inherit; text-align: start; cursor: pointer; }
+.rd-opt:disabled { cursor: default; }
+.rd-opt.ok { border-color: #2e8b57; background: #e6f4ea; }
+.rd-opt.no { border-color: #c0392b; background: #fdecea; }
+:root[data-rd-theme="dark"] .rd-opt.ok { background: #1e3a2a; }
+:root[data-rd-theme="dark"] .rd-opt.no { background: #3a1e1e; }
+.rd-fb { margin: 6px 0 0; color: var(--rd-muted); }

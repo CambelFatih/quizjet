@@ -104,24 +104,32 @@ def reader_page(locale: dict[str, object], pre: str, book: dict[str, object]) ->
     """(title, description, body, jsonld, extra head) of /kitaplar/<slug>/."""
     c, slug = locale["copy"], str(book["slug"])
     back = "→" if locale["dir"] == "rtl" else "←"
+    # Optional keys a news edition sets (scripts/build_news.py); a Gutenberg book has none of them.
+    back_href, back_label = book.get("back") or (f"{pre}/kitaplar/", c["bkBack"])
+    quiz_copy = book.get("quizCopy") or {"title": c["bkQuizTitle"], "body": c["bkQuizBody"], "cta": c["bkQuizCta"], "next": c["bkNextChapter"]}
+    title_lang = str(book.get("titleLang") or "en")
+    title_dir = "ltr" if title_lang == "en" else str(locale["dir"])
+    source_html = book.get("sourceHtml") or (
+        f'{e(c["bkSource"])} <a href="{e(book["source"])}" target="_blank" rel="noopener noreferrer">gutenberg.org</a>')
     chapters = book["chapters"]
     options = "".join(f'<option value="{n}">{n}. {e(ch["title"])}</option>' for n, ch in enumerate(chapters, start=1))
     targets = [("", c["bkNone"])] + [(str(l["code"]), str(l["name"])) for l in LOCALES if l["code"] != "en"]
     target_options = "".join(f'<option value="{e(code)}">{e(name)}</option>' for code, name in targets)
     data = {
         "slug": slug,
+        "base": book.get("base") or f"/kitaplar/{slug}/",
         "lang": locale["code"],
         "bot": BOT,
         "quiz": book.get("quiz") or "",
         "chapterQuizzes": book.get("chapterQuizzes") or {},
         "chapters": [ch["title"] for ch in chapters],
-        "copy": {k: v for k, v in c.items() if k.startswith("bk")},
+        "copy": {k: v for k, v in c.items() if k.startswith(("bk", "nw"))},
     }
     body = f"""      <div class="reader" id="reader">
-        <p class="quiz-back"><a href="{pre}/kitaplar/">{back} {e(c["bkBack"])}</a></p>
-        <h1 lang="en" dir="ltr">{e(book["title"])}</h1>
+        <p class="quiz-back"><a href="{e(back_href)}">{back} {e(back_label)}</a></p>
+        <h1 lang="{e(title_lang)}" dir="{title_dir}">{e(book["title"])}</h1>
         <p class="rd-meta"><span lang="en" dir="ltr">{e(book["author"])}</span> · {e(c["bkLevel"])}: {e(book["level"])}</p>
-        <p class="quiz-note">{e(c["bkSource"])} <a href="{e(book["source"])}" target="_blank" rel="noopener noreferrer">gutenberg.org</a></p>
+        <p class="quiz-note">{source_html}</p>
         <div class="rd-tools">
           <label class="sr-only" for="rd-ch">{e(c["bkChapter"])}</label>
           <select id="rd-ch" lang="en" dir="ltr">{options}</select>
@@ -136,11 +144,11 @@ def reader_page(locale: dict[str, object], pre: str, book: dict[str, object]) ->
         <p class="rd-tip" id="rd-tip">{e(c["bkTip"])}</p>
         <article class="rd-text" id="rd-text" lang="en" dir="ltr"><p>{e(c["bkLoading"])}</p></article>
         <aside class="rd-quiz" id="rd-quiz" lang="{e(locale["code"])}" dir="{locale["dir"]}" hidden>
-          <h2>{e(c["bkQuizTitle"])}</h2>
-          <p>{e(c["bkQuizBody"])}</p>
+          <h2>{e(quiz_copy["title"])}</h2>
+          <p>{e(quiz_copy["body"])}</p>
           <div class="quiz-actions">
-            <a class="button button-primary" id="rd-quiz-link" href="https://t.me/{BOT}" target="_blank" rel="noopener noreferrer">{e(c["bkQuizCta"])} <span aria-hidden="true">↗</span></a>
-            <a class="button button-light" id="rd-next-ch" href="#">{e(c["bkNextChapter"])} <span aria-hidden="true">→</span></a>
+            <a class="button button-primary" id="rd-quiz-link" href="https://t.me/{BOT}" target="_blank" rel="noopener noreferrer">{e(quiz_copy["cta"])} <span aria-hidden="true">↗</span></a>
+            <a class="button button-light" id="rd-next-ch" href="#">{e(quiz_copy["next"])} <span aria-hidden="true">→</span></a>
           </div>
         </aside>
         <div class="rd-bar" id="rd-bar" dir="ltr">
@@ -185,7 +193,7 @@ def reader_page(locale: dict[str, object], pre: str, book: dict[str, object]) ->
       <script type="application/json" id="rd-data">{script_json(data)}</script>
       <script src="/assets/reader.js?v={asset_version("reader.js")}" defer></script>
 """
-    jsonld = script_json({
+    jsonld = script_json(book.get("jsonld") or {
         "@context": "https://schema.org",
         "@type": "Book",
         "name": book["title"],
@@ -195,5 +203,5 @@ def reader_page(locale: dict[str, object], pre: str, book: dict[str, object]) ->
         "isAccessibleForFree": True,
         "url": f"{BASE_URL}{pre}/kitaplar/{slug}/",
     })
-    description = c["bkReaderMeta"].replace("{title}", str(book["title"])).replace("{author}", str(book["author"]))
-    return f'{book["title"]} — {c["bkTitle"]}', description, body, jsonld, reader_css()
+    description = book.get("description") or c["bkReaderMeta"].replace("{title}", str(book["title"])).replace("{author}", str(book["author"]))
+    return book.get("pageTitle") or f'{book["title"]} — {c["bkTitle"]}', description, body, jsonld, reader_css()

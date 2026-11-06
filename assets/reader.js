@@ -387,10 +387,41 @@
       }
       frag.append(p);
     }
+    frag.append(...extras(data));
     text.replaceChildren(frag, quizBox); // the quiz is the chapter's last page
     seek.max = Math.max(spans.length - 1, 0);
     markSaved();
   }
+  /* News lessons (build_news.py) carry key words, four questions answered right here and the reports the
+     text was written from. Each block avoids a column break, so a question never splits across pages. */
+  function block(title, inner) {
+    const d = document.createElement("div");
+    d.className = "rd-box";
+    d.innerHTML = "<h3>" + esc(title) + "</h3>" + inner;
+    return d;
+  }
+  function extras(data) {
+    const out = [];
+    if (data.words && data.words.length) out.push(block(C.nwWords, "<dl>" + data.words.map((w) => "<dt>" + esc(w.w) + "</dt><dd>" + esc(w.d) + "</dd>").join("") + "</dl>"));
+    (data.quiz || []).forEach((q, i) => {
+      const d = block((i + 1) + ". " + q.q, q.o.map((o, k) => '<button type="button" class="rd-opt" data-a="' + (k === q.a ? 1 : 0) + '">' + esc(o) + "</button>").join("") + '<p class="rd-fb" hidden></p>');
+      d.classList.add("rd-q");
+      d.dataset.why = q.why;
+      out.push(d);
+    });
+    if (data.sources && data.sources.length) out.push(block(C.nwSources, "<ul>" + data.sources.map((s) => '<li><a href="' + esc(s.u) + '" target="_blank" rel="noopener noreferrer">' + esc(s.t || s.u) + "</a></li>").join("") + "</ul>"));
+    return out;
+  }
+  text.addEventListener("click", (ev) => {
+    const b = ev.target.closest(".rd-opt");
+    if (!b || b.disabled) return;
+    const q = b.closest(".rd-q"), ok = b.dataset.a === "1";
+    q.querySelectorAll(".rd-opt").forEach((o) => { o.disabled = true; if (o.dataset.a === "1") o.classList.add("ok"); });
+    if (!ok) b.classList.add("no");
+    const why = q.querySelector(".rd-fb");
+    why.textContent = (ok ? C.nwCorrect : C.nwWrong) + " " + q.dataset.why;
+    why.hidden = false;
+  });
   function showQuiz() {
     const key = D.chapterQuizzes[String(chapter)] || D.quiz;
     $("rd-quiz-link").href = "https://t.me/" + D.bot + (key ? "?start=" + encodeURIComponent(key) : "");
@@ -409,7 +440,7 @@
     page = 0;
     quizBox.hidden = true;
     text.innerHTML = "<p>" + esc(C.bkLoading) + "</p>";
-    fetch("/kitaplar/" + D.slug + "/" + n + ".json")
+    fetch((D.base || "/kitaplar/" + D.slug + "/") + n + ".json")
       .then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); })
       .then((data) => {
         if (n !== chapter) return;

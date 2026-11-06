@@ -17,7 +17,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write # the daily news lesson is committed back to main
   pages: write
   id-token: write
 
@@ -36,6 +36,29 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.13"
+
+      - name: Write today's news lesson
+        # Needs secrets OPENAI_API_KEY and TAVILY_API_KEY; without them the site is published without news.
+        # Nothing is generated (or billed) when _data/news/<today>.json already exists, so the push-to-main
+        # run after the daily one costs nothing. The file is committed so the archive of lessons stays;
+        # a push by GITHUB_TOKEN starts no second workflow run. Copyright posture: scripts/build_news.py.
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          TAVILY_API_KEY: ${{ secrets.TAVILY_API_KEY }}
+        run: |
+          if [ -z "$OPENAI_API_KEY" ] || [ -z "$TAVILY_API_KEY" ]; then
+            echo "::notice::OPENAI_API_KEY / TAVILY_API_KEY are not set; publishing without a new news lesson."
+            exit 0
+          fi
+          python scripts/build_news.py --generate || { echo "::warning::News generation failed; publishing without a new lesson."; exit 0; }
+          if [ -n "$(git status --porcelain _data/news)" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add _data/news
+            git commit -m "News lesson $(date -u +%F)"
+            git pull --rebase origin main && git push origin HEAD:main \
+              || echo "::warning::Could not push the lesson to main; it is published from this run only."
+          fi
 
       - name: Check static pages
         run: |
