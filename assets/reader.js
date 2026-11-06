@@ -147,8 +147,11 @@
     continuous = all;
     setActive(i, 1);
     updatePlay();
-    const s = sentences[i], starts = partsOf(s);
+    const s = sentences[i], turns = pageTurns(i);
+    const starts = [...new Set(partsOf(s).concat(Object.keys(turns).map(Number)))].sort((a, b) => a - b);
     const say = (k) => {
+      // The voice is about to cross onto the next page: turn it now (unless the reader is paging by hand).
+      if (turns[starts[k]] && Date.now() - userScrollAt > 4000) goPage(pageOf(turns[starts[k]]));
       const u = utter(s.slice(starts[k], starts[k + 1]));
       u.onboundary = (ev) => { if (mine === run && ev.name !== "sentence") markWord(starts[k] + ev.charIndex); };
       u.onend = () => {
@@ -171,6 +174,19 @@
     // Safari can drop an utterance queued in the same tick as cancel(); a short gap avoids it.
     if (busy) setTimeout(() => { if (mine === run) say(0); }, 60);
     else say(0);
+  }
+  // A sentence that runs over a page end, as {offset of the first word on the next page: that word}. It is spoken in
+  // parts split there so the page turns exactly when the voice gets there. Word positions from the engine cannot do
+  // this: many Android voices report none, and the page sat still while the rest of the sentence was read off-screen.
+  function pageTurns(i) {
+    const out = {};
+    let last = -1;
+    for (const w of spans[i].querySelectorAll(".w")) {
+      const p = pageOf(w);
+      if (last >= 0 && p !== last) out[w.dataset.o] = w;
+      last = p;
+    }
+    return out;
   }
   function sayWord(w) { if (!synth) return; stop(); synth.speak(utter(w)); }
   function updatePlay() {
