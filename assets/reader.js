@@ -14,6 +14,7 @@
   "use strict";
   const root = document.getElementById("reader");
   if (!root) return;
+  root.classList.add("rd-ready"); // paged layout only once the script runs; without it the text is plain paragraphs
   const D = JSON.parse(document.getElementById("rd-data").textContent);
   const C = D.copy;
   const $ = (id) => document.getElementById(id);
@@ -397,7 +398,7 @@
   function block(title, inner) {
     const d = document.createElement("div");
     d.className = "rd-box";
-    d.innerHTML = "<h3>" + esc(title) + "</h3>" + inner;
+    d.innerHTML = "<h2>" + esc(title) + "</h2>" + inner;
     return d;
   }
   function extras(data) {

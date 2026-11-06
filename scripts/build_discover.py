@@ -26,18 +26,20 @@ from pathlib import Path
 
 import build_books
 import build_news
-from build_locales import language_menu, legacy_redirect_page, stylesheet_version
+from build_locales import head_links, language_menu, legacy_redirect_page, legal_url, stylesheet_version
 
 ROOT = Path(__file__).resolve().parents[1]
 BASE_URL = "https://quizjet.app"
 BLOCKLIST_PATH = ROOT / "_data" / "discover-blocklist.json"
 LOCALES = json.loads((ROOT / "_data" / "locales.json").read_text(encoding="utf-8"))
 # Legal pages exist only in English and Turkish (owner decision); other languages link to English.
-LEGAL_ROUTES = {
-    language["route"]
-    for language in json.loads((ROOT / "_data" / "legal.json").read_text(encoding="utf-8"))["languages"].values()
-    if language["route"]
-}
+LEGAL_META = json.loads((ROOT / "_data" / "legal.json").read_text(encoding="utf-8"))
+LEGAL_ROUTES = {language["route"] for language in LEGAL_META["languages"].values() if language["route"]}
+LEGAL_URLS = [legal_url(language["route"], page) for language in LEGAL_META["languages"].values() for page in LEGAL_META["pages"]]
+# A creator's description is published as the page's meta description; links in it (channel invites, mostly) are not.
+URL_RE = re.compile(r"(?:https?://|www\.|t\.me/)\S+", re.IGNORECASE)
+TITLE_LIMIT = 70  # <title> only; the h1 keeps the full title
+PAGE_SIZE = 30  # catalog cards shown before "Show more" (the script; without it every card is on the page)
 SITEMAP_NS = "http://www.sitemaps.org/schemas/sitemap/0.9"
 # URL segments are English and never localized: UI text comes from _data/locales.json, the address of a page
 # is the same in every language apart from its /<route>/ prefix (the way /q/<key>/ always was). A new section
@@ -87,7 +89,7 @@ def load_catalog(path: Path) -> tuple[str, list[dict[str, object]], list[str]]:
         items.append({
             "key": key,
             "title": title,
-            "description": " ".join(str(raw.get("description") or "").split()),
+            "description": " ".join(URL_RE.sub(" ", str(raw.get("description") or "")).split()),
             "questionCount": int(raw.get("questionCount") or 0),
             "aiGenerated": bool(raw.get("isAiGenerated")),
             "createdAtUtc": str(raw.get("createdAtUtc") or ""),
@@ -111,6 +113,8 @@ def shell(locale: dict[str, object], title: str, description: str, suffix: str, 
     ) + f'    <link rel="alternate" hreflang="x-default" href="{BASE_URL}/{suffix}">\n'
     robots = '    <meta name="robots" content="noindex">\n' if noindex else ""
     ld = f'    <script type="application/ld+json">{jsonld}</script>\n' if jsonld else ""
+    links = (f'<a href="{pre}/discover/">{e(c["discAll"])}</a><a href="{pre}/books/">{e(c["navBooks"])}</a>'
+             f'<a href="{pre}/news/">{e(c["navNews"])}</a>')
     return (
         "<!doctype html>\n"
         f'<html lang="{e(locale["code"])}" dir="{e(locale["dir"])}">\n'
@@ -129,28 +133,31 @@ def shell(locale: dict[str, object], title: str, description: str, suffix: str, 
         f'    <meta property="og:title" content="{e(title)}">\n'
         f'    <meta property="og:description" content="{e(description)}">\n'
         f'    <meta property="og:url" content="{url}">\n'
-        f'    <meta property="og:image" content="{BASE_URL}/assets/logo.png">\n'
-        '    <meta name="twitter:card" content="summary">\n'
-        '    <link rel="icon" type="image/png" href="/assets/logo-96.png">\n'
+        f'    <meta property="og:image" content="{BASE_URL}/assets/og-image.png">\n'
+        '    <meta property="og:image:width" content="1200">\n'
+        '    <meta property="og:image:height" content="630">\n'
+        '    <meta name="twitter:card" content="summary_large_image">\n'
+        f'    <meta name="twitter:image" content="{BASE_URL}/assets/og-image.png">\n'
+        f"{head_links()}"
         f'    <link rel="stylesheet" href="/styles.css?v={stylesheet_version()}">\n'
         f"{head}{ld}"
         "  </head>\n"
         "  <body>\n"
+        f'    <a class="skip-link" href="#top">{e(c["skipToContent"])}</a>\n'
         '    <header class="site-header">\n'
-        '      <nav class="navigation page-width">\n'
+        f'      <nav class="navigation page-width" aria-label="{e(c["navMainLabel"])}">\n'
         f'        <a class="brand" href="{pre}/"><img src="/assets/logo-96.png" alt="" width="44" height="44"><span>quizjet</span></a>\n'
-        f'        <div class="nav-actions"><div class="nav-links"><a href="{pre}/discover/">{e(c["discAll"])}</a>'
-        f'<a href="{pre}/books/">{e(c["navBooks"])}</a><a href="{pre}/news/">{e(c["navNews"])}</a></div>'
-        f"{language_menu(locale, LOCALES, suffix)}"
+        f'        <div class="nav-links">{links}</div>\n'
+        f'        <div class="nav-actions">{language_menu(locale, LOCALES, suffix)}'
         f'<a class="button button-small button-light" href="https://t.me/QuizJetBot" target="_blank" rel="noopener noreferrer">'
         f'{e(c["navStart"])} <span aria-hidden="true">↗</span></a></div>\n'
         "      </nav>\n"
         "    </header>\n"
-        f'    <main class="discover page-width">\n{body}    </main>\n'
+        f'    <main class="discover page-width" id="top">\n{body}    </main>\n'
         '    <footer class="site-footer">\n'
         '      <div class="footer-inner page-width">\n'
         f'        <a class="brand footer-brand" href="{pre}/"><img src="/assets/logo-96.png" alt="" width="36" height="36"><span>quizjet</span></a>\n'
-        f'        <nav class="footer-legal"><a href="{legal}/privacy.html">{e(c["footerPrivacy"])}</a>'
+        f'        <nav class="footer-legal" aria-label="{e(c["footerLegalLabel"])}"><a href="{legal}/privacy.html">{e(c["footerPrivacy"])}</a>'
         f'<a href="{legal}/terms.html">{e(c["footerTerms"])}</a><a href="{legal}/support.html">{e(c["footerSupport"])}</a></nav>\n'
         "      </div>\n"
         "    </footer>\n"
@@ -168,39 +175,81 @@ def facts(item: dict[str, object], c: dict[str, str]) -> str:
     ])
 
 
+# Search, sort, AI/by-hand filter and "show more", all on the cards already in the page: no request, no re-render on
+# the server. Without script every card is visible in creation order (the controls stay hidden).
 SEARCH_SCRIPT = """    <script>
 (function () {
   var input = document.getElementById("q"), count = document.getElementById("count"), none = document.getElementById("none");
-  var items = [].slice.call(document.querySelectorAll(".quiz-list li"));
+  var list = document.querySelector(".quiz-list"), items = [].slice.call(list.children), more = document.getElementById("more");
+  var sort = document.getElementById("sort"), filters = [].slice.call(document.querySelectorAll("#filter button"));
+  var PAGE = %d, limit = PAGE, kind = "all";
+  items.forEach(function (li, i) { li.setAttribute("data-i", i); });
   function fold(s) { return s.toLowerCase().replace(/ı/g, "i").normalize("NFKD").replace(/[\\u0300-\\u036f]/g, ""); }
-  input.addEventListener("input", function () {
-    var term = fold(input.value.trim()), shown = 0;
-    items.forEach(function (li) { var hit = !term || li.getAttribute("data-search").indexOf(term) > -1; li.hidden = !hit; if (hit) shown++; });
-    count.textContent = shown;
-    none.hidden = shown > 0;
+  function num(li, a) { return Number(li.getAttribute(a)) || 0; }
+  function apply() {
+    var term = fold(input.value.trim()), mode = sort.value, matched = 0;
+    var order = items.slice().sort(function (a, b) {
+      if (mode === "plays") return num(b, "data-plays") - num(a, "data-plays") || num(a, "data-i") - num(b, "data-i");
+      if (mode === "q") return num(b, "data-q") - num(a, "data-q") || num(a, "data-i") - num(b, "data-i");
+      return num(a, "data-i") - num(b, "data-i");
+    });
+    order.forEach(function (li) {
+      var hit = (!term || li.getAttribute("data-search").indexOf(term) > -1) && (kind === "all" || li.getAttribute("data-ai") === kind);
+      if (hit) matched++;
+      li.hidden = !(hit && matched <= limit);
+      list.appendChild(li);
+    });
+    count.textContent = matched;
+    none.hidden = matched > 0;
+    more.hidden = matched <= limit;
+  }
+  function reset() { limit = PAGE; apply(); }
+  input.addEventListener("input", reset);
+  sort.addEventListener("change", reset);
+  filters.forEach(function (b) {
+    b.addEventListener("click", function () {
+      kind = b.getAttribute("data-kind");
+      filters.forEach(function (x) { x.setAttribute("aria-pressed", String(x === b)); });
+      reset();
+    });
   });
+  more.addEventListener("click", function () { limit += PAGE; apply(); });
+  document.getElementById("controls").hidden = false;
+  apply();
 })();
     </script>
-"""
+""" % PAGE_SIZE
 
 
-def render_catalog(locale: dict[str, object], items: list[dict[str, object]]) -> str:
+def render_catalog(locale: dict[str, object], items: list[dict[str, object]], generated: str) -> str:
     c, pre, e = locale["copy"], prefix(locale), html.escape
     rows = "".join(
-        f'        <li data-search="{e(fold(str(i["title"]) + " " + str(i["description"])), quote=True)}">'
+        f'        <li data-search="{e(fold(str(i["title"]) + " " + str(i["description"])), quote=True)}"'
+        f' data-plays="{int(i["plays"])}" data-q="{int(i["questionCount"])}" data-ai="{"ai" if i["aiGenerated"] else "manual"}">'
         f'<a href="{pre}/q/{i["key"]}/"><strong>{e(str(i["title"]))}</strong>'
         + (f'<span>{e(clip(str(i["description"]), 140))}</span>' if i["description"] else "")
         + f"<small>{e(facts(i, c))}</small></a></li>\n"
         for i in items
     )
+    day = generated[:10]
+    updated = e(c["discUpdated"]).replace("{date}", f'<time datetime="{e(day)}" dir="ltr">{e(day)}</time>') if day else ""
     body = (
         f'      <h1>{e(c["discTitle"])}</h1>\n'
         f'      <p class="discover-lead">{e(c["discLead"])}</p>\n'
         f'      <label class="sr-only" for="q">{e(c["discSearch"])}</label>\n'
         f'      <input class="discover-search" id="q" type="search" placeholder="{e(c["discSearch"], quote=True)}" autocomplete="off">\n'
-        f'      <p class="discover-count">{e(c["discCount"])}: <span id="count">{len(items)}</span></p>\n'
+        '      <div class="discover-controls" id="controls" hidden>\n'
+        f'        <label for="sort">{e(c["discSort"])} <select id="sort"><option value="new">{e(c["discSortNew"])}</option>'
+        f'<option value="plays">{e(c["discSortPlays"])}</option><option value="q">{e(c["discSortQuestions"])}</option></select></label>\n'
+        f'        <div class="discover-filter" id="filter" role="group"><button type="button" data-kind="all" aria-pressed="true">{e(c["discFilterAll"])}</button>'
+        f'<button type="button" data-kind="ai" aria-pressed="false">{e(c["discAi"])}</button>'
+        f'<button type="button" data-kind="manual" aria-pressed="false">{e(c["discManual"])}</button></div>\n'
+        "      </div>\n"
+        f'      <p class="discover-count" aria-live="polite">{e(c["discCount"])}: <span id="count">{len(items)}</span></p>\n'
         f'      <ul class="quiz-list">\n{rows}      </ul>\n'
         f'      <p id="none" class="discover-empty" hidden>{e(c["discEmpty"])}</p>\n'
+        f'      <button type="button" class="button button-dark discover-more" id="more" hidden>{e(c["discShowMore"])}</button>\n'
+        + (f'      <p class="discover-updated">{updated}</p>\n' if updated else "")
         + SEARCH_SCRIPT
     )
     return shell(locale, f'{c["discTitle"]} — QuizJet', c["discMeta"], "discover/", body)
@@ -254,7 +303,7 @@ def render_quiz(locale: dict[str, object], item: dict[str, object], bot: str) ->
         f'      <p class="quiz-note">{note}</p>\n'
         f'      <p class="quiz-report"><a href="{e(report, quote=True)}">{e(c["discReport"])}</a></p>\n'
     )
-    return shell(locale, f'{title} — {c["discQuizSuffix"]}', meta, suffix, body, jsonld=jsonld)
+    return shell(locale, f'{clip(title, TITLE_LIMIT)} — {c["discQuizSuffix"]}', meta, suffix, body, jsonld=jsonld)
 
 
 def catalog_json(items: list[dict[str, object]], bot: str, generated: str) -> str:
@@ -268,14 +317,22 @@ def catalog_json(items: list[dict[str, object]], bot: str, generated: str) -> st
                       ensure_ascii=False, indent=1) + "\n"
 
 
-def sitemap(extra_paths: list[str]) -> str:
+Entry = tuple[str, str | None]  # (path, lastmod date or None): a date only where one is known, never a guess
+
+
+def sitemap(entries: list[Entry]) -> str:
+    """The committed sitemap (landing pages) plus the generated pages and the legal pages; <lastmod> only with a date."""
     ET.register_namespace("", SITEMAP_NS)
     base = ET.parse(ROOT / "sitemap.xml").getroot()
-    urls = [loc.text for loc in base.iter(f"{{{SITEMAP_NS}}}loc")]
-    urls += [BASE_URL + path for path in extra_paths]
+    urls: list[Entry] = [(loc.text or "", None) for loc in base.iter(f"{{{SITEMAP_NS}}}loc")]
+    urls += [(BASE_URL + path, lastmod) for path, lastmod in entries]
+    urls += [(url, None) for url in LEGAL_URLS]
     urlset = ET.Element(f"{{{SITEMAP_NS}}}urlset")
-    for url in urls:
-        ET.SubElement(ET.SubElement(urlset, f"{{{SITEMAP_NS}}}url"), f"{{{SITEMAP_NS}}}loc").text = url
+    for url, lastmod in urls:
+        entry = ET.SubElement(urlset, f"{{{SITEMAP_NS}}}url")
+        ET.SubElement(entry, f"{{{SITEMAP_NS}}}loc").text = url
+        if lastmod:
+            ET.SubElement(entry, f"{{{SITEMAP_NS}}}lastmod").text = lastmod
     ET.indent(urlset, space="  ")
     return ET.tostring(urlset, encoding="utf-8", xml_declaration=True).decode("utf-8") + "\n"
 
@@ -295,18 +352,27 @@ def drop_band(out: Path, band_id: str) -> None:
             write(page, band_re(band_id).sub("", text))
 
 
-def apply_band(out: Path, count: int | None) -> None:
-    """Fill the landing pages' catalog band with the real quiz count, or drop it.
+def thousands(n: int) -> str:
+    """23500 → "23 500" with a narrow no-break space: readable in every language without locale rules."""
+    return f"{n:,}".replace(",", "\u202f")
 
-    The committed pages carry the band with a {count} placeholder (translated per language). Only
-    this build knows the catalog size, so it is filled here; without a catalog the band is removed
+
+def apply_band(out: Path, count: int | None, plays: int = 0, participants: int = 0) -> None:
+    """Fill the landing pages' catalog band with the real numbers, or drop it.
+
+    The committed pages carry the band with {count}, {plays} and {participants} placeholders (labels translated per
+    language). Only this build knows the catalog, so they are filled here; without a catalog the band is removed
     rather than shown with a placeholder or an invented number.
     """
     for page in out.rglob("index.html"):
         text = page.read_text(encoding="utf-8")
         if 'id="discover-band"' not in text:
             continue
-        text = BAND_RE.sub("", text) if count is None else text.replace("{count}", str(count))
+        if count is None:
+            text = BAND_RE.sub("", text)
+        else:
+            text = (text.replace("{count}", str(count)).replace("{plays}", thousands(plays))
+                    .replace("{participants}", thousands(participants)))
         write(page, text)
 
 
@@ -326,51 +392,54 @@ def locale_dir(out: Path, locale: dict[str, object]) -> Path:
     return out / str(locale["route"]) if locale["route"] else out
 
 
-def write_books(out: Path) -> list[str]:
-    """The Books shelf and one reader per book, in every language; returns their sitemap paths."""
+def write_books(out: Path) -> list[Entry]:
+    """The Books shelf and one reader per book, in every language; returns their sitemap entries."""
     books = build_books.load_books()
-    paths: list[str] = []
+    entries: list[Entry] = []
     for locale in LOCALES:
         base, pre = locale_dir(out, locale), prefix(locale)
         title, description, body, head = build_books.list_page(locale, pre, books)
         write(base / "books" / "index.html", shell(locale, title, description, "books/", body, head=head))
-        paths.append(f"{pre}/books/")
+        entries.append((f"{pre}/books/", None))
         for book in books:
             suffix = f"books/{book['slug']}/"
             title, description, body, jsonld, head = build_books.reader_page(locale, pre, book)
             write(base / suffix / "index.html", shell(locale, title, description, suffix, body, jsonld=jsonld, head=head))
-            paths.append(f"{pre}/{suffix}")
+            entries.append((f"{pre}/{suffix}", None))
     for book in books:
         for path, content in build_books.chapter_files(book).items():
             write(out / path, content)
-    return paths
+    return entries
 
 
-def write_news(out: Path) -> list[str]:
-    """The news editions and one reader per edition, in every language; returns their sitemap paths.
+def write_news(out: Path) -> list[Entry]:
+    """The news editions, one reader per edition in every language, and the Atom feed; returns the sitemap entries.
 
     With no edition yet (the keys are not configured, or nothing survived) the list page still exists,
     unindexed and out of the sitemap, so the menu link never 404s."""
     editions = build_news.load_editions()
     if not editions:
         drop_band(out, "news-band")
-    paths: list[str] = []
+    feed = build_news.FEED_LINK if editions else ""
+    entries: list[Entry] = []
     for locale in LOCALES:
         base, pre = locale_dir(out, locale), prefix(locale)
         title, description, body, head = build_news.list_page(locale, pre, editions)
-        write(base / "news" / "index.html", shell(locale, title, description, "news/", body, head=head, noindex=not editions))
+        write(base / "news" / "index.html", shell(locale, title, description, "news/", body, head=head + feed, noindex=not editions))
         if editions:
-            paths.append(f"{pre}/news/")
+            entries.append((f"{pre}/news/", str(editions[0]["date"])))
         for edition in editions:
             suffix = f"news/{edition['date']}/"
             book = build_news.edition_book(locale, pre, edition)
             title, description, body, jsonld, head = build_books.reader_page(locale, pre, book)
-            write(base / suffix / "index.html", shell(locale, title, description, suffix, body, jsonld=jsonld, head=head))
-            paths.append(f"{pre}/{suffix}")
+            write(base / suffix / "index.html", shell(locale, title, description, suffix, body, jsonld=jsonld, head=head + feed))
+            entries.append((f"{pre}/{suffix}", str(edition["date"])))
     for edition in editions:
         for path, content in build_news.chapter_files(edition).items():
             write(out / path, content)
-    return paths
+    if editions:
+        write(out / "news" / "feed.xml", build_news.feed(editions, LOCALES[0]))
+    return entries
 
 
 def write_legacy_redirects(out: Path, new_paths: list[str]) -> None:
@@ -393,29 +462,31 @@ def build(out: Path, export: Path | None) -> str:
             target.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(path, target)
 
-    book_paths = write_books(out) + write_news(out)
+    book_entries = write_books(out) + write_news(out)
     # /discover/ and /news/ exist in every build (placeholder or not), so their old names always forward.
-    write_legacy_redirects(out, [f"{prefix(l)}/discover/" for l in LOCALES] + [f"{prefix(l)}/news/" for l in LOCALES] + book_paths)
+    write_legacy_redirects(out, [f"{prefix(l)}/discover/" for l in LOCALES] + [f"{prefix(l)}/news/" for l in LOCALES]
+                           + [path for path, _ in book_entries])
     if export is None:
         apply_band(out, None)
         for locale in LOCALES:
             write(locale_dir(out, locale) / "discover" / "index.html", render_placeholder(locale))
-        write(out / "sitemap.xml", sitemap(book_paths))
+        write(out / "sitemap.xml", sitemap(book_entries))
         return "Built without the Discover catalog (no export given)."
 
     bot, items, skipped = load_catalog(export)
     generated = str(json.loads(export.read_text(encoding="utf-8")).get("generatedAtUtc") or "")
-    apply_band(out, len(items))
-    paths: list[str] = []
+    apply_band(out, len(items), sum(int(i["plays"]) for i in items), sum(int(i["participants"]) for i in items))
+    entries: list[Entry] = []
     for locale in LOCALES:
         base, pre = locale_dir(out, locale), prefix(locale)
-        write(base / "discover" / "index.html", render_catalog(locale, items))
-        paths.append(f"{pre}/discover/")
+        write(base / "discover" / "index.html", render_catalog(locale, items, generated))
+        entries.append((f"{pre}/discover/", generated[:10] or None))
         for item in items:
             write(base / "q" / str(item["key"]) / "index.html", render_quiz(locale, item, bot))
-            paths.append(f"{pre}/q/{item['key']}/")
+            # the creation date is the one change we know of; a build date would claim every page changed daily
+            entries.append((f"{pre}/q/{item['key']}/", str(item["createdAtUtc"])[:10] or None))
     write(out / "discover.json", catalog_json(items, bot, generated))
-    write(out / "sitemap.xml", sitemap(paths + book_paths))
+    write(out / "sitemap.xml", sitemap(entries + book_entries))
     note = f" Skipped {len(skipped)} item(s) with an unusable key or empty title." if skipped else ""
     return f"Built the Discover catalog with {len(items)} quizzes in {len(LOCALES)} languages.{note}"
 

@@ -10,6 +10,7 @@ import build_discover as bd
 import build_news
 import import_gutenberg as ig
 
+LONG_TITLE = "Hukukun Temel Kavramları Sınav Hazırlık 2 Başarılar Rüzgarın Sesinin (Q13) ve devamı"  # 82 characters
 EXPORT = {
     "generatedAtUtc": "2026-11-02T02:41:00Z",
     "botUsername": "QuizJetBot",
@@ -24,6 +25,8 @@ EXPORT = {
          "questionCount": 5, "isAiGenerated": False, "createdAtUtc": "", "executionCount": 0, "participantCount": 0},
         {"quizId": "d", "externalId": "no_desc", "title": "No description</script><script>alert(1)</script>", "description": None,
          "questionCount": 7, "isAiGenerated": False, "createdAtUtc": "2026-10-01T00:00:00Z", "executionCount": 1, "participantCount": 2},
+        {"quizId": "e", "externalId": "url_desc", "title": LONG_TITLE, "description": "Katıl: https://t.me/+secretInvite www.example.com/x",
+         "questionCount": 3, "isAiGenerated": False, "createdAtUtc": "2026-10-20T00:00:00Z", "executionCount": 9, "participantCount": 4},
     ],
 }
 
@@ -42,7 +45,7 @@ def run() -> None:
             out = tmp_path / "site"
 
             message = bd.build(out, export)
-            assert "2 quizzes in 18 languages" in message and "Skipped 1" in message, message
+            assert "3 quizzes in 18 languages" in message and "Skipped 1" in message, message
 
             # URL segments are English: nothing else appears at the top of the tree, and the Turkish names the site
             # launched with hold nothing but redirects to the English address of the same page
@@ -79,12 +82,22 @@ def run() -> None:
             assert 'content="A quiz you can play on Telegram with QuizJet. Questions: 7."' in injected, "fallback description"
             assert not (out / "q" / "blocked1").exists() and not any("bad key" in str(p) for p in out.rglob("*"))
 
+            # a creator's description is published, the links in it are not; a long title is clipped in <title> only
+            linked = (out / "q" / "url_desc" / "index.html").read_text(encoding="utf-8")
+            assert "secretInvite" not in linked and "example.com" not in linked and 'name="description" content="Katıl:"' in linked
+            page_title = linked.split("<title>")[1].split("</title>")[0]
+            assert page_title.startswith(LONG_TITLE[:60]) and "…" in page_title and len(page_title) < len(LONG_TITLE) + 20, page_title
+            assert f"<h1>{LONG_TITLE}</h1>" in linked
+            assert "secretInvite" not in catalog and 'data-plays="9"' in catalog and 'data-ai="manual"' in catalog
+            assert 'id="sort"' in catalog and 'id="more"' in catalog and 'aria-live="polite"' in catalog, "sort, filter, show-more and a live count"
+            assert 'Last update: <time datetime="2026-11-02" dir="ltr">2026-11-02</time>' in catalog
+
             sitemap = (out / "sitemap.xml").read_text(encoding="utf-8")
             assert "https://quizjet.app/discover/" in sitemap and "https://quizjet.app/q/good_key-1/" in sitemap
             assert "https://quizjet.app/tr/" in sitemap, "static pages stay in the sitemap"
 
             data = json.loads((out / "discover.json").read_text(encoding="utf-8"))
-            assert data["count"] == 2 and data["items"][0]["startGroup"].endswith("?startgroup=good_key-1")
+            assert data["count"] == 3 and data["items"][0]["startGroup"].endswith("?startgroup=good_key-1")
 
             # every Discover page exists in all 18 languages and keeps the visitor in theirs
             tr_catalog = (out / "tr" / "discover" / "index.html").read_text(encoding="utf-8")
@@ -104,15 +117,25 @@ def run() -> None:
             assert sum(1 for _ in out.rglob("q/good_key-1/index.html")) == 18
             landing_tr = (out / "tr" / "index.html").read_text(encoding="utf-8")
             assert 'href="/tr/discover/"' in landing_tr and 'href="/discover/"' not in landing_tr
-            assert sitemap.count("<loc>") == 18 + 18 * (1 + 2) + 18 * 3, "landing + per language: catalog + 2 quizzes + shelf + 2 books"
-            assert "https://quizjet.app/tr/q/good_key-1/" in sitemap
+            assert sitemap.count("<loc>") == 18 + 18 * (1 + 3) + 18 * 3 + len(bd.LEGAL_URLS), \
+                "landing + per language: catalog + 3 quizzes + shelf + 2 books, plus the legal pages"
+            assert "https://quizjet.app/tr/q/good_key-1/" in sitemap and "https://quizjet.app/tr/privacy.html" in sitemap
+            assert "<lastmod>2026-10-30</lastmod>" in sitemap and sitemap.count("<lastmod>") == 18 * (1 + 3), "dates only where known"
 
             # the landing band shows the real count, in every language, with no placeholder left
             for landing in ("index.html", "tr/index.html", "ar/index.html"):
                 html_text = (out / landing).read_text(encoding="utf-8")
                 assert 'id="discover-band"' in html_text and "{count}" not in html_text, landing
-            assert "Ready-made quizzes: 2" in (out / "index.html").read_text(encoding="utf-8")
-            assert "Hazır quiz&#x27;ler: 2" in (out / "tr" / "index.html").read_text(encoding="utf-8") or "Hazır quiz'ler: 2" in (out / "tr" / "index.html").read_text(encoding="utf-8")
+            index = (out / "index.html").read_text(encoding="utf-8")
+            assert "Ready-made quizzes: 3" in index and "<span>Plays</span>: 13 · <span>Players</span>: 18" in index and "{plays}" not in index
+            tr_index = (out / "tr" / "index.html").read_text(encoding="utf-8")
+            assert ("Hazır quiz&#x27;ler: 3" in tr_index or "Hazır quiz'ler: 3" in tr_index) and "<span>Oynanma</span>: 13 · <span>Oyuncu</span>: 18" in tr_index
+            assert '<a class="language-chip" href="/tr/" lang="tr"' in index, "the language grid links the language pages"
+            assert '"@type":"SoftwareApplication"' in index and '"inLanguage":"tr"' in tr_index, "structured data on every landing page"
+            assert (out / "manifest.webmanifest").is_file() and (out / "assets" / "fonts" / "dm-sans-latin.woff2").is_file()
+            not_found = (out / "404.html").read_text(encoding="utf-8")
+            assert '<html lang="en"' in not_found and "Sayfa bulunamadı" in not_found and '"tr":{"lang":"tr"' in not_found, "one 404, every language inside"
+            assert not (out / "news" / "feed.xml").exists(), "no edition, no feed"
 
             # no export: placeholder page, not indexed, sitemap untouched
             bare = tmp_path / "bare"
@@ -135,6 +158,8 @@ def run() -> None:
             tr_reader = (bare / "tr" / "books" / "sherlock-holmes" / "index.html").read_text(encoding="utf-8")
             assert '<html lang="tr" dir="ltr">' in tr_reader and 'href="/tr/books/"' in tr_reader
             assert '"lang":"tr"' in tr_reader and "Bu cümle" in tr_reader and "/assets/reader.js?v=" in tr_reader
+            assert "To Sherlock Holmes she is always THE woman." in tr_reader, "the first chapter is in the HTML, not only in the JSON"
+            assert '<section class="rd-quiz"' in tr_reader and "Bu kitabın quiz&#x27;i yolda" in tr_reader, "no quiz key: no chapter-quiz promise"
             assert 'href="/de/books/sherlock-holmes/"' in tr_reader, "language menu stays on the book"
             assert '"@type":"Book"' in tr_reader
             assert 'name="autoTr"' in tr_reader and 'id="rd-tip"' in tr_reader and "translate.google.com/?" not in tr_reader
