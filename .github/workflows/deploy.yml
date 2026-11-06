@@ -93,6 +93,9 @@ jobs:
       # actions/deploy-pages waits at most 10 minutes: a larger timeout is cut back to 600000 with a warning (run #30,
       # 2026-11-06, where Pages queued the deployment for 7 minutes and the merge never went live). The only lever is
       # a second attempt, which gets a fresh 10 minutes and usually a shorter queue.
+      # Never "Re-run failed jobs" on this workflow: the re-run uploads a second "github-pages" artifact into the same
+      # run and deploy-pages refuses to choose ("Multiple artifacts named github-pages", run #30 attempt 2). Start a
+      # new run instead: Actions → "Build and deploy site" → Run workflow.
       - id: deploy
         uses: actions/deploy-pages@v4
         continue-on-error: true
