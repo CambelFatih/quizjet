@@ -1,0 +1,468 @@
+{
+ "date": "2026-11-07",
+ "model": "gpt-5.6-sol",
+ "articles": [
+  {
+   "topic": "politics",
+   "title": "Israel waits for a decision on its next government.",
+   "level": "B1",
+   "p": [
+    [
+     "Israel held parliamentary elections on October 27, but no political bloc won enough seats to have a majority.",
+     "This means that no group can form a government by itself.",
+     "Political leaders now need to find partners and try to build a coalition with enough support in the Knesset."
+    ],
+    [
+     "Gadi Eisenkot's opposition bloc received majority backing from lawmakers.",
+     "Eisenkot was recommended by 67 members of the Knesset.",
+     "Benjamin Netanyahu received recommendations from 46 lawmakers.",
+     "These recommendations show how many lawmakers currently support each man as a candidate to form the next government."
+    ],
+    [
+     "President Isaac Herzog has not yet chosen a candidate to try to form a government.",
+     "He plans to announce his decision on Sunday, November 8.",
+     "Until a new government is formed, Netanyahu will remain caretaker prime minister while the political groups continue their coalition negotiations."
+    ],
+    [
+     "If Herzog chooses Eisenkot, Eisenkot will still need to assemble partners before he can form a government.",
+     "Support from lawmakers does not mean that coalition talks will be successful.",
+     "The different political groups must reach agreements and work together.",
+     "The talks could fail, and this could lead to another election in Israel."
+    ]
+   ],
+   "words": [
+    {
+     "w": "parliamentary elections",
+     "d": "elections in which people choose members of parliament"
+    },
+    {
+     "w": "political bloc",
+     "d": "a group of political parties or lawmakers that work together"
+    },
+    {
+     "w": "majority",
+     "d": "more than half of the total number"
+    },
+    {
+     "w": "lawmakers",
+     "d": "people whose job is to make laws"
+    },
+    {
+     "w": "caretaker prime minister",
+     "d": "a prime minister who stays in office until a new government is formed"
+    },
+    {
+     "w": "coalition negotiations",
+     "d": "talks between political groups about forming a government together"
+    }
+   ],
+   "quiz": [
+    {
+     "q": "When did Israel hold its parliamentary elections?",
+     "o": [
+      "October 27",
+      "November 8",
+      "October 8",
+      "November 27"
+     ],
+     "a": 0,
+     "why": "The elections took place on October 27."
+    },
+    {
+     "q": "How many Knesset members recommended Gadi Eisenkot?",
+     "o": [
+      "46",
+      "67",
+      "27",
+      "8"
+     ],
+     "a": 1,
+     "why": "Eisenkot received recommendations from 67 Knesset members."
+    },
+    {
+     "q": "Who will announce a decision on Sunday, November 8?",
+     "o": [
+      "Gadi Eisenkot",
+      "Benjamin Netanyahu",
+      "President Isaac Herzog",
+      "The opposition bloc"
+     ],
+     "a": 2,
+     "why": "President Isaac Herzog plans to announce which candidate he has chosen."
+    },
+    {
+     "q": "What could happen if coalition talks fail?",
+     "o": [
+      "Another election could take place.",
+      "Netanyahu would receive 67 recommendations.",
+      "The Knesset would choose a president.",
+      "Eisenkot would automatically form a government."
+     ],
+     "a": 0,
+     "why": "Failed coalition talks could trigger another election in Israel."
+    }
+   ],
+   "sources": [
+    {
+     "t": "PHOTO ESSAY: Israel's government demolished their homes. Bedouins responded by voting against it",
+     "u": "https://apnews.com/article/227c62e1bb260e2ab142d194dd3f679e"
+    },
+    {
+     "t": "Israel's Herzog yet to decide on who should form government as Eisenkot secures significant backing",
+     "u": "https://www.theguardian.com/world/2026/nov/05/herzog-netanyahu-eisenkot-israel-election-decision"
+    }
+   ]
+  },
+  {
+   "topic": "business",
+   "title": "U.S. employers added more jobs than expected in October.",
+   "level": "B1",
+   "p": [
+    [
+     "U.S. employers added 165,000 jobs during October, according to the latest employment report.",
+     "This result was much stronger than economists had expected.",
+     "They had predicted that employers would add approximately 65,000 jobs.",
+     "The unemployment rate also declined unexpectedly to 4.1%."
+    ],
+    [
+     "Professional and business services had the largest increase among the sectors listed in the report.",
+     "This sector added 70,000 positions.",
+     "Healthcare employment increased by 42,000 jobs.",
+     "Transportation and warehousing also grew, adding 25,000 positions during the month."
+    ],
+    [
+     "Workers also saw higher pay.",
+     "Average hourly earnings rose by 3.1% compared with October 2025.",
+     "Earnings are important because they help show whether workers' pay is growing.",
+     "However, faster pay growth can also affect prices and decisions about interest rates."
+    ],
+    [
+     "The strong jobs report could complicate possible interest rate cuts by the Federal Reserve.",
+     "A strong labor market may reduce the need for lower rates.",
+     "However, officials will receive more information before making policy decisions.",
+     "October inflation data will arrive on Tuesday and offer additional guidance about the economy.",
+     "The Federal Reserve can consider both employment and inflation information when thinking about future rate changes."
+    ]
+   ],
+   "words": [
+    {
+     "w": "employers",
+     "d": "people or organizations that give people jobs"
+    },
+    {
+     "w": "approximately",
+     "d": "close to a number, but not exactly"
+    },
+    {
+     "w": "unemployment rate",
+     "d": "the percentage of workers who do not have a job but are looking for one"
+    },
+    {
+     "w": "sector",
+     "d": "one part of the economy or an area of business"
+    },
+    {
+     "w": "hourly earnings",
+     "d": "the money workers receive for each hour of work"
+    },
+    {
+     "w": "interest rate cuts",
+     "d": "reductions in the cost of borrowing money"
+    }
+   ],
+   "quiz": [
+    {
+     "q": "How many jobs did U.S. employers add during October?",
+     "o": [
+      "65,000",
+      "165,000",
+      "42,000",
+      "25,000"
+     ],
+     "a": 1,
+     "why": "The report said that U.S. employers added 165,000 jobs during October."
+    },
+    {
+     "q": "Which sector added 70,000 positions?",
+     "o": [
+      "Healthcare",
+      "Transportation and warehousing",
+      "Professional and business services",
+      "Education"
+     ],
+     "a": 2,
+     "why": "Professional and business services had the largest listed increase, with 70,000 new positions."
+    },
+    {
+     "q": "What happened to the unemployment rate?",
+     "o": [
+      "It rose to 4.1%.",
+      "It declined to 4.1%.",
+      "It stayed at 3.1%.",
+      "It declined to 3.1%."
+     ],
+     "a": 1,
+     "why": "The unemployment rate unexpectedly fell to 4.1%."
+    },
+    {
+     "q": "What information will arrive on Tuesday?",
+     "o": [
+      "October inflation data",
+      "November employment data",
+      "Healthcare earnings data",
+      "Federal Reserve rate cuts"
+     ],
+     "a": 0,
+     "why": "October inflation data will provide officials with additional guidance about the economy."
+    }
+   ],
+   "sources": [
+    {
+     "t": "U.S. labor market zooms ahead with 165,000 jobs added in October",
+     "u": "https://www.axios.com/2026/11/06/october-2026-jobs-report-unemployment-165000"
+    },
+    {
+     "t": "US job growth beats expectations in October; unemployment rate falls to 4.1%",
+     "u": "https://www.investing.com/news/economic-indicators/us-job-growth-beats-expectations-in-october-unemployment-rate-falls-to-41-5008194"
+    },
+    {
+     "t": "Employment Situation News Release — 2026 M10 Results",
+     "u": "https://www.bls.gov/news.release/archives/empsit_11062026.htm"
+    }
+   ]
+  },
+  {
+   "topic": "sports",
+   "title": "LIV Golf will wind down its operations after bankruptcy.",
+   "level": "B1",
+   "p": [
+    [
+     "LIV Golf will wind down its operations following a decision during a bankruptcy-court hearing in New Jersey.",
+     "Lawyers abandoned plans to create a revived league called LIV 2.0.",
+     "This means the organisation will not continue with the proposed new version of the competition."
+    ],
+    [
+     "An important financial plan also ended when BC Partners withdrew from a proposed $300 million investment.",
+     "The investment could have supported the revived league.",
+     "However, insufficient support from players had already weakened plans to hold another LIV Golf season in 2027."
+    ],
+    [
+     "LIV Golf launched in 2022 and offered major guaranteed contracts to players.",
+     "Saudi Arabia's Public Investment Fund, also known as PIF, provided money for the league.",
+     "However, PIF planned to stop financing LIV Golf after the end of the 2026 season."
+    ],
+    [
+     "The league filed for Chapter 11 bankruptcy protection in September.",
+     "This process gave LIV Golf a way to deal with its financial problems through the court.",
+     "The later withdrawal of the proposed investment and the lack of enough player support made plans for LIV 2.0 weaker."
+    ],
+    [
+     "Creditors and the remaining assets of LIV Golf will now proceed through bankruptcy proceedings.",
+     "These proceedings will handle the money and property that remain as the league winds down.",
+     "The New Jersey court process will therefore continue even though plans for a revived league have been abandoned."
+    ]
+   ],
+   "words": [
+    {
+     "w": "wind down",
+     "d": "to slowly reduce activities before stopping completely"
+    },
+    {
+     "w": "bankruptcy-court hearing",
+     "d": "a court meeting about an organisation that cannot pay its debts"
+    },
+    {
+     "w": "revived",
+     "d": "brought back into activity after stopping or becoming weaker"
+    },
+    {
+     "w": "investment",
+     "d": "money given to a business or project to help it grow"
+    },
+    {
+     "w": "creditors",
+     "d": "people or organisations that are owed money"
+    },
+    {
+     "w": "remaining assets",
+     "d": "money, property or other valuable things that are left"
+    }
+   ],
+   "quiz": [
+    {
+     "q": "Where was the decision to wind down LIV Golf announced?",
+     "o": [
+      "At a golf event in Saudi Arabia",
+      "During a New Jersey bankruptcy-court hearing",
+      "At a BC Partners meeting",
+      "During the 2026 season"
+     ],
+     "a": 1,
+     "why": "The decision came during a bankruptcy-court hearing in New Jersey."
+    },
+    {
+     "q": "How much money had BC Partners proposed investing?",
+     "o": [
+      "$30 million",
+      "$200 million",
+      "$300 million",
+      "$2 billion"
+     ],
+     "a": 2,
+     "why": "BC Partners withdrew from a proposed $300 million investment."
+    },
+    {
+     "q": "What weakened plans for a 2027 season?",
+     "o": [
+      "Insufficient player support",
+      "A lack of golf courses",
+      "New rules for players",
+      "Poor weather"
+     ],
+     "a": 0,
+     "why": "The facts state that insufficient player support weakened plans for the 2027 season."
+    },
+    {
+     "q": "Who had funded LIV Golf?",
+     "o": [
+      "The New Jersey court",
+      "BC Partners",
+      "The league's creditors",
+      "Saudi Arabia's Public Investment Fund"
+     ],
+     "a": 3,
+     "why": "Saudi Arabia's Public Investment Fund provided financing for LIV Golf."
+    }
+   ],
+   "sources": [
+    {
+     "t": "LIV and let die: Rival league tells bankruptcy court it will wind down operations",
+     "u": "https://apnews.com/article/1d42dece839fe07ed8ca99c4a31f8480"
+    },
+    {
+     "t": "Saudi-backed LIV Golf is dead",
+     "u": "https://www.axios.com/2026/11/05/liv-golf-bc-saudi-bankruptcy"
+    },
+    {
+     "t": "LIV Golf shutting down after debtors bail and players head for exits",
+     "u": "https://www.cbsnews.com/news/liv-golf-shutting-down-operations-bankruptcy/"
+    }
+   ]
+  },
+  {
+   "topic": "science",
+   "title": "AI stocks stopped a worldwide market sell-off.",
+   "level": "B1",
+   "p": [
+    [
+     "AI stocks helped stop a worldwide market sell-off on November 6, 2026.",
+     "U.S. technology shares recovered some of the losses they had made earlier in the week.",
+     "However, uncertainty about the future of artificial intelligence investment continued to affect trading."
+    ],
+    [
+     "The Nasdaq had fallen by as much as 5.3% on Thursday.",
+     "The decline came after Democratic victories in the U.S. midterm elections.",
+     "The sell-off affected major technology companies as well as semiconductor firms, which produce important parts used in computers and other electronic products."
+    ],
+    [
+     "Investors were also worried about the high valuations of AI companies.",
+     "A valuation is an estimate of how much a company is worth.",
+     "Some investors questioned whether these companies were worth their high market prices.",
+     "They also had concerns about the large amounts of money that AI businesses planned to spend."
+    ],
+    [
+     "On Friday, some AI-related shares improved.",
+     "Micron Technology shares rose 5.1% during trading.",
+     "This increase helped technology markets recover part of their weekly losses, but it did not remove all concerns about the sector."
+    ],
+    [
+     "Trading continued as investors reassessed the outlook for AI companies and their investment plans.",
+     "The recovery showed that buyers were still interested in technology shares.",
+     "Still, market uncertainty remained focused on AI investment, and further volatility was possible in technology markets."
+    ]
+   ],
+   "words": [
+    {
+     "w": "sell-off",
+     "d": "a period when many investors sell shares, causing prices to fall"
+    },
+    {
+     "w": "recovered",
+     "d": "rose again after falling"
+    },
+    {
+     "w": "semiconductor firms",
+     "d": "companies that make small electronic parts used in computers and other devices"
+    },
+    {
+     "w": "valuations",
+     "d": "estimates of how much companies or assets are worth"
+    },
+    {
+     "w": "reassessed",
+     "d": "considered something again to form a new opinion"
+    },
+    {
+     "w": "volatility",
+     "d": "quick and sometimes large changes in market prices"
+    }
+   ],
+   "quiz": [
+    {
+     "q": "What happened to U.S. technology shares on November 6?",
+     "o": [
+      "They recovered part of their weekly losses.",
+      "They lost all their value.",
+      "They stopped trading permanently.",
+      "They remained at exactly the same price."
+     ],
+     "a": 0,
+     "why": "The text says U.S. technology shares regained some of the losses from earlier in the week."
+    },
+    {
+     "q": "How far had the Nasdaq fallen on Thursday?",
+     "o": [
+      "As much as 2.1%",
+      "As much as 3.5%",
+      "As much as 5.1%",
+      "As much as 5.3%"
+     ],
+     "a": 3,
+     "why": "The Nasdaq had fallen by as much as 5.3% on Thursday."
+    },
+    {
+     "q": "Why were some investors concerned about AI companies?",
+     "o": [
+      "They had stopped using computers.",
+      "Their valuations and spending plans seemed high.",
+      "They had won the midterm elections.",
+      "Their shares could not be traded."
+     ],
+     "a": 1,
+     "why": "Investors questioned AI companies' high market values and their plans for large spending."
+    },
+    {
+     "q": "What happened to Micron Technology shares on Friday?",
+     "o": [
+      "They fell by 5.3%.",
+      "They did not change.",
+      "They rose by 5.1%.",
+      "They were removed from the market."
+     ],
+     "a": 2,
+     "why": "Micron Technology shares gained 5.1% during Friday trading."
+    }
+   ],
+   "sources": [
+    {
+     "t": "AI stocks halt their brutal, worldwide sell-off as Wall Street trims its loss for the week",
+     "u": "https://apnews.com/article/bba6f0bf9035a6e6b1c4fef3e8230b89"
+    },
+    {
+     "t": "On Wall Street, Democrats' midterm victory bursts the AI bubble",
+     "u": "https://www.lemonde.fr/en/economy/article/2026/11/06/on-wall-street-democrats-midterm-victory-bursts-the-ai-bubble_6773164_19.html"
+    }
+   ]
+  }
+ ]
+}
