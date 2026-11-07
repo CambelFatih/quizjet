@@ -159,8 +159,6 @@ def run() -> None:
         assert 'id="rd-next-ch" href="#">Sonraki metin ' in tr_reader, "the news framing replaces the book framing on the button"
         assert '"nwCorrect":"Doğru!"' in tr_reader and '"@type":"LearningResource"' in tr_reader and "gutenberg.org" not in tr_reader
         assert "Spor: A striker &lt;b&gt;moves&lt;/b&gt;" in tr_reader, "chapter names are escaped and carry the topic"
-        assert '<nav class="nw-tabs" aria-label="Bölüm"><a class="nw-business" href="#1">Ekonomi</a><a class="nw-sports" href="#2">Spor</a></nav>' in tr_reader
-        assert '<select id="rd-ch" lang="en" dir="ltr" hidden>' in tr_reader, "one desk tab per text replaces the select"
         assert "A big bank that controls money in the country decided not to change interest rates this week." in tr_reader, \
             "the texts are in the HTML for crawlers and readers without JavaScript"
         assert 'href="https://example.com/a"' in tr_reader and 'type="application/atom+xml"' in tr_reader

@@ -11,7 +11,7 @@
 .book-info span, .book-info small { color: var(--muted); font-size: 14px; }
 .book-info .book-read { margin-top: 6px; color: var(--blue); font-weight: 700; }
 
-/* News: one colour per desk, used by the cards on /news/ and the desk tabs in the reader. */
+/* News: one colour per desk, used by the cards on /news/. */
 .nw-politics { --desk: #b42318; } .nw-business { --desk: #0b7a5f; } .nw-sports { --desk: #c2410c; } .nw-science { --desk: #6d28d9; }
 .nw-filter { margin: 0 0 6px; }
 .nw-edition { margin: 22px 0 8px; }
@@ -25,11 +25,6 @@
 .nw-card strong { font-size: 16px; line-height: 1.35; }
 .nw-lead .nw-card strong { font-size: 19px; }
 .nw-first { color: var(--muted); font-size: 14px; line-height: 1.5; }
-.nw-tabs { flex: 1; min-width: 0; display: flex; gap: 6px; overflow-x: auto; }
-.nw-tabs a { flex: 1 0 auto; display: inline-flex; align-items: center; justify-content: center; min-height: 42px; padding: 0 14px; border: 1px solid var(--rd-line); border-bottom: 3px solid var(--desk); border-radius: 10px; color: var(--rd-ink); background: var(--rd-bg); font-size: 14px; font-weight: 600; }
-.nw-tabs a[aria-current="true"] { color: #fff; border-color: var(--desk); background: var(--desk); }
-/* A phone has no room for four tabs beside the ★ and ⚙ buttons: the tabs take a row of their own. */
-@media (max-width: 560px) { .rd-tools:has(.nw-tabs) { flex-wrap: wrap; } .nw-tabs { flex-basis: 100%; } .nw-tabs a { padding: 0 6px; font-size: 13px; } .nw-tabs + select + .rd-icon { margin-inline-start: auto; } }
 @media (prefers-color-scheme: dark) {
   :root:not([data-rd-theme]) .nw-card { background: var(--card); }
   :root:not([data-rd-theme]) .nw-politics { --desk: #f97066; } :root:not([data-rd-theme]) .nw-business { --desk: #3ccb9f; }
@@ -148,6 +143,3 @@
 .rd-fb { margin: 6px 0 0; color: var(--rd-muted); }
 /* Text in the accent colour (the edge of a highlight is fine at 3:1, text is not): a darker ink per theme. */
 .reader #rd-this, .reader .rd-text.study .sb, .book-info .book-read { color: var(--rd-edge-ink, var(--blue)); }
-/* The dark theme recolours every reader link (above); the desk tabs keep their own colours. */
-:root[data-rd-theme] .reader .nw-tabs a { color: var(--rd-ink); }
-:root[data-rd-theme] .reader .nw-tabs a[aria-current="true"] { color: #fff; }

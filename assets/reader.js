@@ -435,7 +435,6 @@
     hideTr();
     chapter = n;
     chSel.value = String(n);
-    document.querySelectorAll(".nw-tabs a").forEach((a, i) => a.setAttribute("aria-current", String(i + 1 === n)));
     active = -1;
     sentences = [];
     spans = []; // savePos() is a no-op until the new chapter is on screen

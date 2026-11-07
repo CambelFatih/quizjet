@@ -388,7 +388,6 @@ def edition_book(locale: dict[str, object], pre: str, edition: dict[str, object]
         "chapters": [{"title": f"{topic_label(locale, str(a['topic']))}: {a['title']}", "p": a["p"], "sources": a.get("sources") or []}
                      for a in edition["articles"]],
         "inlineAll": True,
-        "tabs": [(str(a["topic"]), topic_label(locale, str(a["topic"]))) for a in edition["articles"]],
         "back": (f"{pre}/news/", c["nwBack"]),
         "sourceHtml": e(c["nwSource"]),
         "quizCopy": {"title": c["nwQuizTitle"], "body": c["nwQuizBody"], "cta": c["nwQuizCta"], "next": c["nwNext"]},
