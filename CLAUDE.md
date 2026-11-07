@@ -64,6 +64,8 @@ the Discover catalog and writes the day's news lesson.
 - News texts are written in a clean room: a research call (hosted web search) returns facts of at most 12
   words plus report links, dated from the runner's clock; the writer call sees those facts only. The
   copyright posture is the docstring of `scripts/build_news.py`; keep code and docstring in step.
+- News selection is the desk briefs in `build_news.TOPICS` (sport = European football first, then F1, tennis, NBA,
+  Olympics; golf, NFL and the like never); a story or report link used in the last 3 days is not picked again.
 - User-facing text is never hardcoded in a script: add a key to all 18 locales.
 
 ## Working loop

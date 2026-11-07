@@ -19,6 +19,11 @@ Copyright posture — the code below enforces it, keep the two in step:
 - Generation runs in the deploy workflow once a day, only when OPENAI_API_KEY is set and today's file
   does not exist yet; without the key the site builds without news. A topic with fewer than 5 facts
   or 2 reports is skipped, never padded.
+
+Selection: every desk in TOPICS carries an editorial brief (what leads it, in order, and what never does;
+sport is football first). A story taken by an earlier desk today or by an edition of the last COVERED_DAYS
+is named to the model as covered, and a report link already used is dropped in research(), so the same
+story cannot come back under another desk with the same reports.
 """
 from __future__ import annotations
 
@@ -41,8 +46,30 @@ NEWS_DIR = ROOT / "_data" / "news"
 BASE_URL = "https://quizjet.app"
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 LEVEL = "B1"
-TOPICS = [("politics", "world politics"), ("business", "business and finance"), ("sports", "sports"),
-          ("science", "science and technology")]
+# One editorial brief per desk: what an international editor leads it with, in order, and what never makes it.
+# The readers are adults learning English all over the world, so "important" means important in many countries.
+TOPICS = [
+    ("politics", "World politics and international affairs. Prefer: elections and changes of government in major "
+                 "countries, wars, ceasefires and peace talks, summits and decisions of the UN, EU, NATO, G7 or G20, "
+                 "sanctions and major diplomatic agreements. Avoid: local or state politics, polls, campaign gossip."),
+    ("business", "Global economy, markets and finance. Prefer: central-bank decisions (Federal Reserve, ECB, Bank of "
+                 "England, Bank of Japan), inflation, jobs and growth figures of major economies, big moves in stock "
+                 "markets, oil, gold or currencies, and deals or results of the world's largest companies. "
+                 "Avoid: investment tips, small companies."),
+    ("sports", "Sport, the world's most followed competitions, football first. Prefer, in this order: (1) European club "
+               "football: UEFA Champions League, Premier League, La Liga, Serie A, Bundesliga, Ligue 1, and the biggest "
+               "clubs (Real Madrid, Barcelona, Manchester City, Liverpool, Arsenal, Manchester United, Bayern Munich, "
+               "Paris Saint-Germain, Inter, Juventus), then international football (World Cup, European Championship, "
+               "qualifiers, Ballon d'Or); (2) when football has no strong story or a bigger global event dominates: "
+               "Formula 1, tennis Grand Slams and ATP/WTA Finals, the NBA, the Olympic Games, world athletics, "
+               "heavyweight boxing. A result, record, title race, confirmed transfer or coach change beats a preview. "
+               "Avoid: golf, American football, baseball, ice hockey, college sport, horse racing, betting, injury lists, "
+               "transfer rumours."),
+    ("science", "Science, health and technology. Prefer: discoveries, space missions, medicine and health, climate and "
+                "environment, and new technology such as AI, chips or phones: the research or the product, never its "
+                "share price. Avoid: stock-market and company-results stories (they belong to business), press releases."),
+]
+COVERED_DAYS = 3  # stories (and their reports) of the editions this many days back are not picked again
 RESEARCH_MODEL = os.environ.get("NEWS_RESEARCH_MODEL", "gpt-5.6-luna")  # the bot's grounding tier: searches, lists facts
 MODEL = os.environ.get("NEWS_MODEL", "gpt-5.6-sol")  # the bot's quality tier writes the text; ~4 a day cost cents
 MAX_FACT_WORDS = 12  # a "fact" longer than this is a sentence lifted from a page, not a fact
@@ -53,19 +80,26 @@ FEED_LINK = f'    <link rel="alternate" type="application/atom+xml" href="/{FEED
 FRESH_DAYS = 2
 # The model has no idea what day it is: the date comes from the runner's clock and goes into the prompt,
 # and every report's publication date comes back so research() can drop the stale ones itself.
-RESEARCH = f"""You are a research assistant for an English-learning site. Today is {{today}} (UTC). Search the web
-for the main news on the given topic published on {{earliest}} or later; check each report's publication
-date and ignore older reports and undated evergreen pages. Pick the ONE story that at least two
-independent reports from that period cover and that will still make sense tomorrow. Report it as FACTS
-ONLY: 8 to 14 short fragments of at most {MAX_FACT_WORDS} words each (who, what, where, when, numbers,
-what happens next), each in your own words, never a sentence or phrase copied from a page. List every
-report you used, with its title, URL and publication date as YYYY-MM-DD (empty if the page shows none)."""
+RESEARCH = f"""You are the desk editor of an English-learning site read by adults all over the world. Today is {{today}} (UTC).
+Search the web for news of the given desk published on {{earliest}} or later; check each report's publication
+date and ignore older reports and undated evergreen pages. Pick the ONE story an international editor would
+lead this desk with: first what the desk brief prefers, in its order; then the story that matters to the most
+people in the most countries, not in one country only; then the one the most independent major outlets cover
+(international agencies and broadcasters such as Reuters, AP, AFP and the BBC count most). It must be covered
+by at least two independent reports from that period and still make sense tomorrow. Never pick a story listed
+as already covered, an opinion piece, a rumour or a press release. Report it as FACTS ONLY: 8 to 14 short
+fragments of at most {MAX_FACT_WORDS} words each (who, what, where, when, numbers, what happens next), each in
+your own words, never a sentence or phrase copied from a page. Name the competition, institution or country the
+story is about in 1 to 3 words as its tag (for example "Premier League", "Federal Reserve", "European Union").
+List every report you used, with its title, URL and publication date as YYYY-MM-DD (empty if the page shows none)."""
+MAX_TAG_WORDS = 4
 
 FACTS_SCHEMA = {
     "type": "object", "additionalProperties": False,
-    "required": ["story", "facts", "sources"],
+    "required": ["story", "tag", "facts", "sources"],
     "properties": {
         "story": {"type": "string"},
+        "tag": {"type": "string"},
         "facts": {"type": "array", "items": {"type": "string"}},
         "sources": {"type": "array", "items": {"type": "object", "additionalProperties": False, "required": ["title", "url", "published"],
                                                "properties": {"title": {"type": "string"}, "url": {"type": "string"}, "published": {"type": "string"}}}},
@@ -118,29 +152,33 @@ def responses(body: dict[str, object], key: str, timeout: int = 120) -> dict[str
     return json.loads(text)
 
 
-def research(query: str, key: str, date: str) -> dict[str, object]:
+def research(query: str, key: str, date: str, covered: list[str] | None = None, seen: set[str] | None = None) -> dict[str, object]:
     """Call 1: the hosted web_search reads the reports and hands back facts and links, never their wording.
 
     Shape as the bot's OpenAiWebSearchProvider sends it (tool + strict schema, tool_choice required, low
-    effort); a hosted search is a model turn, so the budget is minutes, not the seconds of a search API."""
+    effort); a hosted search is a model turn, so the budget is minutes, not the seconds of a search API.
+    ``covered`` (titles) is told to the model; ``seen`` (report links already used) is enforced here: on
+    2026-11-07 the science desk returned the previous day's business story with the very same reports."""
     earliest = (dt.date.fromisoformat(date) - dt.timedelta(days=FRESH_DAYS)).isoformat()
+    avoid = "".join(f"\n- {t}" for t in covered or [])
     out = responses({
         "model": RESEARCH_MODEL, "instructions": RESEARCH.replace("{today}", date).replace("{earliest}", earliest),
-        "input": f"Topic: {query}",
+        "input": f"Desk brief: {query}" + (f"\nAlready covered, pick a different story:{avoid}" if avoid else ""),
         "tools": [{"type": "web_search", "search_context_size": "low"}], "tool_choice": "required",
         "reasoning": {"effort": "low"}, "max_output_tokens": 4000,
         "text": {"format": {"type": "json_schema", "name": "news_facts", "strict": True, "schema": FACTS_SCHEMA}},
     }, key, timeout=180)
     facts = [clean(str(f)) for f in out["facts"] if 1 <= len(str(f).split()) <= MAX_FACT_WORDS]
-    sources, seen = [], set()
+    sources, used = [], set()
     for src in out["sources"]:
         url, published = str(src.get("url") or ""), str(src.get("published") or "").strip()
         if DATE_RE.match(published) and published < earliest:
             continue  # the model was told, but a stale report is dropped here too, not trusted to the prompt
-        if url.startswith(("http://", "https://")) and url not in seen:  # the url is published as a link
-            seen.add(url)
+        if url.startswith(("http://", "https://")) and url not in used and url not in (seen or ()):  # published as a link
+            used.add(url)
             sources.append({"t": clean(str(src.get("title") or "")), "u": url})
-    return {"story": clean(str(out["story"])), "facts": facts, "sources": sources}
+    tag = clean(str(out["tag"]))
+    return {"story": clean(str(out["story"])), "tag": tag if len(tag.split()) <= MAX_TAG_WORDS else "", "facts": facts, "sources": sources}
 
 
 def write_lesson(facts: list[str], key: str) -> dict[str, object]:
@@ -168,9 +206,21 @@ def article(lesson: dict[str, object], found: dict[str, object], topic: str) -> 
     words = [{"w": clean(str(w["w"])), "d": clean(str(w["d"]))} for w in lesson["words"] if str(w["w"]).strip()]
     if len(quiz) < 3 or len(words) < 3:
         raise ValueError("thin quiz")
-    return {"topic": topic, "title": clean(str(lesson["title"])), "level": LEVEL,
+    return {"topic": topic, **({"tag": found["tag"]} if found.get("tag") else {}), "title": clean(str(lesson["title"])), "level": LEVEL,
             "p": [split_sentences(p) for p in paragraphs], "words": words[:8], "quiz": quiz[:4],
             "sources": found["sources"]}
+
+
+def recent(news_dir: Path, date: str) -> tuple[list[str], set[str]]:
+    """Titles and report links of the editions in the COVERED_DAYS before ``date``: not picked again."""
+    earliest = (dt.date.fromisoformat(date) - dt.timedelta(days=COVERED_DAYS)).isoformat()
+    covered, seen = [], set()
+    for path in sorted(news_dir.glob("*.json")):
+        if earliest <= path.stem < date:
+            for a in json.loads(path.read_text(encoding="utf-8")).get("articles") or []:
+                covered.append(str(a.get("title") or ""))
+                seen.update(str(s.get("u") or "") for s in a.get("sources") or [])
+    return [t for t in covered if t], seen - {""}
 
 
 def generate(date: str, news_dir: Path | None = None) -> Path:
@@ -180,13 +230,16 @@ def generate(date: str, news_dir: Path | None = None) -> Path:
         print(f"{path.name} exists; nothing generated.")
         return path
     key = os.environ["OPENAI_API_KEY"]
+    covered, seen = recent(news_dir, date)
     articles = []
     for topic, query in TOPICS:
         try:
-            found = research(query, key, date)
+            found = research(query, key, date, covered, seen)
             if len(found["facts"]) < 5 or len(found["sources"]) < 2:
-                raise ValueError(f"only {len(found['facts'])} facts from {len(found['sources'])} reports")
+                raise ValueError(f"only {len(found['facts'])} facts from {len(found['sources'])} new reports")
             articles.append(article(write_lesson(found["facts"], key), found, topic))
+            covered.append(found["story"])  # the next desk never takes the story this one just took
+            seen.update(s["u"] for s in found["sources"])
         except Exception as exc:  # noqa: BLE001 — one topic failing never loses the others
             print(f"{topic}: skipped ({exc})", file=sys.stderr)
     if not articles:
@@ -225,32 +278,63 @@ def chapter_files(edition: dict[str, object]) -> dict[str, str]:
     }
 
 
-def edition_row(locale: dict[str, object], pre: str, ed: dict[str, object]) -> str:
-    c = locale["copy"]
-    return (
-        f'        <li><a href="{pre}/news/{ed["date"]}/">'
-        f'{build_books.cover({"title": ed["date"], "author": "QuizJet", "cover": ["#2a4d3a", "#9ad3a8"]})}<span class="book-info">'
-        f'<strong>{e(c["nwEdition"].replace("{date}", str(ed["date"])))}</strong>'
-        f'<span lang="en" dir="ltr">{e(" · ".join(str(a["title"]) for a in ed["articles"]))}</span>'
-        f'<small>{e(c["bkLevel"])}: {e(LEVEL)} · {e(", ".join(topic_label(locale, str(a["topic"])) for a in ed["articles"]))}</small>'
-        f'<span class="book-read">{e(c["bkRead"])} <span aria-hidden="true">→</span></span></span></a></li>\n'
-    )
+def card(locale: dict[str, object], pre: str, date: str, n: int, a: dict[str, object], lead: bool) -> str:
+    """One article as a card that opens the reader on it (#n); the newest edition's cards show the first sentence."""
+    topic = str(a["topic"])
+    tag = f' · <span lang="en" dir="ltr">{e(a["tag"])}</span>' if a.get("tag") else ""
+    first = f'<span class="nw-first" lang="en" dir="ltr">{e(a["p"][0][0])}</span>' if lead and a["p"] and a["p"][0] else ""
+    return (f'          <li data-topic="{e(topic)}"><a class="nw-card nw-{e(topic)}" href="{pre}/news/{date}/#{n}">'
+            f'<span class="nw-kicker">{e(topic_label(locale, topic))}{tag}</span>'
+            f'<strong lang="en" dir="ltr">{e(a["title"])}</strong>{first}</a></li>\n')
+
+
+def edition_block(locale: dict[str, object], pre: str, ed: dict[str, object], lead: bool) -> str:
+    c, date = locale["copy"], str(ed["date"])
+    cards = "".join(card(locale, pre, date, n, a, lead) for n, a in enumerate(ed["articles"], start=1))
+    return (f'      <section class="nw-edition{" nw-lead" if lead else ""}">\n'
+            f'        <h2><a href="{pre}/news/{date}/">{e(c["nwEdition"].replace("{date}", date))}</a></h2>\n'
+            f'        <ul class="nw-grid">\n{cards}        </ul>\n      </section>\n')
+
+
+# Topic filter: hidden until the script runs, so a page without JavaScript shows no dead buttons. An edition with
+# nothing left under the chosen topic leaves too.
+FILTER_SCRIPT = """    <script>
+(function () {
+  var buttons = [].slice.call(document.querySelectorAll("#nw-filter button"));
+  buttons.forEach(function (b) {
+    b.addEventListener("click", function () {
+      var t = b.getAttribute("data-topic");
+      buttons.forEach(function (x) { x.setAttribute("aria-pressed", String(x === b)); });
+      document.querySelectorAll(".nw-edition").forEach(function (sec) {
+        var any = false;
+        sec.querySelectorAll("li[data-topic]").forEach(function (li) { li.hidden = t !== "all" && li.getAttribute("data-topic") !== t; any = any || !li.hidden; });
+        sec.hidden = !any;
+      });
+    });
+  });
+  document.getElementById("nw-filter").hidden = false;
+})();
+    </script>
+"""
 
 
 def list_page(locale: dict[str, object], pre: str, editions: list[dict[str, object]]) -> tuple[str, str, str, str]:
-    """(title, description, body, extra head) of /news/: one list, or one list per month once there is more than one."""
+    """(title, description, body, extra head) of /news/: a topic filter, the newest edition as cards with their first
+    sentence, then the older ones as cards, under one heading per month once there is more than one month."""
     c = locale["copy"]
-    months: dict[str, list[dict[str, object]]] = {}
-    for ed in editions:
-        months.setdefault(str(ed["date"])[:7], []).append(ed)
-    if len(months) > 1:
-        lists = "".join(
-            f'      <h2 class="nw-month" dir="ltr">{e(month)}</h2>\n      <ul class="book-list">\n'
-            + "".join(edition_row(locale, pre, ed) for ed in group) + "      </ul>\n"
-            for month, group in months.items()
-        )
-    elif editions:
-        lists = '      <ul class="book-list">\n' + "".join(edition_row(locale, pre, ed) for ed in editions) + "      </ul>\n"
+    lists, month = "", str(editions[0]["date"])[:7] if editions else ""
+    several = len({str(ed["date"])[:7] for ed in editions}) > 1
+    for i, ed in enumerate(editions):
+        if several and (i == 0 or str(ed["date"])[:7] != month):
+            month = str(ed["date"])[:7]
+            lists += f'      <h2 class="nw-month" dir="ltr">{e(month)}</h2>\n'
+        lists += edition_block(locale, pre, ed, lead=i == 0)
+    if editions:
+        topics = list(dict.fromkeys(t for t, _ in TOPICS))
+        buttons = "".join(f'<button type="button" data-topic="{t}" aria-pressed="false">{e(topic_label(locale, t))}</button>' for t in topics)
+        lists = (f'      <div class="discover-filter nw-filter" id="nw-filter" role="group" hidden>'
+                 f'<button type="button" data-topic="all" aria-pressed="true">{e(c["discFilterAll"])}</button>{buttons}</div>\n'
+                 + lists + FILTER_SCRIPT)
     else:
         lists = f'      <p class="discover-empty">{e(c["nwEmpty"])}</p>\n'
     body = (
