@@ -1,12 +1,10 @@
 name: SEO checks
 
-# No pull_request trigger (owner decision, 2026-11-04): opening a PR runs nothing. The same four
-# checks run on every push to main here and again in deploy.yml before the site is published;
-# run them by hand before a PR: build_locales.py --check, check_seo.py, test_build_discover.py, test_build_news.py.
+# Manual only (owner decision, 2026-11-07): no PR and no push runs this. The same four checks run in
+# deploy.yml before every publish (push to main, daily, manual), so a push-triggered copy here tested the
+# same commit twice. Run them by hand before a PR: build_locales.py --check, check_seo.py,
+# test_build_discover.py, test_build_news.py — or start this workflow from Actions > "Run workflow".
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch:
 
 permissions:

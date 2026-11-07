@@ -15,8 +15,8 @@ python scripts/test_build_news.py
 python scripts/build_discover.py --out /tmp/site [--export export.json]   # the deployable artifact, outside the repo
 ```
 
-CI runs the four checks on push to `main` only (owner decision 2026-11-04: a PR triggers nothing), then
-`deploy.yml` publishes. **Merged = deployed** here, unlike the bot. The daily run (02:41 UTC) also pulls
+The four checks run inside `deploy.yml` before it publishes; nothing runs on a PR or a branch commit, and
+`seo-check.yml` is manual only (owner decisions 2026-11-04 and 2026-11-07: no test runs twice). **Merged = deployed** here, unlike the bot. The daily run (02:41 UTC) also pulls
 the Discover catalog and writes the day's news lesson.
 
 ## URL rule — path segments are English, never localized
