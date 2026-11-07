@@ -132,6 +132,9 @@ def reader_page(locale: dict[str, object], pre: str, book: dict[str, object]) ->
         f'{e(c["bkSource"])} <a href="{e(book["source"])}" target="_blank" rel="noopener noreferrer">gutenberg.org</a>')
     chapters = book["chapters"]
     options = "".join(f'<option value="{n}">{n}. {e(ch["title"])}</option>' for n, ch in enumerate(chapters, start=1))
+    # A news edition switches texts with one tab per desk (#n, read by reader.js like the select, which it then hides).
+    tabs = "".join(f'<a class="nw-{e(topic)}" href="#{n}">{e(label)}</a>' for n, (topic, label) in enumerate(book.get("tabs") or [], start=1))
+    tabs_html = f'<nav class="nw-tabs" aria-label="{e(c["bkChapter"])}">{tabs}</nav>\n          ' if tabs else ""
     targets = [("", c["bkNone"])] + [(str(l["code"]), str(l["name"])) for l in LOCALES if l["code"] != "en"]
     target_options = "".join(f'<option value="{e(code)}">{e(name)}</option>' for code, name in targets)
     data = {
@@ -152,7 +155,7 @@ def reader_page(locale: dict[str, object], pre: str, book: dict[str, object]) ->
         <p class="rd-tip" id="rd-tip">{e(c["bkTip"])}</p>
         <div class="rd-tools">
           <label class="sr-only" for="rd-ch">{e(c["bkChapter"])}</label>
-          <select id="rd-ch" lang="en" dir="ltr">{options}</select>
+          {tabs_html}<select id="rd-ch" lang="en" dir="ltr"{" hidden" if tabs else ""}>{options}</select>
           <button type="button" class="rd-icon" id="rd-words-btn" aria-label="{e(c["bkWords"])}"><span aria-hidden="true">★</span> <span id="rd-words-n">0</span></button>
           <button type="button" class="rd-icon" id="rd-set-btn" aria-label="{e(c["bkSettings"])}" title="{e(c["bkSettings"])}"><span aria-hidden="true">⚙︎</span></button>
         </div>

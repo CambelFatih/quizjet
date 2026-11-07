@@ -13,6 +13,7 @@ import build_news as bn
 PAGE_SENTENCE = "The central bank kept its main interest rate unchanged on Wednesday, saying inflation was slowing but still above target."
 FOUND = {
     "story": "Central bank holds rates",
+    "tag": "Central bank",
     "facts": ["central bank left its main rate unchanged", "decision came on Wednesday", "inflation slowing but above target",
               "shares rose after the decision", "investors expect a cut early next year", "next months will show if prices calm",
               PAGE_SENTENCE],  # a 20-word "fact" is a lifted sentence: dropped
@@ -47,6 +48,9 @@ def fake_api(calls: list[dict[str, object]]):
         assert body["text"]["format"]["strict"] is True
         calls.append(body)
         answer = FOUND if "tools" in body else ORIGINAL
+        searches = sum("tools" in c for c in calls)
+        if "tools" in body and searches > 1:  # every desk finds its own reports; the same links twice would be skipped
+            answer = dict(FOUND, sources=[dict(src, url=src["url"] + f"?desk={searches}") for src in FOUND["sources"]])
         if "tools" in body:
             assert body["tool_choice"] == "required" and body["tools"][0]["type"] == "web_search"
         return {"output": [{"type": "web_search_call"}, {"type": "reasoning"},
@@ -66,6 +70,20 @@ def run() -> None:
         assert PAGE_SENTENCE not in found["facts"] and len(found["facts"]) == 6, "a fact longer than MAX_FACT_WORDS is a lifted sentence"
         assert [s["u"] for s in found["sources"]] == ["https://example.com/a", "https://example.com/b"], "deduplicated, http(s) only, nothing older than two days"
         assert "Today is 2026-11-06 (UTC)" in calls[-1]["instructions"] and "published on 2026-11-04 or later" in calls[-1]["instructions"], "the runner's date, not the model's guess"
+        assert calls[-1]["input"] == "Desk brief: business and finance" and found["tag"] == "Central bank"
+        sports = dict(bn.TOPICS)["sports"]
+        assert sports.index("Champions League") < sports.index("Formula 1") < sports.index("Avoid:") < sports.index("golf"), "football first, golf never"
+        # what was covered is told to the model; a report already used is dropped here, whatever the model says
+        again = bn.research("business and finance", "o-key", "2026-11-06", ["Rates stay the same"], {"https://example.com/a?desk=2"})
+        assert calls[-1]["input"].endswith("Already covered, pick a different story:\n- Rates stay the same")
+        assert [s["u"] for s in again["sources"]] == ["https://example.com/b?desk=2"], "a report used before never counts as a new one"
+        original_found = dict(FOUND)
+        FOUND["tag"] = "a tag that is really a whole sentence"
+        try:
+            assert bn.research("x", "o-key", "2026-11-06")["tag"] == "", "a tag longer than MAX_TAG_WORDS is dropped"
+        finally:
+            FOUND.update(original_found)
+        calls[:] = calls[:1]
         lesson = bn.write_lesson(found["facts"], "o-key")
         writer = calls[-1]
         assert "tools" not in writer and writer["model"] == bn.MODEL, "the writer searches nothing"
@@ -73,7 +91,8 @@ def run() -> None:
         assert writer["input"].startswith("Facts:\n- central bank left its main rate unchanged\n")
 
         art = bn.article(lesson, found, "business")
-        assert art["topic"] == "business" and art["level"] == "B1"
+        assert art["topic"] == "business" and art["level"] == "B1" and art["tag"] == "Central bank"
+        assert "tag" not in bn.article(lesson, dict(found, tag=""), "business"), "no tag, no empty field"
         assert art["p"][0] == ["A big bank that controls money in the country decided not to change interest rates this week.",
                                "Prices are rising more slowly than before, but they are still rising too fast."], art["p"][0]
         assert [q["a"] for q in art["quiz"]] == [1, 1, 2], "the answer index comes from the answer text"
@@ -95,10 +114,18 @@ def run() -> None:
         # the whole generation: one research and one writer call per topic, one file, a second run bills nothing
         calls.clear()
         with tempfile.TemporaryDirectory() as tmp:
+            for day, url in (("2026-11-05", "https://example.com/yesterday"), ("2026-11-01", "https://example.com/old"), ("2026-11-07", "https://example.com/later")):
+                Path(tmp, f"{day}.json").write_text(json.dumps({"date": day, "articles": [{"title": f"Story of {day}", "sources": [{"u": url}]}]}), encoding="utf-8")
+            assert bn.recent(Path(tmp), "2026-11-06") == (["Story of 2026-11-05"], {"https://example.com/yesterday"}), "the three days before, nothing else"
+            for day in ("2026-11-05", "2026-11-01", "2026-11-07"):
+                Path(tmp, f"{day}.json").unlink()
             written = bn.generate("2026-11-06", Path(tmp))
             edition = json.loads(written.read_text(encoding="utf-8"))
             assert edition["date"] == "2026-11-06" and [a["topic"] for a in edition["articles"]] == [t for t, _ in bn.TOPICS]
             assert len(calls) == 2 * len(bn.TOPICS) and sum("tools" in c for c in calls) == len(bn.TOPICS)
+            searches = [c for c in calls if "tools" in c]
+            assert "Already covered" not in searches[0]["input"] and searches[-1]["input"].count("- Central bank holds rates") == len(bn.TOPICS) - 1, \
+                "each desk is told the stories the desks before it took"
             bn.generate("2026-11-06", Path(tmp))
             assert len(calls) == 2 * len(bn.TOPICS), "an existing edition is never regenerated"
     finally:
@@ -111,7 +138,7 @@ def run() -> None:
         tmp_path = Path(tmp)
         news = tmp_path / "news"
         news.mkdir()
-        (news / "2026-11-06.json").write_text(json.dumps({"date": "2026-11-06", "model": "test", "articles": [art, dict(art, topic="sports", title="A striker <b>moves</b>")]}), encoding="utf-8")
+        (news / "2026-11-06.json").write_text(json.dumps({"date": "2026-11-06", "model": "test", "articles": [art, dict(art, topic="sports", title="A striker <b>moves</b>", tag="")]}), encoding="utf-8")
         (news / "2026-10-30.json").write_text(json.dumps({"date": "2026-10-30", "model": "test", "articles": [art]}), encoding="utf-8")
         bn.NEWS_DIR = news
         try:
@@ -132,6 +159,8 @@ def run() -> None:
         assert 'id="rd-next-ch" href="#">Sonraki metin ' in tr_reader, "the news framing replaces the book framing on the button"
         assert '"nwCorrect":"Doğru!"' in tr_reader and '"@type":"LearningResource"' in tr_reader and "gutenberg.org" not in tr_reader
         assert "Spor: A striker &lt;b&gt;moves&lt;/b&gt;" in tr_reader, "chapter names are escaped and carry the topic"
+        assert '<nav class="nw-tabs" aria-label="Bölüm"><a class="nw-business" href="#1">Ekonomi</a><a class="nw-sports" href="#2">Spor</a></nav>' in tr_reader
+        assert '<select id="rd-ch" lang="en" dir="ltr" hidden>' in tr_reader, "one desk tab per text replaces the select"
         assert "A big bank that controls money in the country decided not to change interest rates this week." in tr_reader, \
             "the texts are in the HTML for crawlers and readers without JavaScript"
         assert 'href="https://example.com/a"' in tr_reader and 'type="application/atom+xml"' in tr_reader
@@ -142,7 +171,12 @@ def run() -> None:
         assert '<h1 lang="ar" dir="rtl">' in ar_reader
 
         shelf = (out / "news" / "index.html").read_text(encoding="utf-8")
-        assert 'href="/news/2026-11-06/"' in shelf and "Business, Sports" in shelf and "Interest rates stay the same for now · A striker &lt;b&gt;moves&lt;/b&gt;" in shelf
+        assert 'href="/news/2026-11-06/"' in shelf and 'href="/news/2026-11-06/#2"' in shelf and 'href="/news/2026-10-30/#1"' in shelf, "a card opens its own text"
+        assert '<span class="nw-kicker">Sports</span><strong lang="en" dir="ltr">A striker &lt;b&gt;moves&lt;/b&gt;</strong>' in shelf
+        assert '<span class="nw-kicker">Business · <span lang="en" dir="ltr">Central bank</span></span>' in shelf, "the tag follows the desk"
+        assert shelf.count('class="nw-first"') == 2 and shelf.count('class="nw-edition nw-lead"') == 1, "only the newest edition shows first sentences"
+        assert '<div class="discover-filter nw-filter" id="nw-filter" role="group" hidden><button type="button" data-topic="all" aria-pressed="true">All</button>' in shelf
+        assert [shelf.count(f'data-topic="{t}"') for t, _ in bn.TOPICS] == [1, 3, 2, 1], "one filter button per desk, one data-topic per card"
         assert '<meta name="robots" content="noindex">' not in shelf and "support@quizjet.app" in shelf
         assert 'class="nw-month"' in shelf and ">2026-10<" in shelf and 'type="application/atom+xml"' in shelf, "two months: grouped by month, feed linked"
         sitemap = (out / "sitemap.xml").read_text(encoding="utf-8")
@@ -161,7 +195,7 @@ def run() -> None:
         finally:
             bn.NEWS_DIR = original_dir
         bare = (empty / "news" / "index.html").read_text(encoding="utf-8")
-        assert '<meta name="robots" content="noindex">' in bare and "next daily update" in bare
+        assert '<meta name="robots" content="noindex">' in bare and "next daily update" in bare and "nw-filter" not in bare
         assert "news" not in (empty / "sitemap.xml").read_text(encoding="utf-8")
         assert not (empty / "news" / "feed.xml").exists() and 'type="application/atom+xml"' not in bare
         for landing_page in ("index.html", "ar/index.html"):
