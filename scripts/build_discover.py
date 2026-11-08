@@ -403,37 +403,51 @@ def thousands(n: int) -> str:
     return f"{n:,}".replace(",", "\u202f")
 
 
-Stats = tuple[int, int, int]  # quizzes, plays, players
+BAND_STATS_RE = re.compile(r'[ \t]*<p class="band-stats">.*?</p>\n')
 
 
-def band_stats(items: list[dict[str, object]], by_language: bool) -> dict[str, Stats]:
-    """The catalog band's numbers per landing route ("" = English): the quizzes in that language, or the whole catalog
+def band_counts(items: list[dict[str, object]], by_language: bool) -> dict[str, int]:
+    """The catalog band's quiz count per landing route ("" = English): the quizzes in that language, or the whole catalog
     on every page when the export does not say the language."""
-    stats: dict[str, Stats] = {}
-    for locale in LOCALES:
-        mine = [i for i in items if home_locale(i) is locale] if by_language else items
-        stats[str(locale["route"])] = (len(mine), sum(int(i["plays"]) for i in mine), sum(int(i["participants"]) for i in mine))
-    return stats
+    return {str(locale["route"]): len([i for i in items if home_locale(i) is locale] if by_language else items)
+            for locale in LOCALES}
 
 
-def apply_band(out: Path, stats: dict[str, Stats] | None) -> None:
+def export_totals(data: dict[str, object]) -> tuple[int, int] | None:
+    """The bot's own totals for all of QuizJet, (players, plays): distinct people who finished a quiz and finished plays,
+    admins excluded — the numbers its admin panel shows. The cards' per-quiz player counts cannot be summed into this:
+    a person who played five quizzes would count five times (the band did exactly that until 2026-11-08)."""
+    totals = data.get("totals")
+    if not isinstance(totals, dict):
+        return None
+    players, plays = totals.get("players"), totals.get("plays")
+    ok = all(isinstance(n, int) and not isinstance(n, bool) for n in (players, plays)) and 0 < players <= plays
+    return (players, plays) if ok else None
+
+
+def apply_band(out: Path, counts: dict[str, int] | None, totals: tuple[int, int] | None = None) -> None:
     """Fill the landing pages' catalog band with the real numbers, or drop it.
 
     The committed pages carry the band with {count}, {plays} and {participants} placeholders (labels translated per
     language). Only this build knows the catalog, so they are filled here; without a catalog, or with no quiz in the
     page's language, the band is removed rather than shown with a placeholder, a zero or another language's quizzes.
+    The plays/players line is QuizJet-wide and comes from the bot's totals; an export without them (a bot older than
+    the field, or the count failed) drops that line rather than show a sum that counts people more than once.
     """
     for page in out.rglob("index.html"):
         text = page.read_text(encoding="utf-8")
         if 'id="discover-band"' not in text:
             continue
         route = page.parent.relative_to(out).as_posix().strip(".")
-        count, plays, participants = (stats or {}).get(route, (0, 0, 0))
+        count = (counts or {}).get(route, 0)
         if not count:
             text = BAND_RE.sub("", text)
+        elif totals is None:
+            text = BAND_STATS_RE.sub("", text.replace("{count}", str(count)))
         else:
+            players, plays = totals
             text = (text.replace("{count}", str(count)).replace("{plays}", thousands(plays))
-                    .replace("{participants}", thousands(participants)))
+                    .replace("{participants}", thousands(players)))
         write(page, text)
 
 
@@ -535,11 +549,12 @@ def build(out: Path, export: Path | None) -> str:
         return "Built without the Discover catalog (no export given)."
 
     bot, items, skipped = load_catalog(export)
-    generated = str(json.loads(export.read_text(encoding="utf-8")).get("generatedAtUtc") or "")
+    raw = json.loads(export.read_text(encoding="utf-8"))
+    generated = str(raw.get("generatedAtUtc") or "")
     # ponytail: the old every-page-in-every-language build stays for an export from a bot older than the language field
     # (merged ≠ deployed there); drop it, and this flag, once every export carries "language".
     by_language = any(item["language"] for item in items)
-    apply_band(out, band_stats(items, by_language))
+    apply_band(out, band_counts(items, by_language), export_totals(raw))
     entries: list[Entry] = []
     for locale in LOCALES:
         base, pre = locale_dir(out, locale), prefix(locale)

@@ -16,6 +16,7 @@ EXPORT = {
     "botUsername": "QuizJetBot",
     "totalCount": 4,
     "truncated": False,
+    "totals": {"players": 7, "plays": 40},  # the bot's own QuizJet-wide numbers, not the cards' sums (13 plays, 18 "players")
     "items": [
         {"quizId": "a", "externalId": "good_key-1", "title": "Türkiye <b>coğrafyası</b>", "description": "İller & bölgeler",
          "questionCount": 1, "isAiGenerated": True, "createdAtUtc": "2026-10-30T10:00:00Z", "executionCount": 3, "participantCount": 12},
@@ -134,9 +135,21 @@ def run() -> None:
                 html_text = (out / landing).read_text(encoding="utf-8")
                 assert 'id="discover-band"' in html_text and "{count}" not in html_text, landing
             index = (out / "index.html").read_text(encoding="utf-8")
-            assert "Ready-made quizzes: 3" in index and "<span>Plays</span>: 13 · <span>Players</span>: 18" in index and "{plays}" not in index
+            assert "Ready-made quizzes: 3" in index and "{plays}" not in index
+            assert "<span>QuizJet overall</span> · <span>Plays</span>: 40 · <span>Players</span>: 7" in index, "the bot's totals, not the cards' sum"
             tr_index = (out / "tr" / "index.html").read_text(encoding="utf-8")
-            assert ("Hazır quiz&#x27;ler: 3" in tr_index or "Hazır quiz'ler: 3" in tr_index) and "<span>Oynanma</span>: 13 · <span>Oyuncu</span>: 18" in tr_index
+            assert ("Hazır quiz&#x27;ler: 3" in tr_index or "Hazır quiz'ler: 3" in tr_index) and "<span>Oynanma</span>: 40 · <span>Oyuncu</span>: 7" in tr_index
+
+            # an export without totals (an older bot, or its count failed): the count stays, the plays/players line goes
+            old = tmp_path / "old-export.json"
+            old.write_text(json.dumps({k: v for k, v in EXPORT.items() if k != "totals"}), encoding="utf-8")
+            bd.build(tmp_path / "old-site", old)
+            old_index = (tmp_path / "old-site" / "index.html").read_text(encoding="utf-8")
+            assert "Ready-made quizzes: 3" in old_index and 'class="band-stats"' not in old_index and "{plays}" not in old_index
+            for bad in (None, {}, {"players": 5}, {"players": True, "plays": 9}, {"players": 0, "plays": 4},
+                        {"players": 9, "plays": 4}, {"players": "7", "plays": 40}):
+                assert bd.export_totals({"totals": bad}) is None, bad
+            assert bd.export_totals({"totals": {"players": 7, "plays": 40}}) == (7, 40)
             assert '<a class="language-chip" href="/tr/" lang="tr"' in index, "the language grid links the language pages"
             assert '"@type":"SoftwareApplication"' in index and '"inLanguage":"tr"' in tr_index, "structured data on every landing page"
             assert (out / "manifest.webmanifest").is_file() and (out / "assets" / "fonts" / "dm-sans-latin.woff2").is_file()
