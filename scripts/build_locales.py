@@ -417,6 +417,10 @@ def legacy_redirect_page(target: str, canonical: str = BASE_URL + "/") -> str:
 
 
 NOT_FOUND_SCRIPT = """(function () {
+  // A quiz has one page, in its own language (2026-11-08). Its old copy under another prefix (/de/q/<key>/) forwards
+  // to /q/<key>/, which is the quiz or a redirect to it; a quiz gone from Discover stays here.
+  var p = location.pathname.split("/");
+  if (p[1] && p[1] !== "q" && p[2] === "q" && /^[A-Za-z0-9_-]+$/.test(p[3] || "")) { location.replace("/q/" + p[3] + "/"); return; }
   var seg = location.pathname.split("/")[1] || "", all = JSON.parse(document.getElementById("nf-i18n").textContent), t = all[seg];
   if (!t) return;
   var pre = "/" + seg, root = document.documentElement;

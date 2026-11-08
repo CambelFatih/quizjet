@@ -31,6 +31,11 @@ the Discover catalog and writes the day's news lesson.
 - The site launched with Turkish names (`kesfet`, `kitaplar`, `haberler`, fixed 2026-11-06).
   `build_discover.LEGACY_ROUTES` keeps a redirect page at every old address (search engines, shared
   links). Never reuse those names, never drop the redirects.
+- A quiz page exists ONCE, in the quiz's own language (the export's `language`, bot decision 2026-11-08):
+  `/<route>/q/<key>/`, or `/q/<key>/` for English, a language the site lacks and an unknown one. `/q/<key>/` always
+  exists (the page or a redirect to it) and `404.html` forwards an old `/<other>/q/<key>/` copy there. Each
+  `/<route>/discover/` lists its own language first; "All languages" shows the rest. An export without `language`
+  (a bot older than the field) builds the old way, every quiz in every language.
 - The reader loads chapters from `D.base` (`/books/<slug>/<n>.json`, `/news/<date>/<n>.json`); a path
   typed anywhere else is a bug.
 

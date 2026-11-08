@@ -45,7 +45,7 @@ def run() -> None:
             out = tmp_path / "site"
 
             message = bd.build(out, export)
-            assert "3 quizzes in 18 languages" in message and "Skipped 1" in message, message
+            assert "3 quizzes (18 languages)" in message and "Skipped 1" in message, message
 
             # URL segments are English: nothing else appears at the top of the tree, and the Turkish names the site
             # launched with hold nothing but redirects to the English address of the same page
@@ -176,6 +176,8 @@ def run() -> None:
             assert 'href="/books/frankenstein/"' in shelf and "Chapters: 28" in shelf
             assert 'href="/tr/books/"' in (bare / "tr" / "index.html").read_text(encoding="utf-8"), "landing links the shelf"
 
+            check_by_language(tmp_path)
+
             # a truncated export is refused
             export.write_text(json.dumps({**EXPORT, "truncated": True}), encoding="utf-8")
             try:
@@ -195,6 +197,49 @@ def run() -> None:
             build_news.NEWS_DIR = original_news
     check_books(Path(tempfile.mkdtemp()))
     print("build_discover self-check passed.")
+
+
+def check_by_language(tmp: Path) -> None:
+    """The export says each quiz's language (bot decision 2026-11-08): one page per quiz, own language first."""
+    languages = {"good_key-1": "tr", "no_desc": "de-AT", "url_desc": "hi"}  # Turkish · German by its subtag · not a site language
+    items = [{**raw, "language": languages.get(raw["externalId"], "")} for raw in EXPORT["items"]]
+    export = tmp / "lang-export.json"
+    export.write_text(json.dumps({**EXPORT, "items": items}), encoding="utf-8")
+    out = tmp / "lang-site"
+
+    assert "3 quizzes (one page per quiz, in its own language)" in bd.build(out, export)
+    # one page per quiz: Turkish under /tr/, German under /de/, Hindi under the English interface
+    assert sum(1 for _ in out.rglob("good_key-1/index.html")) == 2, "the page and the redirect at /q/<key>/"
+    tr_quiz = (out / "tr" / "q" / "good_key-1" / "index.html").read_text(encoding="utf-8")
+    assert '<html lang="tr"' in tr_quiz and 'hreflang=' not in tr_quiz, "a single-language page names no alternates"
+    assert 'href="/de/discover/"' in tr_quiz and 'href="/de/q/good_key-1/"' not in tr_quiz, "the language menu leads to catalogs"
+    assert '"inLanguage": "tr"' in tr_quiz
+    moved = (out / "q" / "good_key-1" / "index.html").read_text(encoding="utf-8")
+    assert 'content="0;url=/tr/q/good_key-1/"' in moved and 'content="noindex"' in moved, "the shared address forwards"
+    assert (out / "de" / "q" / "no_desc" / "index.html").is_file() and (out / "q" / "url_desc" / "index.html").is_file()
+    assert not (out / "de" / "q" / "good_key-1").exists() and not (out / "tr" / "q" / "url_desc").exists()
+
+    # the catalog: own language first and selected; the rest behind "All languages"; links go to the one page
+    tr_catalog = (out / "tr" / "discover" / "index.html").read_text(encoding="utf-8")
+    assert tr_catalog.index("good_key-1") < tr_catalog.index("no_desc") and 'data-own="1"' in tr_catalog
+    assert '<option value="own" selected>Türkçe (1)</option>' in tr_catalog and "Tüm diller (3)" in tr_catalog
+    assert 'href="/de/q/no_desc/"' in tr_catalog and 'href="/q/url_desc/"' in tr_catalog and "Bu dilde henüz" not in tr_catalog
+    fr_catalog = (out / "fr" / "discover" / "index.html").read_text(encoding="utf-8")
+    assert '<option value="own" disabled>Français (0)</option>' in fr_catalog and '<option value="all" selected>' in fr_catalog
+    assert "Aucun quiz dans cette langue" in fr_catalog, "an empty language says so and shows every quiz"
+    en_catalog = (out / "discover" / "index.html").read_text(encoding="utf-8")
+    assert "English (0)" in en_catalog, "Hindi is not English: an unknown or non-site language belongs to no catalog"
+
+    # sitemap: every catalog, each quiz once, never the redirect
+    sitemap = (out / "sitemap.xml").read_text(encoding="utf-8")
+    assert sitemap.count("/q/") == 3 and "https://quizjet.app/tr/q/good_key-1/" in sitemap and "https://quizjet.app/q/good_key-1/" not in sitemap
+    assert sitemap.count("/discover/</loc>") == 18
+    # the landing band counts the page's language and disappears where there is none
+    assert ("Hazır quiz&#x27;ler: 1" in (out / "tr" / "index.html").read_text(encoding="utf-8")
+            or "Hazır quiz'ler: 1" in (out / "tr" / "index.html").read_text(encoding="utf-8"))
+    assert 'id="discover-band"' not in (out / "fr" / "index.html").read_text(encoding="utf-8")
+    assert json.loads((out / "discover.json").read_text(encoding="utf-8"))["items"][0]["url"] == "https://quizjet.app/tr/q/good_key-1/"
+    assert bd.home_locale({"language": "pt-BR"})["route"] == "pt-br" and bd.home_locale({"language": "zz"}) is None
 
 
 def check_books(tmp: Path) -> None:
