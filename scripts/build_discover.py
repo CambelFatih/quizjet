@@ -3,10 +3,14 @@
     python scripts/build_discover.py --out /tmp/site [--export discover-export.json]
 
 The export comes from the bot (GET https://api.quizjet.app/public/discover/export, see
-quizjet-bot docs/decisions/2026-11-02-kesfet-web-yayini.md). Every Discover page exists in all
-18 site languages (/discover/ and /q/<key>/ for English, /<route>/discover/ and /<route>/q/<key>/ for
-the others), so a visitor stays in the language they picked. The interface text comes from
-_data/locales.json; quiz titles and descriptions stay in the language their creator wrote them in.
+quizjet-bot docs/decisions/2026-11-02-kesfet-web-yayini.md). The catalog page exists in all 18 site
+languages (/discover/, /<route>/discover/) and shows the quizzes written in that language first; the
+others are one click away ("All languages"). A quiz has ONE page, in its own language: /<route>/q/<key>/,
+or /q/<key>/ (English interface) for English, for a language the site does not have and for an unknown one.
+/q/<key>/ always exists, as the page or as a redirect to it, and the 404 page forwards an old copy under
+another language prefix there. The quiz language comes from the export (quizjet-bot
+docs/decisions/2026-11-08-quiz-dili.md); an export without it is built the old way, every page in every
+language. Interface text comes from _data/locales.json; quiz titles and descriptions are never translated.
 Without --export (the token is not configured yet) every /discover/ page is a "coming soon" page and
 the sitemap only lists the static and Books pages. A truncated or malformed export fails the build
 so a partial catalog is never published. The Books pages (/books/) need no export: see
@@ -51,6 +55,8 @@ LEGACY_ROUTES = {"kesfet": "discover", "kitaplar": "books", "haberler": "news"}
 # Telegram's deep-link payload alphabet; a key outside it cannot start the quiz anyway.
 KEY_RE = re.compile(r"^[A-Za-z0-9_-]{1,64}$")
 BOT_RE = re.compile(r"^[A-Za-z0-9_]{5,32}$")
+# The bot's quiz language: a short code and an optional two-letter region (tr, en, pt-BR, hi). Anything else is unknown.
+LANGUAGE_RE = re.compile(r"^[A-Za-z]{2,3}(?:-[A-Za-z]{2})?$")
 SUPPORT = "support@quizjet.app"
 
 
@@ -67,6 +73,20 @@ def clip(text: str, limit: int) -> str:
 
 def prefix(locale: dict[str, object]) -> str:
     return f"/{locale['route']}" if locale["route"] else ""
+
+
+def home_locale(item: dict[str, object]) -> dict[str, object] | None:
+    """The site language a quiz is written in, if the site has it: the exact code, else its primary subtag (en-US → en)."""
+    language = str(item.get("language") or "").lower()
+    if not language:
+        return None
+    codes = {str(locale["code"]).lower(): locale for locale in LOCALES}
+    return codes.get(language) or codes.get(language.split("-")[0])
+
+
+def quiz_path(item: dict[str, object]) -> str:
+    """The one address of a quiz page: in its own language, else under the English interface (the x-default)."""
+    return f"{prefix(home_locale(item) or LOCALES[0])}/q/{item['key']}/"
 
 
 def load_catalog(path: Path) -> tuple[str, list[dict[str, object]], list[str]]:
@@ -86,9 +106,11 @@ def load_catalog(path: Path) -> tuple[str, list[dict[str, object]], list[str]]:
             continue
         if key in blocked:
             continue
+        language = str(raw.get("language") or "")
         items.append({
             "key": key,
             "title": title,
+            "language": language if LANGUAGE_RE.match(language) else "",
             "description": " ".join(URL_RE.sub(" ", str(raw.get("description") or "")).split()),
             "questionCount": int(raw.get("questionCount") or 0),
             "aiGenerated": bool(raw.get("isAiGenerated")),
@@ -100,15 +122,18 @@ def load_catalog(path: Path) -> tuple[str, list[dict[str, object]], list[str]]:
 
 
 def shell(locale: dict[str, object], title: str, description: str, suffix: str, body: str,
-          *, noindex: bool = False, jsonld: str = "", head: str = "") -> str:
-    """Page frame in ``locale``; ``suffix`` is the path after the language prefix (e.g. "discover/")."""
+          *, noindex: bool = False, jsonld: str = "", head: str = "", single: bool = False) -> str:
+    """Page frame in ``locale``; ``suffix`` is the path after the language prefix (e.g. "discover/").
+
+    ``single``: the page exists in this language only (a quiz page), so it names no other-language alternates and its
+    language menu leads to the catalog in the other language rather than to a page that does not exist."""
     c = locale["copy"]
     pre = prefix(locale)
     url = f"{BASE_URL}{pre}/{suffix}"
     legal = pre if locale["route"] in LEGAL_ROUTES else ""
     en = "" if legal or locale["code"] == "en" else " (EN)"  # the legal pages are English and Turkish only; say so elsewhere
     e = lambda value: html.escape(str(value), quote=True)  # noqa: E731
-    alternates = "".join(
+    alternates = "" if single else "".join(
         f'    <link rel="alternate" hreflang="{e(other["code"])}" href="{BASE_URL}{prefix(other)}/{suffix}">\n'
         for other in LOCALES
     ) + f'    <link rel="alternate" hreflang="x-default" href="{BASE_URL}/{suffix}">\n'
@@ -149,7 +174,7 @@ def shell(locale: dict[str, object], title: str, description: str, suffix: str, 
         f'      <nav class="navigation page-width" aria-label="{e(c["navMainLabel"])}">\n'
         f'        <a class="brand" href="{pre}/"><img src="/assets/logo-96.png" alt="" width="44" height="44"><span>quizjet</span></a>\n'
         f'        <div class="nav-links">{links}</div>\n'
-        f'        <div class="nav-actions">{language_menu(locale, LOCALES, suffix)}'
+        f'        <div class="nav-actions">{language_menu(locale, LOCALES, "discover/" if single else suffix)}'
         f'<details class="nav-menu"><summary aria-label="{e(c["navMenu"])}"></summary><div class="nav-panel">'
         f'<a class="brand nav-panel-brand" href="{pre}/"><img src="/assets/logo-96.png" alt="" width="44" height="44"><span>quizjet</span></a>'
         f'{links}</div></details></div>\n'
@@ -178,13 +203,14 @@ def facts(item: dict[str, object], c: dict[str, str]) -> str:
     ])
 
 
-# Search, sort, AI/by-hand filter and "show more", all on the cards already in the page: no request, no re-render on
-# the server. Without script every card is visible in creation order (the controls stay hidden).
+# Search, sort, language scope, AI/by-hand filter and "show more", all on the cards already in the page: no request, no
+# re-render on the server. Without script every card is visible, the page's own language first (the controls stay hidden).
 SEARCH_SCRIPT = """    <script>
 (function () {
   var input = document.getElementById("q"), count = document.getElementById("count"), none = document.getElementById("none");
   var list = document.querySelector(".quiz-list"), items = [].slice.call(list.children), more = document.getElementById("more");
   var sort = document.getElementById("sort"), filters = [].slice.call(document.querySelectorAll("#filter button"));
+  var lang = document.getElementById("lang");
   var PAGE = %d, limit = PAGE, kind = "all";
   items.forEach(function (li, i) { li.setAttribute("data-i", i); });
   function fold(s) { return s.toLowerCase().replace(/ı/g, "i").normalize("NFKD").replace(/[\\u0300-\\u036f]/g, ""); }
@@ -197,7 +223,8 @@ SEARCH_SCRIPT = """    <script>
       return num(a, "data-i") - num(b, "data-i");
     });
     order.forEach(function (li) {
-      var hit = (!term || li.getAttribute("data-search").indexOf(term) > -1) && (kind === "all" || li.getAttribute("data-ai") === kind);
+      var hit = (!term || li.getAttribute("data-search").indexOf(term) > -1) && (kind === "all" || li.getAttribute("data-ai") === kind)
+        && (!lang || lang.value === "all" || li.getAttribute("data-own") === "1");
       if (hit) matched++;
       li.hidden = !(hit && matched <= limit);
       list.appendChild(li);
@@ -209,6 +236,7 @@ SEARCH_SCRIPT = """    <script>
   function reset() { limit = PAGE; apply(); }
   input.addEventListener("input", reset);
   sort.addEventListener("change", reset);
+  if (lang) lang.addEventListener("change", reset);
   filters.forEach(function (b) {
     b.addEventListener("click", function () {
       kind = b.getAttribute("data-kind");
@@ -224,16 +252,28 @@ SEARCH_SCRIPT = """    <script>
 """ % PAGE_SIZE
 
 
-def render_catalog(locale: dict[str, object], items: list[dict[str, object]], generated: str) -> str:
+def render_catalog(locale: dict[str, object], items: list[dict[str, object]], generated: str, by_language: bool) -> str:
+    """``by_language``: the export says each quiz's language, so this language's quizzes come first and the rest wait
+    behind "All languages"; without it every quiz is listed with its copy in this language (the old build)."""
     c, pre, e = locale["copy"], prefix(locale), html.escape
+    is_own = lambda i: by_language and home_locale(i) is locale  # noqa: E731
+    own = sum(1 for i in items if is_own(i))
+    ordered = sorted(items, key=lambda i: not is_own(i))  # stable: creation order inside each group
     rows = "".join(
         f'        <li data-search="{e(fold(str(i["title"]) + " " + str(i["description"])), quote=True)}"'
-        f' data-plays="{int(i["plays"])}" data-q="{int(i["questionCount"])}" data-ai="{"ai" if i["aiGenerated"] else "manual"}">'
-        f'<a href="{pre}/q/{i["key"]}/"><strong>{e(str(i["title"]))}</strong>'
+        f' data-plays="{int(i["plays"])}" data-q="{int(i["questionCount"])}" data-ai="{"ai" if i["aiGenerated"] else "manual"}"'
+        + (f' data-own="{1 if is_own(i) else 0}"' if by_language else "") + ">"
+        f'<a href="{quiz_path(i) if by_language else pre + "/q/" + str(i["key"]) + "/"}"><strong>{e(str(i["title"]))}</strong>'
         + (f'<span>{e(clip(str(i["description"]), 140))}</span>' if i["description"] else "")
         + f"<small>{e(facts(i, c))}</small></a></li>\n"
-        for i in items
+        for i in ordered
     )
+    scope = (
+        f'        <label for="lang">{e(c["discLangLabel"])} <select id="lang">'
+        f'<option value="own"{" selected" if own else " disabled"}>{e(str(locale["name"]))} ({own})</option>'
+        f'<option value="all"{"" if own else " selected"}>{e(c["discLangAll"])} ({len(items)})</option></select></label>\n'
+    ) if by_language else ""
+    none_here = f'      <p class="discover-empty">{e(c["discLangNone"])}</p>\n' if by_language and not own else ""
     day = generated[:10]
     updated = e(c["discUpdated"]).replace("{date}", f'<time datetime="{e(day)}" dir="ltr">{e(day)}</time>') if day else ""
     body = (
@@ -242,12 +282,14 @@ def render_catalog(locale: dict[str, object], items: list[dict[str, object]], ge
         f'      <label class="sr-only" for="q">{e(c["discSearch"])}</label>\n'
         f'      <input class="discover-search" id="q" type="search" placeholder="{e(c["discSearch"], quote=True)}" autocomplete="off">\n'
         '      <div class="discover-controls" id="controls" hidden>\n'
+        f"{scope}"
         f'        <label for="sort">{e(c["discSort"])} <select id="sort"><option value="new">{e(c["discSortNew"])}</option>'
         f'<option value="plays">{e(c["discSortPlays"])}</option><option value="q">{e(c["discSortQuestions"])}</option></select></label>\n'
         f'        <div class="discover-filter" id="filter" role="group"><button type="button" data-kind="all" aria-pressed="true">{e(c["discFilterAll"])}</button>'
         f'<button type="button" data-kind="ai" aria-pressed="false">{e(c["discAi"])}</button>'
         f'<button type="button" data-kind="manual" aria-pressed="false">{e(c["discManual"])}</button></div>\n'
         "      </div>\n"
+        f"{none_here}"
         f'      <p class="discover-count" aria-live="polite">{e(c["discCount"])}: <span id="count">{len(items)}</span></p>\n'
         f'      <ul class="quiz-list">\n{rows}      </ul>\n'
         f'      <p id="none" class="discover-empty" hidden>{e(c["discEmpty"])}</p>\n'
@@ -268,7 +310,7 @@ def render_placeholder(locale: dict[str, object]) -> str:
     return shell(locale, f'{c["discTitle"]} — QuizJet', c["discSoon"], "discover/", body, noindex=True)
 
 
-def render_quiz(locale: dict[str, object], item: dict[str, object], bot: str) -> str:
+def render_quiz(locale: dict[str, object], item: dict[str, object], bot: str, single: bool = False) -> str:
     c, pre, e = locale["copy"], prefix(locale), html.escape
     key, title, description = str(item["key"]), str(item["title"]), str(item["description"])
     created = str(item["createdAtUtc"])[:10]
@@ -285,6 +327,7 @@ def render_quiz(locale: dict[str, object], item: dict[str, object], bot: str) ->
         **({"description": description} if description else {}),
         "url": f"{BASE_URL}{pre}/{suffix}",
         **({"dateCreated": created} if created else {}),
+        **({"inLanguage": str(item["language"])} if item.get("language") else {}),
         "isAccessibleForFree": True,
         "provider": {"@type": "Organization", "name": "QuizJet", "url": BASE_URL + "/"},
     }, ensure_ascii=False).replace("</", "<\\/")
@@ -306,13 +349,13 @@ def render_quiz(locale: dict[str, object], item: dict[str, object], bot: str) ->
         f'      <p class="quiz-note">{note}</p>\n'
         f'      <p class="quiz-report"><a href="{e(report, quote=True)}">{e(c["discReport"])}</a></p>\n'
     )
-    return shell(locale, f'{clip(title, TITLE_LIMIT)} — {c["discQuizSuffix"]}', meta, suffix, body, jsonld=jsonld)
+    return shell(locale, f'{clip(title, TITLE_LIMIT)} — {c["discQuizSuffix"]}', meta, suffix, body, jsonld=jsonld, single=single)
 
 
 def catalog_json(items: list[dict[str, object]], bot: str, generated: str) -> str:
     out = [{
         **item,
-        "url": f"{BASE_URL}/q/{item['key']}/",
+        "url": f"{BASE_URL}{quiz_path(item)}",
         "startPrivate": f"https://t.me/{bot}?start={item['key']}",
         "startGroup": f"https://t.me/{bot}?startgroup={item['key']}",
     } for item in items]
@@ -360,18 +403,33 @@ def thousands(n: int) -> str:
     return f"{n:,}".replace(",", "\u202f")
 
 
-def apply_band(out: Path, count: int | None, plays: int = 0, participants: int = 0) -> None:
+Stats = tuple[int, int, int]  # quizzes, plays, players
+
+
+def band_stats(items: list[dict[str, object]], by_language: bool) -> dict[str, Stats]:
+    """The catalog band's numbers per landing route ("" = English): the quizzes in that language, or the whole catalog
+    on every page when the export does not say the language."""
+    stats: dict[str, Stats] = {}
+    for locale in LOCALES:
+        mine = [i for i in items if home_locale(i) is locale] if by_language else items
+        stats[str(locale["route"])] = (len(mine), sum(int(i["plays"]) for i in mine), sum(int(i["participants"]) for i in mine))
+    return stats
+
+
+def apply_band(out: Path, stats: dict[str, Stats] | None) -> None:
     """Fill the landing pages' catalog band with the real numbers, or drop it.
 
     The committed pages carry the band with {count}, {plays} and {participants} placeholders (labels translated per
-    language). Only this build knows the catalog, so they are filled here; without a catalog the band is removed
-    rather than shown with a placeholder or an invented number.
+    language). Only this build knows the catalog, so they are filled here; without a catalog, or with no quiz in the
+    page's language, the band is removed rather than shown with a placeholder, a zero or another language's quizzes.
     """
     for page in out.rglob("index.html"):
         text = page.read_text(encoding="utf-8")
         if 'id="discover-band"' not in text:
             continue
-        if count is None:
+        route = page.parent.relative_to(out).as_posix().strip(".")
+        count, plays, participants = (stats or {}).get(route, (0, 0, 0))
+        if not count:
             text = BAND_RE.sub("", text)
         else:
             text = (text.replace("{count}", str(count)).replace("{plays}", thousands(plays))
@@ -478,20 +536,30 @@ def build(out: Path, export: Path | None) -> str:
 
     bot, items, skipped = load_catalog(export)
     generated = str(json.loads(export.read_text(encoding="utf-8")).get("generatedAtUtc") or "")
-    apply_band(out, len(items), sum(int(i["plays"]) for i in items), sum(int(i["participants"]) for i in items))
+    # ponytail: the old every-page-in-every-language build stays for an export from a bot older than the language field
+    # (merged ≠ deployed there); drop it, and this flag, once every export carries "language".
+    by_language = any(item["language"] for item in items)
+    apply_band(out, band_stats(items, by_language))
     entries: list[Entry] = []
     for locale in LOCALES:
         base, pre = locale_dir(out, locale), prefix(locale)
-        write(base / "discover" / "index.html", render_catalog(locale, items, generated))
+        write(base / "discover" / "index.html", render_catalog(locale, items, generated, by_language))
         entries.append((f"{pre}/discover/", generated[:10] or None))
-        for item in items:
+        for item in ([] if by_language else items):
             write(base / "q" / str(item["key"]) / "index.html", render_quiz(locale, item, bot))
             # the creation date is the one change we know of; a build date would claim every page changed daily
             entries.append((f"{pre}/q/{item['key']}/", str(item["createdAtUtc"])[:10] or None))
+    for item in (items if by_language else []):
+        path = quiz_path(item)
+        write(out / path.strip("/") / "index.html", render_quiz(home_locale(item) or LOCALES[0], item, bot, single=True))
+        entries.append((path, str(item["createdAtUtc"])[:10] or None))
+        if path != f"/q/{item['key']}/":  # the shared, language-free address keeps working
+            write(out / "q" / str(item["key"]) / "index.html", legacy_redirect_page(path, BASE_URL + path))
     write(out / "discover.json", catalog_json(items, bot, generated))
     write(out / "sitemap.xml", sitemap(entries + book_entries))
     note = f" Skipped {len(skipped)} item(s) with an unusable key or empty title." if skipped else ""
-    return f"Built the Discover catalog with {len(items)} quizzes in {len(LOCALES)} languages.{note}"
+    shape = "one page per quiz, in its own language" if by_language else f"{len(LOCALES)} languages"
+    return f"Built the Discover catalog with {len(items)} quizzes ({shape}).{note}"
 
 
 def main() -> int:
