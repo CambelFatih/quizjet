@@ -1,0 +1,360 @@
+{
+ "date": "2026-11-08",
+ "model": "gpt-5.6-sol",
+ "articles": [
+  {
+   "topic": "politics",
+   "tag": "Iran–United States",
+   "title": "Iran reviews U.S. proposals on its nuclear program.",
+   "level": "B1",
+   "p": [
+    [
+     "Iran is reviewing proposals from the United States about Tehran's nuclear program.",
+     "The proposals follow months of war between Iran and the United States.",
+     "The two countries remain divided over the possible terms of an agreement.",
+     "However, discussions are taking place to prevent another military escalation in the region."
+    ],
+    [
+     "Qatar is mediating between Washington and Tehran.",
+     "Its efforts are continuing after the U.S. midterm elections.",
+     "Donald Trump also discussed de-escalation with Qatar's emir.",
+     "This contact is part of wider efforts to reduce tensions and stop renewed fighting."
+    ],
+    [
+     "Communication is also taking place through other channels.",
+     "U.S. and Iranian defense officials have communicated with each other.",
+     "Iran's foreign minister has also discussed the negotiations with Iraq's foreign minister.",
+     "These talks show that several governments and officials are involved in the diplomatic activity."
+    ],
+    [
+     "Egypt has urged the countries to use political negotiations to prevent new regional fighting.",
+     "The main goal of the discussions is to avoid another military escalation.",
+     "Iran is considering the U.S. proposals, but important differences remain between Tehran and Washington.",
+     "Qatar continues to act as a mediator while officials discuss possible terms and ways to lower tensions."
+    ]
+   ],
+   "words": [
+    {
+     "w": "proposal",
+     "d": "a plan or idea offered for people to consider"
+    },
+    {
+     "w": "nuclear program",
+     "d": "a country's activities involving nuclear technology"
+    },
+    {
+     "w": "mediate",
+     "d": "to help two sides in a disagreement reach an agreement"
+    },
+    {
+     "w": "de-escalation",
+     "d": "the process of making a dangerous situation less serious"
+    },
+    {
+     "w": "negotiations",
+     "d": "formal discussions that try to produce an agreement"
+    },
+    {
+     "w": "military escalation",
+     "d": "an increase in military action or conflict"
+    }
+   ],
+   "quiz": [
+    {
+     "q": "What is Iran reviewing?",
+     "o": [
+      "U.S. proposals about its nuclear program",
+      "Egypt's plans for regional trade",
+      "Qatar's election results",
+      "Iraq's defense budget"
+     ],
+     "a": 0,
+     "why": "The text says Iran is reviewing U.S. proposals concerning Tehran's nuclear program."
+    },
+    {
+     "q": "Which country is mediating between Washington and Tehran?",
+     "o": [
+      "Egypt",
+      "Iraq",
+      "Qatar",
+      "Iran"
+     ],
+     "a": 2,
+     "why": "Qatar is continuing its mediation efforts between the United States and Iran."
+    },
+    {
+     "q": "Who discussed de-escalation with Qatar's emir?",
+     "o": [
+      "Iran's foreign minister",
+      "Donald Trump",
+      "Iraq's foreign minister",
+      "An Egyptian official"
+     ],
+     "a": 1,
+     "why": "Donald Trump discussed ways to reduce tensions with Qatar's emir."
+    },
+    {
+     "q": "What is the main aim of the discussions?",
+     "o": [
+      "To organize new elections",
+      "To increase regional trade",
+      "To prevent another military escalation",
+      "To end Qatar's mediation"
+     ],
+     "a": 2,
+     "why": "The discussions are intended to avoid renewed fighting and another military escalation."
+    }
+   ],
+   "sources": [
+    {
+     "t": "Trump discusses Middle East de-escalation with Qatar's emir, and other Mideast news",
+     "u": "https://apnews.com/article/ab62071e056c046fe6034216e14b8bb7"
+    },
+    {
+     "t": "Iran sent nuclear proposal to the US via Qatar, senior Iranian official tells Reuters",
+     "u": "https://www.al-monitor.com/originals/2026/11/iran-sent-nuclear-proposal-us-qatar-senior-iranian-official-tells-reuters"
+    }
+   ]
+  },
+  {
+   "topic": "sports",
+   "tag": "Champions League",
+   "title": "Como defeated Lens by a record-equalling margin.",
+   "level": "B1",
+   "p": [
+    [
+     "Como defeated Lens 9–1 in France on November 4, 2026.",
+     "Como produced a very strong performance and scored nine times away from home.",
+     "Lens had a very difficult match and conceded nine goals in front of their home supporters.",
+     "The result was important because of the large difference between the two teams."
+    ],
+    [
+     "The eight-goal difference equalled the biggest winning margin in the competition.",
+     "Como also became only the second team in the competition to score nine goals in one match.",
+     "Scoring so many goals away from home made the result especially notable for the Italian side."
+    ],
+    [
+     "Tasos Douvikas played a major part in Como's victory.",
+     "He scored a hat-trick, which means that he scored three goals in the same match.",
+     "His goals helped Como reach the record-equalling result.",
+     "However, the other Como players also contributed six goals during the game."
+    ],
+    [
+     "After the heavy home defeat, Lens coach Yannick Cahuzac accepted responsibility for the result.",
+     "Lens will need to recover after conceding nine times at home.",
+     "Como, meanwhile, must quickly turn its attention to its next match.",
+     "The team will face Inter in Serie A on November 8, 2026, only four days after the victory in France.",
+     "That match will give Como another important challenge after its unusual 9–1 win."
+    ]
+   ],
+   "words": [
+    {
+     "w": "defeated",
+     "d": "won a game against another team"
+    },
+    {
+     "w": "conceded",
+     "d": "allowed the other team to score"
+    },
+    {
+     "w": "winning margin",
+     "d": "the difference between the scores of the winning and losing teams"
+    },
+    {
+     "w": "hat-trick",
+     "d": "three goals scored by one player in one match"
+    },
+    {
+     "w": "accepted responsibility",
+     "d": "said that he was responsible for what happened"
+    },
+    {
+     "w": "recover",
+     "d": "return to a good condition after a difficult experience"
+    }
+   ],
+   "quiz": [
+    {
+     "q": "What was the final score between Como and Lens?",
+     "o": [
+      "Como won 3–1.",
+      "Como won 8–1.",
+      "Como won 9–1.",
+      "Como won 9–0."
+     ],
+     "a": 2,
+     "why": "Como scored nine goals, while Lens scored one."
+    },
+    {
+     "q": "Why was Como's victory especially important?",
+     "o": [
+      "It equalled the competition's biggest winning margin.",
+      "It was the final match of the season.",
+      "It gave Como the Serie A title.",
+      "It was Como's first away match."
+     ],
+     "a": 0,
+     "why": "The eight-goal difference matched the largest winning margin in the competition."
+    },
+    {
+     "q": "Which player scored a hat-trick?",
+     "o": [
+      "Yannick Cahuzac",
+      "Tasos Douvikas",
+      "A Lens defender",
+      "An Inter player"
+     ],
+     "a": 1,
+     "why": "Tasos Douvikas scored three goals in the match."
+    },
+    {
+     "q": "Who will Como play next?",
+     "o": [
+      "Lens",
+      "Inter",
+      "France",
+      "Serie A"
+     ],
+     "a": 1,
+     "why": "Como are scheduled to face Inter in Serie A on November 8, 2026."
+    }
+   ],
+   "sources": [
+    {
+     "t": "'I lacked composure' – Lens head coach Yannick Cahuzac takes full responsibility for 9-1 Como hammering",
+     "u": "https://staging-aws.sports.yahoo.com/articles/lacked-composure-lens-head-coach-151400765.html"
+    },
+    {
+     "t": "'Football moves at incredible speed' - Cesc Fabregas issues strict warning to Como stars ahead of massive Inter clash",
+     "u": "https://ca.sports.yahoo.com/news/football-moves-incredible-speed-cesc-095805243.html"
+    },
+    {
+     "t": "Nine-goal nightmare! Zidane labels Lens horror show 'abnormal' as he picks Risser over Como rival Butez",
+     "u": "https://ca.sports.yahoo.com/news/nine-goal-nightmare-zidane-labels-070134097.html"
+    }
+   ]
+  },
+  {
+   "topic": "science",
+   "tag": "Measles outbreak",
+   "title": "Measles cases rise sharply across the United States in 2026.",
+   "level": "B1",
+   "p": [
+    [
+     "The United States had recorded 5,182 confirmed measles cases by November 5, 2026.",
+     "The CDC reported these figures on November 6.",
+     "Cases were found across 47 U.S. jurisdictions, showing that infections had occurred in many parts of the country."
+    ],
+    [
+     "Most infections were connected to outbreaks.",
+     "Of all confirmed cases, 4,993 were linked to 43 separate outbreaks.",
+     "This means that only a small number of cases were not known to be part of one of these outbreaks."
+    ],
+    [
+     "Vaccination status was an important factor in the figures.",
+     "People who were unvaccinated, or whose vaccination status was unknown, represented 96% of all confirmed cases.",
+     "Children and teenagers accounted for almost 60% of cases.",
+     "During 2026, 562 patients with measles were hospitalized.",
+     "Four deaths associated with the disease were also reported this year."
+    ],
+    [
+     "The number of cases in 2026 is already much higher than the total for the previous year.",
+     "During all of 2025, the United States reported 2,289 measles cases.",
+     "By early November 2026, the total was more than twice that number.",
+     "The continuing outbreaks also threaten the country's measles-elimination status.",
+     "The figures show that the disease has affected thousands of people, especially younger people and those who were not known to be vaccinated."
+    ]
+   ],
+   "words": [
+    {
+     "w": "confirmed cases",
+     "d": "cases of a disease that have been officially tested and recorded"
+    },
+    {
+     "w": "jurisdictions",
+     "d": "areas where a particular government or authority is responsible"
+    },
+    {
+     "w": "outbreaks",
+     "d": "sudden increases in cases of a disease in particular places"
+    },
+    {
+     "w": "vaccination status",
+     "d": "information about whether a person has received a vaccine"
+    },
+    {
+     "w": "hospitalized",
+     "d": "taken to a hospital for medical care"
+    },
+    {
+     "w": "elimination status",
+     "d": "official recognition that a disease no longer regularly spreads in a country"
+    }
+   ],
+   "quiz": [
+    {
+     "q": "How many confirmed measles cases had the United States recorded by November 5, 2026?",
+     "o": [
+      "2,289",
+      "4,993",
+      "5,182",
+      "562"
+     ],
+     "a": 2,
+     "why": "The CDC figures showed 5,182 confirmed cases by November 5."
+    },
+    {
+     "q": "What percentage of cases involved unvaccinated people or people with unknown vaccination status?",
+     "o": [
+      "43%",
+      "47%",
+      "60%",
+      "96%"
+     ],
+     "a": 3,
+     "why": "Unvaccinated or unknown-status people represented 96% of confirmed cases."
+    },
+    {
+     "q": "Which age groups accounted for almost 60% of confirmed cases?",
+     "o": [
+      "Children and teenagers",
+      "Adults over 65",
+      "Hospital workers",
+      "Young parents"
+     ],
+     "a": 0,
+     "why": "Children and teenagers made up almost 60% of the confirmed cases."
+    },
+    {
+     "q": "Why is the 2026 total especially important?",
+     "o": [
+      "It is lower than the 2025 total.",
+      "It only occurred in one jurisdiction.",
+      "It threatens the country's measles-elimination status.",
+      "It includes no outbreaks."
+     ],
+     "a": 2,
+     "why": "The large number of continuing outbreaks threatens the United States' measles-elimination status."
+    }
+   ],
+   "sources": [
+    {
+     "t": "US measles cases rise to 5,182, CDC says",
+     "u": "https://www.marketscreener.com/news/us-measles-cases-rise-to-5-182-cdc-says-ce785fd2da8af22c"
+    },
+    {
+     "t": "Measles Cases and Outbreaks",
+     "u": "https://www.cdc.gov/measles/data-research/index.html"
+    },
+    {
+     "t": "The CDC has recorded more than 5,000 measles cases this year",
+     "u": "https://www.washingtonpost.com/health/2026/11/07/cdc-has-recorded-more-than-5000-measles-cases-this-year/"
+    },
+    {
+     "t": "CDC reports more than 5,000 measles cases, highest number in 35 years",
+     "u": "https://www.aljazeera.com/news/2026/11/7/cdc-reports-more-than-5000-measles-cases-highest-number-in-35-years"
+    }
+   ]
+  }
+ ]
+}
