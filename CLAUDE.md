@@ -69,8 +69,11 @@ the Discover catalog and writes the day's news lesson.
 - News texts are written in a clean room: a research call (hosted web search) returns facts of at most 12
   words plus report links, dated from the runner's clock; the writer call sees those facts only. The
   copyright posture is the docstring of `scripts/build_news.py`; keep code and docstring in step.
-- News selection is the desk briefs in `build_news.TOPICS` (sport = European football first, then F1, tennis, NBA,
-  Olympics; golf, NFL and the like never); a story or report link used in the last 3 days is not picked again.
+- News selection is the desk briefs in `build_news.TOPICS` (sport = Arda Güler first, then Real Madrid / Turkey,
+  European football, then F1, tennis, NBA, Olympics; golf, NFL and the like never; politics = told through its
+  economic effects); a story or report link used in the last 3 days is not picked again. The business desk is in
+  `ANALYSIS_DESKS`: not one story but the day's US stock market across dimensions (market, drivers, geopolitical
+  risk, risk appetite/fear, Magnificent Seven, what next), a 380–480-word text, skipped below 14 facts / 3 reports.
 - User-facing text is never hardcoded in a script: add a key to all 18 locales.
 
 ## Working loop
