@@ -1,0 +1,525 @@
+{
+ "date": "2026-11-09",
+ "model": "gpt-5.6-sol",
+ "articles": [
+  {
+   "topic": "politics",
+   "tag": "U.S. tariffs",
+   "title": "Incoming Democrats plan to challenge Trump's tariff powers.",
+   "level": "B1",
+   "p": [
+    [
+     "Incoming Democrats in Congress plan to take action against President Trump's power to set tariffs.",
+     "Hakeem Jeffries has promised to act against tariffs that are raising prices for Americans.",
+     "Ron Wyden also plans to restore the authority of Congress over trade policy.",
+     "Some Republicans have also said that tariffs have made goods too expensive."
+    ],
+    [
+     "Trump could announce new duties on imports from more than twelve economies.",
+     "Such a move could increase costs for businesses that depend on imported products or materials.",
+     "Consumers may then have to pay higher prices.",
+     "Businesses and families also face continued uncertainty because they do not know how much future imports will cost."
+    ],
+    [
+     "Tariffs have already contributed to U.S. consumer-price inflation, which has reached an annual rate of 3.7%.",
+     "However, changing the policy may not bring quick results.",
+     "Existing tariffs could be difficult to remove in a short period, even if Congress takes action."
+    ],
+    [
+     "Congressional action after January could reshape U.S. trade policy and reduce the president's control over tariffs.",
+     "The dispute is also important outside the United States.",
+     "It could affect global suppliers, product prices and trade negotiations between countries.",
+     "Companies that sell goods to the United States may need to prepare for higher duties or changing rules.",
+     "The final result will depend on what Trump announces and how Congress responds."
+    ]
+   ],
+   "words": [
+    {
+     "w": "tariff",
+     "d": "a tax placed on goods brought into a country"
+    },
+    {
+     "w": "duties",
+     "d": "taxes paid on imported goods"
+    },
+    {
+     "w": "authority",
+     "d": "the official power to make decisions"
+    },
+    {
+     "w": "trade policy",
+     "d": "a government's plans and rules for buying and selling between countries"
+    },
+    {
+     "w": "inflation",
+     "d": "a general rise in prices over time"
+    },
+    {
+     "w": "global suppliers",
+     "d": "companies around the world that provide goods or materials"
+    }
+   ],
+   "quiz": [
+    {
+     "q": "What do incoming Democrats plan to target?",
+     "o": [
+      "Trump's tariff powers",
+      "U.S. employment laws",
+      "Global shipping companies",
+      "Consumer tax cuts"
+     ],
+     "a": 0,
+     "why": "The text says incoming Democrats plan to challenge Trump's power to set tariffs."
+    },
+    {
+     "q": "What does Ron Wyden plan to restore?",
+     "o": [
+      "Lower consumer prices",
+      "Congressional authority over trade policy",
+      "Trade with only twelve economies",
+      "Financial support for suppliers"
+     ],
+     "a": 1,
+     "why": "Ron Wyden plans to give Congress greater authority over trade policy again."
+    },
+    {
+     "q": "What annual rate has U.S. consumer-price inflation reached?",
+     "o": [
+      "2.7%",
+      "3.2%",
+      "3.7%",
+      "12%"
+     ],
+     "a": 2,
+     "why": "The text states that annual U.S. consumer-price inflation has reached 3.7%."
+    },
+    {
+     "q": "Why do businesses and consumers face uncertainty?",
+     "o": [
+      "They do not know future import costs",
+      "Congress has removed all tariffs",
+      "Global suppliers have stopped trading",
+      "Prices are falling too quickly"
+     ],
+     "a": 0,
+     "why": "Future tariff decisions could change the cost of imported goods and materials."
+    }
+   ],
+   "sources": [
+    {
+     "t": "Trump and U.S. Congress set to clash over economic costs of tariffs",
+     "u": "https://www.japantimes.co.jp/business/2026/11/07/economy/trump-congress-tariffs-clash/"
+    },
+    {
+     "t": "Voters demanded economic relief. Trump and Democrats face tough choices on how to deliver",
+     "u": "https://apnews.com/article/ab332d745571d36c5512e7e3beab6d59"
+    }
+   ]
+  },
+  {
+   "topic": "business",
+   "tag": "Wall Street",
+   "title": "Technology shares lifted the market on Friday after a difficult week.",
+   "level": "B1",
+   "p": [
+    [
+     "US stocks ended Friday with mixed results after losses earlier in the week.",
+     "The S&P 500, a broad measure of large US companies, rose 0.31% to 7,376.86.",
+     "The technology-heavy Nasdaq gained 1.09%, but the Dow fell 0.46%.",
+     "For November 2–6, the S&P 500 lost 2.68%, the Nasdaq dropped 3.37%, and the Dow declined 0.94%.",
+     "Shares linked to artificial intelligence, or AI, recovered after Thursday's severe technology sell-off.",
+     "Hospitals and liquor companies exposed to tariffs also gained after the Democrats' election victory."
+    ],
+    [
+     "Several economic and policy facts shaped trading.",
+     "Employers added 165,000 jobs in October, much more than the expected 59,000.",
+     "Unemployment fell from 4.2% to 4.1%.",
+     "These figures showed strength in the job market.",
+     "The Fed kept its policy interest-rate range at 3.75%–4.00% after its October decision.",
+     "Markets put the chance of a December rate increase at 76.8% on November 6.",
+     "The ten-year Treasury yield, the return paid on long-term US government debt, was near 4.86%."
+    ],
+    [
+     "Political results affected industries in different ways.",
+     "Defense shares fell between 4% and 12% after the midterm election.",
+     "In contrast, alcohol companies affected by tariffs rose because of hopes for policy relief.",
+     "Tariffs are taxes placed on imported goods.",
+     "The moves showed that investors were changing their views about which companies could benefit from policy after the election."
+    ],
+    [
+     "Fear eased, but it remained important.",
+     "The VIX, an index that measures expected stock-market changes and is often called a fear gauge, closed near 25.64 on November 6, down from 28.18.",
+     "Investors also rotated toward Berkshire as AI shares weakened.",
+     "Rotation means moving money from one type of investment into another.",
+     "This shift suggested that some investors were looking beyond AI-linked companies during the period of weakness."
+    ],
+    [
+     "The Magnificent Seven gave mixed signals.",
+     "These seven large technology-related companies represented about 34% of the S&P 500's value, so their moves had a strong effect.",
+     "Nvidia rose 2.78% on Friday after collapsing 9.26% on Thursday.",
+     "Tesla gained 4.23% Friday, although it had fallen 10.1% after the election.",
+     "Alphabet and Meta each rose about 0.8%.",
+     "Amazon slipped about 0.3%, Microsoft fell 0.99% amid reports of lower neocloud usage, and Apple recorded a modest decline."
+    ],
+    [
+     "Investors next face several economic reports and company results.",
+     "October CPI, which measures changes in consumer prices, arrives Tuesday, November 10, before the Fed's December meeting.",
+     "Weekly jobless claims and existing-home sales are due Thursday, November 12.",
+     "October producer prices, which measure prices received by producers, arrive Friday, November 13.",
+     "CoreWeave reports results Tuesday, while Cisco and Applied Materials report Thursday."
+    ],
+    [
+     "Overall, Friday's technology rebound moved the market most because the Nasdaq rose 1.09%, more than the S&P 500, while AI-linked shares recovered.",
+     "Gains in Nvidia and Tesla supported that move.",
+     "However, the Dow's decline, the week's losses, high Treasury yields, and the strong probability of a December rate increase limited the positive picture.",
+     "Election effects and lower fear also mattered, but their impact was less broad than the recovery in major technology shares."
+    ]
+   ],
+   "words": [
+    {
+     "w": "sell-off",
+     "d": "A period when many investors sell shares and prices fall quickly."
+    },
+    {
+     "w": "interest-rate range",
+     "d": "The upper and lower limits set for an important borrowing rate."
+    },
+    {
+     "w": "Treasury yield",
+     "d": "The return paid to an investor who owns US government debt."
+    },
+    {
+     "w": "tariff",
+     "d": "A tax placed on goods imported from another country."
+    },
+    {
+     "w": "fear gauge",
+     "d": "A measure of how much change or worry investors expect in the stock market."
+    },
+    {
+     "w": "rotation",
+     "d": "The movement of investment money from one market group to another."
+    }
+   ],
+   "quiz": [
+    {
+     "q": "Which major index gained the most on Friday?",
+     "o": [
+      "The S&P 500",
+      "The Nasdaq",
+      "The Dow",
+      "The VIX"
+     ],
+     "a": 1,
+     "why": "The Nasdaq rose 1.09%, compared with a 0.31% gain for the S&P 500 and a decline for the Dow."
+    },
+    {
+     "q": "What happened to US unemployment in October?",
+     "o": [
+      "It rose to 4.2%.",
+      "It stayed at 4.2%.",
+      "It fell to 4.1%.",
+      "It fell to 3.75%."
+     ],
+     "a": 2,
+     "why": "The unemployment rate decreased from 4.2% to 4.1% in October."
+    },
+    {
+     "q": "Why did tariff-exposed alcohol companies rise?",
+     "o": [
+      "They reported higher profits.",
+      "They joined the Magnificent Seven.",
+      "Investors hoped for policy relief.",
+      "The Fed lowered interest rates."
+     ],
+     "a": 2,
+     "why": "The companies gained because the election result created hopes for relief from tariff policy."
+    },
+    {
+     "q": "Which upcoming report measures changes in consumer prices?",
+     "o": [
+      "October CPI",
+      "Weekly jobless claims",
+      "Existing-home sales",
+      "CoreWeave results"
+     ],
+     "a": 0,
+     "why": "CPI measures changes in prices paid by consumers and is due on Tuesday, November 10."
+    }
+   ],
+   "sources": [
+    {
+     "t": "How major US stock indexes fared Friday 11/6/2026",
+     "u": "https://apnews.com/article/wall-street-stocks-dow-nasdaq-806f71d95105bc7efbc760b194dd8cad"
+    },
+    {
+     "t": "Inflation, housing, jobs and corporate earnings will dominate the business calendar this week",
+     "u": "https://apnews.com/article/inflation-home-sales-jobs-40dba34b39bf5bc08c71547e538e3355"
+    },
+    {
+     "t": "The week the midterm elections rattled Wall Street",
+     "u": "https://apnews.com/article/stock-market-winners-losers-defense-ai-musk-4ac9a6a3c35aeec37374fc8083bf9395"
+    },
+    {
+     "t": "Nasdaq Adds 264 Points in Tech Rebound: Stock Market Today",
+     "u": "https://www.kiplinger.com/investing/stocks/nasdaq-adds-264-points-in-tech-rebound-but-ends-the-week-lower-stock-market-today"
+    },
+    {
+     "t": "Interest rate hike isn't a sure thing, despite strong jobs report",
+     "u": "https://www.axios.com/2026/11/06/federal-reserve-jobs-report-bonds"
+    },
+    {
+     "t": "Wall Street braces for US inflation data, Cisco results and a string of Fed speakers",
+     "u": "https://terraworldnews.com/en/news/2026/11/08/wallstreet"
+    },
+    {
+     "t": "Berkshire shares surge as Wall Street swoons amid AI fears",
+     "u": "https://link.cnbc.com/public/48311348"
+    },
+    {
+     "t": "Magnificent Seven Stocks: Weights and Q3 2026 Earnings Dates",
+     "u": "https://primexbt.ch/for-traders/magnificent-seven-stocks/"
+    }
+   ]
+  },
+  {
+   "topic": "sports",
+   "tag": "Real Madrid",
+   "title": "Real Madrid beat Valencia 3-0 at Mestalla.",
+   "level": "B1",
+   "p": [
+    [
+     "Real Madrid defeated Valencia 3-0 at Mestalla on November 7.",
+     "The result gave Real Madrid their eighth victory in a row.",
+     "The team reached 30 points after playing 12 league matches.",
+     "Valencia ended the match with only ten players after José Gayà was dismissed."
+    ],
+    [
+     "Federico Valverde opened the scoring for Real Madrid in the 28th minute.",
+     "Eight minutes later, Arda Güler added the second goal.",
+     "The young attacking midfielder scored with his right foot from inside the penalty area.",
+     "His goal gave Real Madrid a 2-0 lead in the 36th minute."
+    ],
+    [
+     "Güler also played an important part in the third goal.",
+     "In the 75th minute, he assisted Kylian Mbappé, who completed the 3-0 result.",
+     "It was another successful match for Mbappé, as he scored for the seventh consecutive game.",
+     "Güler stayed on the field for nine more minutes before leaving the match in the 84th minute."
+    ],
+    [
+     "The game was a strong result for Real Madrid before the international break.",
+     "Güler started in attacking midfield, scored one goal and created another.",
+     "Valverde, Güler and Mbappé were the three goalscorers at Mestalla.",
+     "Real Madrid and Güler will now enter the international break after extending the club's winning run and improving their league points total."
+    ]
+   ],
+   "words": [
+    {
+     "w": "defeated",
+     "d": "won a game against another team"
+    },
+    {
+     "w": "in a row",
+     "d": "one after another without a break"
+    },
+    {
+     "w": "opened the scoring",
+     "d": "scored the first goal of a match"
+    },
+    {
+     "w": "penalty area",
+     "d": "the large box near the goal on a football field"
+    },
+    {
+     "w": "assisted",
+     "d": "helped another player score a goal"
+    },
+    {
+     "w": "international break",
+     "d": "a period when club games stop for national team matches"
+    }
+   ],
+   "quiz": [
+    {
+     "q": "What was the final score?",
+     "o": [
+      "Real Madrid won 1-0",
+      "Real Madrid won 2-0",
+      "Real Madrid won 3-0",
+      "The match ended 3-3"
+     ],
+     "a": 2,
+     "why": "Real Madrid defeated Valencia 3-0 at Mestalla."
+    },
+    {
+     "q": "Who scored Real Madrid's first goal?",
+     "o": [
+      "Arda Güler",
+      "Federico Valverde",
+      "Kylian Mbappé",
+      "José Gayà"
+     ],
+     "a": 1,
+     "why": "Valverde opened the scoring in the 28th minute."
+    },
+    {
+     "q": "How did Güler help with the third goal?",
+     "o": [
+      "He won a penalty",
+      "He took a corner",
+      "He assisted Mbappé",
+      "He scored with his left foot"
+     ],
+     "a": 2,
+     "why": "Güler assisted Mbappé's goal in the 75th minute."
+    },
+    {
+     "q": "Why did Valencia finish with ten players?",
+     "o": [
+      "A player was injured",
+      "José Gayà was dismissed",
+      "A player left at half-time",
+      "The coach changed the team"
+     ],
+     "a": 1,
+     "why": "Valencia had ten players at the end after Gayà's dismissal."
+    }
+   ],
+   "sources": [
+    {
+     "t": "Madrid thrashes at Mestalla",
+     "u": "https://www.realmadrid.com/en-US/news/football/first-team/reports/cronica-valencia-real-madrid-j12-liga-07-11-2026"
+    },
+    {
+     "t": "Valencia 0-3 Real Madrid: resumen, goles y resultado",
+     "u": "https://as.com/futbol/primera/valencia-real-madrid-en-directo-laliga-ea-sports-hoy-en-vivo-f202611-d/"
+    },
+    {
+     "t": "Valencia CF vs Real Madrid — LaLiga match page",
+     "u": "https://iaas-public-front-pro.laliga.com/en-US/match/temporada-2026-2027-laliga-ea-sports-valencia-cf-real-madrid-12"
+    },
+    {
+     "t": "El Real Madrid manda en Mestalla y asoma al liderato",
+     "u": "https://www.europapress.es/deportes/futbol-00162/noticia-real-madrid-manda-mestalla-asoma-al-liderato-20261107232221.html"
+    }
+   ]
+  },
+  {
+   "topic": "science",
+   "tag": "COP31",
+   "title": "Countries meet in Türkiye for COP31 climate talks.",
+   "level": "B1",
+   "p": [
+    [
+     "Climate talks begin on Monday in Antalya, Türkiye, as nearly 190 countries are expected to take part in COP31.",
+     "The conference runs from November 9 through November 20.",
+     "Türkiye is hosting the meeting and holds its presidency, while Australia is leading the formal negotiations."
+    ],
+    [
+     "Delegates will discuss how countries can cut emissions and provide climate finance.",
+     "Support for adaptation in vulnerable countries remains a major issue.",
+     "These countries need help to prepare for and respond to the effects of climate change.",
+     "A leaders' summit is also planned for November 11 and 12."
+    ],
+    [
+     "The United Nations has warned that current national pledges could lead to roughly 2.6°C of warming.",
+     "This warning adds pressure on negotiators to make practical and visible progress.",
+     "However, dependence on fossil fuels makes the conference's objectives more difficult to reach.",
+     "Many countries still use these fuels as an important part of their energy systems."
+    ],
+    [
+     "The discussions are expected to continue until the final day of the conference.",
+     "Negotiators will work toward a closing agreement on November 20.",
+     "The outcome will show whether participating countries can move closer to stronger emissions cuts, better climate finance, and more adaptation support.",
+     "Delegates face the challenge of finding common positions among nearly 190 countries while also producing results that people can clearly see."
+    ]
+   ],
+   "words": [
+    {
+     "w": "emissions cuts",
+     "d": "reductions in gases released into the air that cause climate change"
+    },
+    {
+     "w": "climate finance",
+     "d": "money used to help countries deal with climate change"
+    },
+    {
+     "w": "adaptation",
+     "d": "changes made to prepare for the effects of climate change"
+    },
+    {
+     "w": "vulnerable",
+     "d": "likely to be harmed or affected by something"
+    },
+    {
+     "w": "pledges",
+     "d": "serious promises to do something"
+    },
+    {
+     "w": "fossil fuels",
+     "d": "fuels such as coal, oil, and natural gas"
+    }
+   ],
+   "quiz": [
+    {
+     "q": "Where is COP31 taking place?",
+     "o": [
+      "Antalya, Türkiye",
+      "Sydney, Australia",
+      "New York, United States",
+      "Paris, France"
+     ],
+     "a": 0,
+     "why": "Türkiye is hosting COP31 in the city of Antalya."
+    },
+    {
+     "q": "Which country is leading the formal negotiations?",
+     "o": [
+      "Türkiye",
+      "Australia",
+      "France",
+      "Brazil"
+     ],
+     "a": 1,
+     "why": "Australia is responsible for leading the formal negotiations at the conference."
+    },
+    {
+     "q": "What warming level could current pledges produce, according to the United Nations?",
+     "o": [
+      "About 1.2°C",
+      "About 1.8°C",
+      "About 2.6°C",
+      "About 4.0°C"
+     ],
+     "a": 2,
+     "why": "The United Nations warns that present pledges imply roughly 2.6°C of warming."
+    },
+    {
+     "q": "When is the closing agreement expected?",
+     "o": [
+      "November 9",
+      "November 11",
+      "November 12",
+      "November 20"
+     ],
+     "a": 3,
+     "why": "The talks continue until a closing agreement on November 20."
+    }
+   ],
+   "sources": [
+    {
+     "t": "AP Exclusive: Departing UN chief calls this 'a moment of truth' in fight to curb global warming",
+     "u": "https://apnews.com/article/e5ae99093b025f6fdd44c425602b93d1"
+    },
+    {
+     "t": "Cop31 must deliver climate progress that people can see is real, host says",
+     "u": "https://www.theguardian.com/environment/2026/nov/08/cop31-climate-summit-deliver-progress-real-host-says"
+    },
+    {
+     "t": "Licensable video: COP31 in Türkiye: What to know about crucial climate summit",
+     "u": "https://www.reutersconnect.com/item/cop31-in-turkiye-what-to-know-about-crucial-climate-summit/dGFnOnJldXRlcnMuY29tLDIwMjY6bmV3c21sX09XQU5BQ0FBVklERU8yMDI2MTEwNzQyOTk0MzIz"
+    }
+   ]
+  }
+ ]
+}
