@@ -18,10 +18,12 @@ Copyright posture — the code below enforces it, keep the two in step:
   right, DSM Directive art. 15(1)); no photos, no quotations.
 - Generation runs in the deploy workflow once a day, only when OPENAI_API_KEY is set and today's file
   does not exist yet; without the key the site builds without news. A topic with fewer than 5 facts
-  or 2 reports is skipped, never padded.
+  or 2 reports (an analysis desk: ANALYSIS_MIN_FACTS from ANALYSIS_MIN_SOURCES) is skipped, never padded.
 
 Selection: every desk in TOPICS carries an editorial brief (what leads it, in order, and what never does;
-sport is football first). A story taken by an earlier desk today or by an edition of the last COVERED_DAYS
+sport is Arda Güler first, then football; politics is told through its economic effects). A desk in ANALYSIS_DESKS
+(business: the US stock market) is not one story but the day read across the dimensions of its brief, in a longer
+text whose closing paragraph weighs them, from the facts only. A story taken by an earlier desk today or by an edition of the last COVERED_DAYS
 is named to the model as covered, and a report link already used is dropped in research(), so the same
 story cannot come back under another desk with the same reports.
 """
@@ -49,26 +51,44 @@ LEVEL = "B1"
 # One editorial brief per desk: what an international editor leads it with, in order, and what never makes it.
 # The readers are adults learning English all over the world, so "important" means important in many countries.
 TOPICS = [
-    ("politics", "World politics and international affairs. Prefer: elections and changes of government in major "
-                 "countries, wars, ceasefires and peace talks, summits and decisions of the UN, EU, NATO, G7 or G20, "
-                 "sanctions and major diplomatic agreements. Avoid: local or state politics, polls, campaign gossip."),
-    ("business", "Global economy, markets and finance. Prefer: central-bank decisions (Federal Reserve, ECB, Bank of "
-                 "England, Bank of Japan), inflation, jobs and growth figures of major economies, big moves in stock "
-                 "markets, oil, gold or currencies, and deals or results of the world's largest companies. "
-                 "Avoid: investment tips, small companies."),
-    ("sports", "Sport, the world's most followed competitions, football first. Prefer, in this order: (1) European club "
-               "football: UEFA Champions League, Premier League, La Liga, Serie A, Bundesliga, Ligue 1, and the biggest "
-               "clubs (Real Madrid, Barcelona, Manchester City, Liverpool, Arsenal, Manchester United, Bayern Munich, "
-               "Paris Saint-Germain, Inter, Juventus), then international football (World Cup, European Championship, "
-               "qualifiers, Ballon d'Or); (2) when football has no strong story or a bigger global event dominates: "
-               "Formula 1, tennis Grand Slams and ATP/WTA Finals, the NBA, the Olympic Games, world athletics, "
-               "heavyweight boxing. A result, record, title race, confirmed transfer or coach change beats a preview. "
-               "Avoid: golf, American football, baseball, ice hockey, college sport, horse racing, betting, injury lists, "
-               "transfer rumours."),
+    ("politics", "World politics told through its economic consequences. Prefer the political story with the biggest "
+                 "effect on the world economy: trade wars, tariffs and trade deals, sanctions, wars, ceasefires and peace "
+                 "talks that move oil, gas, food or shipping, elections and changes of government in major economies, "
+                 "decisions of the G7, G20, EU, UN, NATO or OPEC on money, trade or energy, government budgets, debt and "
+                 "shutdowns. At least three of the facts must give the economic side: what it does or may do to prices, "
+                 "trade, markets, currencies, energy, jobs or budgets, with numbers where the reports give them. "
+                 "Avoid: local or state politics, polls, campaign gossip, a political story with no reported economic effect."),
+    ("business", "The US stock market today, as one analysis across these dimensions, each with numbers and dates: "
+                 "(1) market: the S&P 500, Nasdaq and Dow Jones, their daily and weekly moves, records or falls, the sectors "
+                 "that led and lagged; (2) drivers: the Federal Reserve and rate expectations, Treasury yields, the dollar, "
+                 "inflation, jobs and growth data, company results; (3) geopolitical risk: wars, sanctions, tariffs and trade "
+                 "talks, elections or government shutdowns, and what they did to oil, gold and stocks; (4) risk appetite and "
+                 "fear: the VIX volatility index, the CNN Fear & Greed Index, money moving into or out of stocks, bonds, gold "
+                 "or bitcoin; (5) the Magnificent Seven (Apple, Microsoft, Alphabet, Amazon, Meta, Nvidia, Tesla): each "
+                 "one's share move and its news (results, products, AI spending, deals, court cases), and their weight in "
+                 "the index; (6) next: the data, decisions and results the market waits for in the coming days. "
+                 "Avoid: investment tips, price targets, small companies."),
+    ("sports", "Sport, centred on Arda Güler, the Turkish midfielder of Real Madrid and the Turkey national team. Prefer, "
+               "in this order: (1) a story about Arda Güler himself: a match he played for Real Madrid or Turkey (his goals, "
+               "assists, minutes, role and the result), his selection or a coach's decision about him, a record, award, "
+               "contract or confirmed transfer, an injury that keeps him out; (2) when there is no new report on him: Real "
+               "Madrid or the Turkey national team (a result, title race, coach change); (3) then European club football: "
+               "UEFA Champions League, Premier League, La Liga, Serie A, Bundesliga, Ligue 1, and the biggest clubs "
+               "(Barcelona, Manchester City, Liverpool, Arsenal, Manchester United, Bayern Munich, Paris Saint-Germain, "
+               "Inter, Juventus), then international football (World Cup, European Championship, qualifiers, Ballon d'Or); "
+               "(4) when football has no strong story or a bigger global event dominates: Formula 1, tennis Grand Slams "
+               "and ATP/WTA Finals, the NBA, the Olympic Games, world athletics, heavyweight boxing. A result, record, title "
+               "race, confirmed transfer or coach change beats a preview. Avoid: golf, American football, baseball, ice "
+               "hockey, college sport, horse racing, betting, injury lists, transfer rumours (about Arda Güler too)."),
     ("science", "Science, health and technology. Prefer: discoveries, space missions, medicine and health, climate and "
                 "environment, and new technology such as AI, chips or phones: the research or the product, never its "
                 "share price. Avoid: stock-market and company-results stories (they belong to business), press releases."),
 ]
+# The desks written as one multi-factor analysis of the day instead of one story: more searches, more facts, a longer
+# text. The day's market read is a standing story, so no covered titles go in; its reports must still be new ones.
+ANALYSIS_DESKS = {"business"}
+ANALYSIS_FRESH_DAYS = 3  # Monday's 02:41 UTC run still sees Friday's close
+ANALYSIS_MIN_FACTS, ANALYSIS_MIN_SOURCES = 14, 3  # fewer cannot carry the dimensions; skipped, never padded
 COVERED_DAYS = 3  # stories (and their reports) of the editions this many days back are not picked again
 RESEARCH_MODEL = os.environ.get("NEWS_RESEARCH_MODEL", "gpt-5.6-luna")  # the bot's grounding tier: searches, lists facts
 MODEL = os.environ.get("NEWS_MODEL", "gpt-5.6-sol")  # the bot's quality tier writes the text; ~4 a day cost cents
@@ -92,6 +112,17 @@ fragments of at most {MAX_FACT_WORDS} words each (who, what, where, when, number
 your own words, never a sentence or phrase copied from a page. Name the competition, institution or country the
 story is about in 1 to 3 words as its tag (for example "Premier League", "Federal Reserve", "European Union").
 List every report you used, with its title, URL and publication date as YYYY-MM-DD (empty if the page shows none)."""
+ANALYSIS_RESEARCH = f"""You are the markets editor of an English-learning site read by adults all over the world. Today is {{today}} (UTC).
+Do not pick one story: search the web several times, once for every dimension of the desk brief, for reports
+published on {{earliest}} or later; check each report's publication date and ignore older reports and undated
+pages. Use at least four independent reports in all (international agencies and financial outlets such as
+Reuters, AP, AFP, the BBC, CNBC, Bloomberg and the Financial Times count most). Never take a fact from an opinion
+piece, a rumour, a press release or a price forecast. Report FACTS ONLY: 18 to 28 short fragments of at most
+{MAX_FACT_WORDS} words each, every one starting with its dimension in brackets, for example "[fear] VIX rose to 21
+on Friday", with the numbers and the day they belong to, each in your own words, never a sentence or phrase copied
+from a page. A dimension the reports say nothing about gets no facts. Name the day's market picture in a few words
+as the story, use "Wall Street" as the tag, and list every report you used, with its title, URL and publication
+date as YYYY-MM-DD (empty if the page shows none)."""
 MAX_TAG_WORDS = 4
 
 FACTS_SCHEMA = {
@@ -106,14 +137,25 @@ FACTS_SCHEMA = {
     },
 }
 
+QUIZ_RULES = """Then: 6 key words or phrases from your text with simple English definitions, and 4 multiple-choice
+comprehension questions, each with 4 options, the correct option repeated in "answer" exactly, and a
+one-sentence explanation."""
 WRITER = f"""You write short news texts for adult English learners (CEFR {LEVEL}). You get a list of facts about one
 news story and nothing else. Write an ORIGINAL text from these facts only: no claim the facts do not
 support, no quotations, neutral tone, names of people, places and organisations as given. at least 180 and at most 230
 words in 4 or 5 short paragraphs of plain sentences ({LEVEL} vocabulary and grammar, no headline
 fragments). The title is a plain sentence, not a headline pun.
-Then: 6 key words or phrases from your text with simple English definitions, and 4 multiple-choice
-comprehension questions, each with 4 options, the correct option repeated in "answer" exactly, and a
-one-sentence explanation."""
+{QUIZ_RULES}"""
+ANALYSIS_WRITER = f"""You write a US stock-market analysis for adult English learners (CEFR {LEVEL}). You get a list of facts
+about one trading day, each marked with its dimension, and nothing else. Write an ORIGINAL analysis from these facts
+only: no claim the facts do not support, no quotations, neutral tone, names of people, places, companies and indexes as
+given. One paragraph per dimension that has facts, in this order: the market, its drivers, geopolitical risk, risk
+appetite and fear, the Magnificent Seven, what comes next; then a closing paragraph that weighs these factors against
+each other and says which one moved the market most and why, reasoning from the facts only. Never add a fact, never
+state a forecast as certain, never tell the reader to buy or sell. At least 380 and at most 480 words in 6 to 8
+paragraphs of plain sentences ({LEVEL} vocabulary and grammar, every market term explained the first time it appears).
+The title is a plain sentence, not a headline pun.
+{QUIZ_RULES}"""
 
 LESSON_SCHEMA = {
     "type": "object", "additionalProperties": False,
@@ -152,22 +194,26 @@ def responses(body: dict[str, object], key: str, timeout: int = 120) -> dict[str
     return json.loads(text)
 
 
-def research(query: str, key: str, date: str, covered: list[str] | None = None, seen: set[str] | None = None) -> dict[str, object]:
+def research(query: str, key: str, date: str, covered: list[str] | None = None, seen: set[str] | None = None,
+             analysis: bool = False) -> dict[str, object]:
     """Call 1: the hosted web_search reads the reports and hands back facts and links, never their wording.
 
     Shape as the bot's OpenAiWebSearchProvider sends it (tool + strict schema, tool_choice required, low
     effort); a hosted search is a model turn, so the budget is minutes, not the seconds of a search API.
     ``covered`` (titles) is told to the model; ``seen`` (report links already used) is enforced here: on
-    2026-11-07 the science desk returned the previous day's business story with the very same reports."""
-    earliest = (dt.date.fromisoformat(date) - dt.timedelta(days=FRESH_DAYS)).isoformat()
+    2026-11-07 the science desk returned the previous day's business story with the very same reports.
+    ``analysis`` must search once per dimension of the brief: medium effort, more room for reasoning tokens, more time."""
+    earliest = (dt.date.fromisoformat(date) - dt.timedelta(days=ANALYSIS_FRESH_DAYS if analysis else FRESH_DAYS)).isoformat()
     avoid = "".join(f"\n- {t}" for t in covered or [])
+    effort, tokens, timeout = ("medium", 8000, 300) if analysis else ("low", 4000, 180)
     out = responses({
-        "model": RESEARCH_MODEL, "instructions": RESEARCH.replace("{today}", date).replace("{earliest}", earliest),
+        "model": RESEARCH_MODEL,
+        "instructions": (ANALYSIS_RESEARCH if analysis else RESEARCH).replace("{today}", date).replace("{earliest}", earliest),
         "input": f"Desk brief: {query}" + (f"\nAlready covered, pick a different story:{avoid}" if avoid else ""),
         "tools": [{"type": "web_search", "search_context_size": "low"}], "tool_choice": "required",
-        "reasoning": {"effort": "low"}, "max_output_tokens": 4000,
+        "reasoning": {"effort": effort}, "max_output_tokens": tokens,
         "text": {"format": {"type": "json_schema", "name": "news_facts", "strict": True, "schema": FACTS_SCHEMA}},
-    }, key, timeout=180)
+    }, key, timeout=timeout)
     facts = [clean(str(f)) for f in out["facts"] if 1 <= len(str(f).split()) <= MAX_FACT_WORDS]
     sources, used = [], set()
     for src in out["sources"]:
@@ -181,10 +227,10 @@ def research(query: str, key: str, date: str, covered: list[str] | None = None, 
     return {"story": clean(str(out["story"])), "tag": tag if len(tag.split()) <= MAX_TAG_WORDS else "", "facts": facts, "sources": sources}
 
 
-def write_lesson(facts: list[str], key: str) -> dict[str, object]:
+def write_lesson(facts: list[str], key: str, analysis: bool = False) -> dict[str, object]:
     """Call 2: the writer gets the facts and nothing else: no tools, no page text, so it cannot copy any."""
     return responses({
-        "model": MODEL, "instructions": WRITER, "input": "Facts:\n" + "\n".join(f"- {f}" for f in facts),
+        "model": MODEL, "instructions": ANALYSIS_WRITER if analysis else WRITER, "input": "Facts:\n" + "\n".join(f"- {f}" for f in facts),
         # Low effort: a 200-word text needs no long deliberation, and reasoning tokens are billed as output.
         # The cap must leave room for them too: a text cut off mid-JSON is a skipped topic, not a cheaper one.
         "reasoning": {"effort": "low"}, "max_output_tokens": 8000,
@@ -196,7 +242,7 @@ def article(lesson: dict[str, object], found: dict[str, object], topic: str) -> 
     """Checked, reader-shaped article; raises ValueError for anything thin."""
     paragraphs = [clean(str(p)) for p in lesson["paragraphs"] if str(p).strip()]
     words = sum(len(p.split()) for p in paragraphs)
-    if len(paragraphs) < 3 or len(found["sources"]) < 2 or words < MIN_WORDS:
+    if len(paragraphs) < 3 or len(found["sources"]) < 2 or words < MIN_WORDS * (2 if topic in ANALYSIS_DESKS else 1):
         raise ValueError(f"thin lesson: {len(paragraphs)} paragraphs, {words} words, {len(found['sources'])} reports")
     quiz = []
     for q in lesson["quiz"]:
@@ -233,11 +279,13 @@ def generate(date: str, news_dir: Path | None = None) -> Path:
     covered, seen = recent(news_dir, date)
     articles = []
     for topic, query in TOPICS:
+        analysis = topic in ANALYSIS_DESKS
+        min_facts, min_sources = (ANALYSIS_MIN_FACTS, ANALYSIS_MIN_SOURCES) if analysis else (5, 2)
         try:
-            found = research(query, key, date, covered, seen)
-            if len(found["facts"]) < 5 or len(found["sources"]) < 2:
+            found = research(query, key, date, None if analysis else covered, seen, analysis)
+            if len(found["facts"]) < min_facts or len(found["sources"]) < min_sources:
                 raise ValueError(f"only {len(found['facts'])} facts from {len(found['sources'])} new reports")
-            articles.append(article(write_lesson(found["facts"], key), found, topic))
+            articles.append(article(write_lesson(found["facts"], key, analysis), found, topic))
             covered.append(found["story"])  # the next desk never takes the story this one just took
             seen.update(s["u"] for s in found["sources"])
         except Exception as exc:  # noqa: BLE001 — one topic failing never loses the others

@@ -23,6 +23,9 @@ FOUND = {
                 {"title": "x", "url": "javascript:alert(1)", "published": "2026-11-06"},
                 {"title": "last year's rate decision", "url": "https://example.com/old", "published": "2025-11-05"}],
 }
+# The analysis desk (business) needs more: ANALYSIS_MIN_FACTS facts from ANALYSIS_MIN_SOURCES reports.
+ANALYSIS_FOUND = dict(FOUND, facts=[f"[market] index fact number {n}" for n in range(14)],
+                      sources=FOUND["sources"] + [{"title": "Fear gauge", "url": "https://example.com/c", "published": "2026-11-03"}])
 # What the writer call hands back.
 ORIGINAL = {
     "title": "Interest rates stay the same for now",
@@ -47,10 +50,10 @@ def fake_api(calls: list[dict[str, object]]):
         assert url.endswith("/v1/responses") and headers["Authorization"] == "Bearer o-key" and body["store"] is False
         assert body["text"]["format"]["strict"] is True
         calls.append(body)
-        answer = FOUND if "tools" in body else ORIGINAL
+        answer = (ANALYSIS_FOUND if "Magnificent Seven" in body["input"] else FOUND) if "tools" in body else ORIGINAL
         searches = sum("tools" in c for c in calls)
         if "tools" in body and searches > 1:  # every desk finds its own reports; the same links twice would be skipped
-            answer = dict(FOUND, sources=[dict(src, url=src["url"] + f"?desk={searches}") for src in FOUND["sources"]])
+            answer = dict(answer, sources=[dict(src, url=src["url"] + f"?desk={searches}") for src in answer["sources"]])
         if "tools" in body:
             assert body["tool_choice"] == "required" and body["tools"][0]["type"] == "web_search"
         return {"output": [{"type": "web_search_call"}, {"type": "reasoning"},
@@ -72,7 +75,9 @@ def run() -> None:
         assert "Today is 2026-11-06 (UTC)" in calls[-1]["instructions"] and "published on 2026-11-04 or later" in calls[-1]["instructions"], "the runner's date, not the model's guess"
         assert calls[-1]["input"] == "Desk brief: business and finance" and found["tag"] == "Central bank"
         sports = dict(bn.TOPICS)["sports"]
-        assert sports.index("Champions League") < sports.index("Formula 1") < sports.index("Avoid:") < sports.index("golf"), "football first, golf never"
+        assert sports.index("Arda Güler") < sports.index("Real Madrid or the Turkey") < sports.index("Champions League") \
+            < sports.index("Formula 1") < sports.index("Avoid:") < sports.index("golf"), "Arda Güler first, then football, golf never"
+        assert "economic" in dict(bn.TOPICS)["politics"] and bn.ANALYSIS_DESKS == {"business"}
         # what was covered is told to the model; a report already used is dropped here, whatever the model says
         again = bn.research("business and finance", "o-key", "2026-11-06", ["Rates stay the same"], {"https://example.com/a?desk=2"})
         assert calls[-1]["input"].endswith("Already covered, pick a different story:\n- Rates stay the same")
@@ -83,12 +88,18 @@ def run() -> None:
             assert bn.research("x", "o-key", "2026-11-06")["tag"] == "", "a tag longer than MAX_TAG_WORDS is dropped"
         finally:
             FOUND.update(original_found)
+        market = bn.research(dict(bn.TOPICS)["business"], "o-key", "2026-11-06", analysis=True)
+        assert "markets editor" in calls[-1]["instructions"] and "published on 2026-11-03 or later" in calls[-1]["instructions"] \
+            and calls[-1]["reasoning"]["effort"] == "medium", "an analysis searches every dimension and reaches back over a weekend"
+        assert len(market["facts"]) == 14 and len(market["sources"]) == 3
         calls[:] = calls[:1]
         lesson = bn.write_lesson(found["facts"], "o-key")
         writer = calls[-1]
         assert "tools" not in writer and writer["model"] == bn.MODEL, "the writer searches nothing"
         assert "saying inflation was slowing" not in writer["input"] and PAGE_SENTENCE not in writer["input"], "no page text reaches the writer"
         assert writer["input"].startswith("Facts:\n- central bank left its main rate unchanged\n")
+        bn.write_lesson(market["facts"], "o-key", analysis=True)
+        assert calls[-1]["instructions"] == bn.ANALYSIS_WRITER and "never tell the reader to buy or sell" in calls[-1]["instructions"]
 
         art = bn.article(lesson, found, "business")
         assert art["topic"] == "business" and art["level"] == "B1" and art["tag"] == "Central bank"
@@ -126,8 +137,16 @@ def run() -> None:
             searches = [c for c in calls if "tools" in c]
             assert "Already covered" not in searches[0]["input"] and searches[-1]["input"].count("- Central bank holds rates") == len(bn.TOPICS) - 1, \
                 "each desk is told the stories the desks before it took"
+            assert "Already covered" not in searches[1]["input"], "the day's market read is a standing story, not one to avoid"
+            assert [c["instructions"] == bn.ANALYSIS_WRITER for c in calls if "tools" not in c] == [False, True, False, False]
             bn.generate("2026-11-06", Path(tmp))
             assert len(calls) == 2 * len(bn.TOPICS), "an existing edition is never regenerated"
+            ANALYSIS_FOUND["facts"] = FOUND["facts"]  # six facts carry a story, not an analysis of six dimensions
+            try:
+                thin = json.loads(bn.generate("2026-11-07", Path(tmp)).read_text(encoding="utf-8"))
+                assert [a["topic"] for a in thin["articles"]] == ["politics", "sports", "science"], "a thin analysis is skipped, never padded"
+            finally:
+                ANALYSIS_FOUND["facts"] = [f"[market] index fact number {n}" for n in range(14)]
     finally:
         bn.post_json = original_post
         bn.MIN_WORDS = original_min
