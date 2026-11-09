@@ -362,8 +362,8 @@ def render_page(template: str, locale: dict[str, object], locales: list[dict[str
         count=1,
         flags=re.DOTALL,
     )
-    if route:
-        page = re.sub(r'((?:href|src)=")(assets/|styles\.css)', r"\1/\2", page)
+    # Root too: a relative favicon breaks wherever the home page is read from another base (crawlers, /index.html).
+    page = re.sub(r'((?:href|src)=")(assets/|styles\.css)', r"\1/\2", page)
     if route:
         # Discover and Books pages exist in every language; keep the visitor in the language they chose.
         page = page.replace('href="/discover/"', f'href="/{route}/discover/"')
