@@ -169,6 +169,8 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
 .footer-inner { flex-wrap: wrap; }
 .footer-legal { display: flex; flex-wrap: wrap; justify-content: center; gap: 0 18px; flex-basis: 100%; padding-bottom: 12px; color: var(--muted); font-size: 13px; font-weight: 600; }
 .footer-legal a { display: inline-block; padding: 6px 2px; }
+/* Generated pages have no tagline in the footer: the links then share the row with the brand instead of sitting alone below it. */
+.footer-inner:not(:has(> p)) .footer-legal { flex-basis: auto; padding-bottom: 0; }
 .footer-legal a:hover, .footer-legal a[aria-current="page"] { color: var(--ink); }
 .legal { max-width: 760px; padding-block: 40px 64px; line-height: 1.7; }
 .legal h1 { margin: 6px 0 18px; font-family: Manrope, "DM Sans", sans-serif; font-size: clamp(30px, 4vw, 40px); line-height: 1.2; letter-spacing: -.03em; }
@@ -298,6 +300,88 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
   .footer-inner > p { order: 3; flex-basis: 100%; line-height: 1.7; }
   [dir="rtl"] .closing-decoration { right: auto; left: 7%; }
 }
+
+/* Desktop (1100 px and wider): edge-to-edge gutters, a hero that fills the first screen and type sized for a monitor.
+   Everything narrower keeps the rules above. */
+@media (min-width: 1100px) {
+  .page-width { width: min(1760px, calc(100% - 2 * clamp(32px, 3.5vw, 72px))); }
+  .navigation { min-height: 96px; }
+  .brand { font-size: 26px; }
+  .brand img { width: 46px; height: 46px; }
+  .nav-links { gap: 40px; }
+  .nav-links a, .language-menu summary { font-size: 15px; letter-spacing: .01em; }
+  .hero-grid { min-height: calc(100vh - 96px); min-height: calc(100svh - 96px); grid-template-columns: 1.1fr .9fr; gap: 64px; padding-block: 72px 120px; }
+  .hero-copy { max-width: 800px; }
+  .eyebrow, .section-kicker, .closing-kicker { font-size: 14px; }
+  .eyebrow { padding: 11px 17px; }
+  .hero h1 { margin: 32px 0 26px; font-size: clamp(64px, 5.6vw, 108px); line-height: 1.04; }
+  .hero-lead { max-width: 660px; font-size: 21px; line-height: 1.65; }
+  .hero-actions { gap: 32px; margin-top: 44px; }
+  .button { min-height: 60px; padding-inline: 30px; border-radius: 14px; font-size: 16px; }
+  .text-link { font-size: 16px; }
+  .hero-proof { margin-top: 48px; }
+  .hero-proof p { font-size: 16px; }
+  .hero-proof strong { font-size: 20px; }
+  .hero-art { width: min(100%, 560px); justify-self: center; scale: 1.1; } /* the pills stay beside the card, not at the screen edge */
+  .section { padding-block: 136px; }
+  .section-heading { max-width: 940px; margin-bottom: 64px; }
+  .section-heading h2, .how-copy h2 { margin: 18px 0 16px; font-size: clamp(44px, 3.6vw, 66px); }
+  .section-heading p, .how-copy > p { font-size: 19px; }
+  .feature-grid { gap: 24px; }
+  .feature-card { min-height: 330px; padding: 40px 40px 56px; border-radius: 24px; }
+  .feature-icon { width: 60px; height: 60px; margin-bottom: 30px; border-radius: 16px; }
+  .feature-icon svg { width: 32px; height: 32px; }
+  .feature-card h3 { margin-bottom: 12px; font-size: 24px; }
+  .feature-card p { max-width: 520px; font-size: 17px; }
+  .card-number { right: 28px; bottom: 20px; font-size: 40px; }
+  .discover-band { padding-bottom: 72px; }
+  .discover-band-inner { padding: 44px 52px; border-radius: 24px; }
+  .discover-band h2 { margin-bottom: 10px; font-size: 36px; }
+  .discover-band p { max-width: 760px; font-size: 18px; }
+  .discover-band .band-stats { font-size: 15px; }
+  .how-grid { gap: 120px; padding-block: 136px; }
+  .how-copy { max-width: 620px; }
+  .how-copy > p { margin-bottom: 36px; }
+  .button-dark { min-height: 56px; }
+  .steps-list li { grid-template-columns: 56px 1fr 46px; gap: 24px; padding-block: 34px; }
+  .step-index { font-size: 15px; }
+  .steps-list h3 { margin-bottom: 6px; font-size: 23px; }
+  .steps-list p { font-size: 17px; }
+  .step-symbol { width: 46px; height: 46px; border-radius: 13px; font-size: 19px; }
+  .language-grid { gap: 14px; }
+  .language-chip { min-height: 70px; gap: 12px; padding-inline: 20px; border-radius: 14px; font-size: 16px; }
+  .language-flag { font-size: 22px; }
+  .closing-section { padding-bottom: 120px; }
+  .closing-card { padding: 100px 48px 108px; border-radius: 32px; }
+  .closing-card h2 { max-width: 1280px; margin-block: 20px 16px; font-size: clamp(44px, 3.8vw, 68px); }
+  .closing-card p { margin-bottom: 38px; font-size: 19px; }
+  .closing-decoration { font-size: 40px; }
+  .footer-inner { min-height: 120px; gap: 14px 32px; padding-block: 30px; }
+  .footer-brand { font-size: 22px; }
+  .footer-brand img { width: 40px; height: 40px; }
+  .footer-inner > p, .footer-telegram, .footer-legal { font-size: 15px; }
+  .footer-legal { gap: 0 28px; padding-bottom: 0; }
+  .discover { padding-block: 64px 104px; }
+  .discover h1 { margin-bottom: 18px; font-size: clamp(42px, 3.2vw, 58px); }
+  .discover-lead { font-size: 19px; }
+  .discover-search { min-height: 58px; padding-inline: 20px; border-radius: 14px; font-size: 17px; }
+  .discover-controls { margin-top: 18px; }
+  .discover-controls label, .discover-count, .discover-empty, .discover-updated { font-size: 15px; }
+  .discover-controls select { min-height: 46px; font-size: 15px; }
+  .discover-filter button { min-height: 46px; padding-inline: 20px; font-size: 15px; }
+  .quiz-list { grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); gap: 16px; }
+  .quiz-list a { gap: 6px; padding: 22px 24px; border-radius: 18px; }
+  .quiz-list strong { font-size: 19px; }
+  .quiz-list span { font-size: 16px; }
+  .quiz-list small, .quiz-facts, .quiz-note { font-size: 15px; }
+  .quiz-description { font-size: 19px; }
+  .legal { max-width: 900px; padding-block: 64px 104px; }
+  .legal h1 { font-size: clamp(44px, 3.6vw, 60px); }
+  .legal h2 { margin-top: 40px; font-size: 24px; }
+  .legal p, .legal li { font-size: 17px; }
+  .legal-updated { font-size: 15px; }
+}
+@media (min-width: 1600px) { .hero-art { scale: 1.25; } } /* below this the scaled pills would reach the screen edge */
 
 @keyframes nav-panel-in { from { transform: translateX(10%); opacity: 0; } to { transform: none; opacity: 1; } }
 
