@@ -306,10 +306,11 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
 @media (min-width: 1100px) {
   .page-width { width: min(1760px, calc(100% - 2 * clamp(32px, 3.5vw, 72px))); }
   .navigation { min-height: 96px; }
-  .brand { font-size: 26px; }
-  .brand img { width: 46px; height: 46px; }
-  .nav-links { gap: 40px; }
-  .nav-links a, .language-menu summary { font-size: 15px; letter-spacing: .01em; }
+  .brand { font-size: 28px; }
+  .brand img { width: 48px; height: 48px; }
+  .nav-links { gap: clamp(24px, 2.3vw, 48px); }
+  .nav-links a, .language-menu summary { font-size: clamp(17px, 1.05vw, 20px); letter-spacing: .01em; }
+  .language-code { font-size: 14px; }
   .hero-grid { min-height: calc(100vh - 96px); min-height: calc(100svh - 96px); grid-template-columns: 1.1fr .9fr; gap: 64px; padding-block: 72px 120px; }
   .hero-copy { max-width: 800px; }
   .eyebrow, .section-kicker, .closing-kicker { font-size: 14px; }
