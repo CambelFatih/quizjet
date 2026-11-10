@@ -1,0 +1,521 @@
+{
+ "date": "2026-11-10",
+ "model": "gpt-5.6-sol",
+ "articles": [
+  {
+   "topic": "politics",
+   "tag": "Iran",
+   "title": "Oil prices fell while negotiations showed possible progress.",
+   "level": "B1",
+   "p": [
+    [
+     "President Donald Trump met Qatar's prime minister on November 9.",
+     "After the meeting, Trump said that renewed U.S. attacks appeared unlikely if negotiations continued to make progress.",
+     "However, officials warned that the sides had not reached an immediate final agreement."
+    ],
+    [
+     "Iran proposed several early steps that could help build confidence.",
+     "It offered to stop blocking the Strait of Hormuz.",
+     "Tehran also proposed an end to the U.S. blockade and asked for some sanctions to be lifted.",
+     "Nuclear negotiations would take place after these first measures."
+    ],
+    [
+     "The Strait of Hormuz is an important route for petroleum shipments, but it remains partly disrupted.",
+     "Any change there could affect the movement of oil.",
+     "Brent crude fell by 5.8% and reached $92.57 per barrel.",
+     "Earlier in November, the price had risen above $112 per barrel."
+    ],
+    [
+     "The change in oil prices came as financial markets improved.",
+     "U.S. stocks recovered much of the losses they had suffered during the previous week.",
+     "Still, the situation remained uncertain because the first confidence-building measures had not produced a final deal.",
+     "Further progress depended on negotiations and action from the sides involved."
+    ]
+   ],
+   "words": [
+    {
+     "w": "renewed",
+     "d": "started again after stopping for a time"
+    },
+    {
+     "w": "sanctions",
+     "d": "official limits placed on a country to influence its actions"
+    },
+    {
+     "w": "confidence-building measures",
+     "d": "early actions that help sides begin to trust each other"
+    },
+    {
+     "w": "disrupted",
+     "d": "prevented from continuing normally"
+    },
+    {
+     "w": "crude",
+     "d": "oil in its natural form before it is prepared for use"
+    },
+    {
+     "w": "recovered",
+     "d": "returned toward an earlier or better level"
+    }
+   ],
+   "quiz": [
+    {
+     "q": "Who did President Donald Trump meet on November 9?",
+     "o": [
+      "Iran's president",
+      "Qatar's prime minister",
+      "A U.S. oil company leader",
+      "The head of Brent crude trading"
+     ],
+     "a": 1,
+     "why": "The text says Trump met Qatar's prime minister on November 9."
+    },
+    {
+     "q": "What did Tehran offer to stop doing?",
+     "o": [
+      "Selling petroleum",
+      "Holding nuclear negotiations",
+      "Blocking the Strait of Hormuz",
+      "Trading with Qatar"
+     ],
+     "a": 2,
+     "why": "Iran offered to stop blocking the important shipping route."
+    },
+    {
+     "q": "What happened to the price of Brent crude?",
+     "o": [
+      "It rose by 5.8%",
+      "It stayed above $112",
+      "It fell to $92.57 per barrel",
+      "It fell below $50 per barrel"
+     ],
+     "a": 2,
+     "why": "Brent crude fell 5.8% and reached $92.57 per barrel."
+    },
+    {
+     "q": "What warning did officials give?",
+     "o": [
+      "Oil shipments had completely stopped",
+      "A final agreement had not been reached",
+      "U.S. stocks would continue to fall",
+      "Nuclear negotiations had ended"
+     ],
+     "a": 1,
+     "why": "Officials warned that there was still no immediate final agreement."
+    }
+   ],
+   "sources": [
+    {
+     "t": "Trump after meeting with Qatari PM says he believes war with Iran is militarily 'effectively over'",
+     "u": "https://apnews.com/article/c38770b168faf5e094e96c1e1e212cff"
+    },
+    {
+     "t": "Trump to meet Iran war mediator Qatar, no imminent deal seen to end the war",
+     "u": "https://www.investing.com/news/world-news/trump-to-meet-iran-war-mediator-qatar-no-imminent-deal-seen-to-end-the-war-5011287"
+    },
+    {
+     "t": "US stocks rally and recover most of last week's losses as oil prices swing lower",
+     "u": "https://apnews.com/article/d938f8e6ff42b3706e1d36e6245ec56b"
+    },
+    {
+     "t": "Oil falls as Trump downplays prospect of escalation with Iran",
+     "u": "https://www.investing.com/news/commodities-news/oil-falls-as-trump-downplays-prospect-of-escalation-with-iran-5013892"
+    }
+   ]
+  },
+  {
+   "topic": "business",
+   "tag": "Wall Street",
+   "title": "US stocks rose strongly as geopolitical tensions eased",
+   "level": "B1",
+   "p": [
+    [
+     "US stocks rose strongly on November 9 after falling the week before.",
+     "The S&P 500, a broad measure of large US stocks, gained 2.3%.",
+     "The Nasdaq, an index with many technology companies, rose 2.7%.",
+     "The Dow, an index of 30 major companies, jumped 1,104 points, or 2.2%.",
+     "All eleven S&P 500 sectors, or industry groups, increased.",
+     "Industrials led with a 3.8% gain.",
+     "However, the recovery followed a difficult week.",
+     "The S&P 500 had fallen 2.7%, the Nasdaq had dropped 3.4%, and the Dow had declined 0.9%.",
+     "Technology had been the weakest major sector, falling 6.9%.",
+     "The Nasdaq also remained nearly 12% below its October 6 record."
+    ],
+    [
+     "Economic information gave investors several points to consider.",
+     "October payrolls, which measure the number of jobs added, increased by 165,000, while unemployment fell to 4.1%.",
+     "Markets priced in a 78% probability that the Fed would raise interest rates on December 9.",
+     "A rate hike means an increase in the cost of borrowing money.",
+     "The 10-year Treasury yield, the return paid by a long-term US government bond, rose to 4.87% Monday.",
+     "Investors were also waiting for October CPI and core CPI on Tuesday, November 10.",
+     "These reports measure changes in consumer prices, with core CPI leaving out food and energy.",
+     "The relationship between oil and yields had recently turned negative, near minus 10%."
+    ],
+    [
+     "Geopolitical risk became less serious on Monday.",
+     "Trump called the Iran war militarily effectively over.",
+     "Hopes for de-escalation, meaning a reduction in conflict, helped push oil prices lower.",
+     "WTI crude, a major US oil price, had already fallen 13% during the previous week as Iran-war tensions eased.",
+     "However, the U.S. blockade continued to restrict Iranian oil exports.",
+     "This showed that an important part of the conflict remained in place even as military tensions appeared to decrease."
+    ],
+    [
+     "Measures of fear gave a mixed picture of risk appetite, or investors' willingness to hold less safe assets.",
+     "The VIX, an index that measures expected stock-market changes and is often called a fear measure, closed near 19.92 after falling 22.31%.",
+     "This large decline suggested less immediate market fear.",
+     "However, CNN Fear and Greed stood at 29, which was still in fear territory.",
+     "Bitcoin exchange-traded funds, or ETFs that hold assets linked to Bitcoin, recorded $412 million of outflows Monday.",
+     "Outflows are money leaving an investment.",
+     "These funds lost nearly $1.9 billion across two sessions."
+    ],
+    [
+     "Most Magnificent Seven stocks rose.",
+     "This group represented nearly 40% of the S&P 500's weighting, or its influence on the index.",
+     "Apple gained 2.43%, Microsoft rose 2.75%, Alphabet added 1.18%, Amazon gained 2.9%, Meta climbed 5.12%, and Tesla jumped 5.54% after earlier election-related losses.",
+     "No specific catalyst, or event causing a price move, was reported for Apple or Meta.",
+     "Oracle capacity reductions remained news for Microsoft, while Anthropic pursued alternative AI infrastructure related to Amazon.",
+     "Google's AI-chip push pressured Nvidia, which fell 4.27% despite the wider technology rebound."
+    ],
+    [
+     "Overall, easing Iran-war tensions appear to have moved the market most because they were linked directly to lower oil prices, while every S&P 500 sector rose and fear fell sharply.",
+     "Strong gains among six Magnificent Seven companies also supported the indexes because of the group's large weighting.",
+     "Still, the high probability of a Fed rate hike, the rising Treasury yield, continued fear readings, Bitcoin ETF outflows, and the upcoming inflation reports gave investors reasons to remain careful."
+    ]
+   ],
+   "words": [
+    {
+     "w": "sector",
+     "d": "A group of companies in the same part of the economy."
+    },
+    {
+     "w": "rate hike",
+     "d": "An increase in interest rates that makes borrowing more expensive."
+    },
+    {
+     "w": "Treasury yield",
+     "d": "The return paid by a US government bond."
+    },
+    {
+     "w": "de-escalation",
+     "d": "A reduction in the level of conflict or tension."
+    },
+    {
+     "w": "risk appetite",
+     "d": "How willing investors are to hold less safe investments."
+    },
+    {
+     "w": "outflows",
+     "d": "Money that leaves an investment or fund."
+    }
+   ],
+   "quiz": [
+    {
+     "q": "How much did the S&P 500 gain on November 9?",
+     "o": [
+      "0.9%",
+      "2.3%",
+      "2.7%",
+      "3.8%"
+     ],
+     "a": 1,
+     "why": "The S&P 500 increased by 2.3% on November 9."
+    },
+    {
+     "q": "What helped push oil prices lower on Monday?",
+     "o": [
+      "A rise in unemployment",
+      "Hopes for de-escalation",
+      "Technology-sector losses",
+      "Bitcoin ETF inflows"
+     ],
+     "a": 1,
+     "why": "Lower Iran-war tensions supported hopes for de-escalation and helped reduce oil prices."
+    },
+    {
+     "q": "Which Magnificent Seven stock fell on Monday?",
+     "o": [
+      "Meta",
+      "Tesla",
+      "Amazon",
+      "Nvidia"
+     ],
+     "a": 3,
+     "why": "Nvidia fell 4.27% even though the broader technology market rebounded."
+    },
+    {
+     "q": "Why did the Magnificent Seven have strong influence on the S&P 500?",
+     "o": [
+      "They represented nearly 40% of its weighting",
+      "They all gained more than 5%",
+      "They led the industrial sector",
+      "They controlled Treasury yields"
+     ],
+     "a": 0,
+     "why": "Their nearly 40% weighting meant their price moves had a large effect on the index."
+    }
+   ],
+   "sources": [
+    {
+     "t": "How major US stock indexes fared Monday 11/9/2026",
+     "u": "https://apnews.com/article/f7ec9680fc858e3c2505913e7b3a54e2"
+    },
+    {
+     "t": "Microsoft Word - 11082026 Weekly Market Commentary",
+     "u": "https://www.ftportfolios.com/Commentary/Insights/2026/11/9/week-ended-november-6%2C-2026"
+    },
+    {
+     "t": "Oil prices and bond yields no longer moving together",
+     "u": "https://www.axios.com/2026/11/09/oil-yields-inflation-growth"
+    },
+    {
+     "t": "Closing Tape — 2026-11-09",
+     "u": "https://www.marketalleys.com/post/marketalleys-closing-tape-2026-11-09"
+    },
+    {
+     "t": "US Markets Briefs: Pre-market brief — Saturday, November 7, 2026",
+     "u": "https://princejain.me/stock-tracker/us-markets/briefs/2026-11-07-premarket.html"
+    },
+    {
+     "t": "US STOCKS-Nasdaq rebounds but posts fourth straight weekly decline",
+     "u": "https://wealthinsights.metrobank.com.ph/news/us-stocks-nasdaq-rebounds-but-posts-fourth-straight-weekly-decline"
+    },
+    {
+     "t": "Market Snapshot November 9th 2026",
+     "u": "https://prop.theconcepttrader.com/market-snapshot-november-9th-2026/"
+    }
+   ]
+  },
+  {
+   "topic": "sports",
+   "tag": "Paris Masters",
+   "title": "Carlos Alcaraz wins his first Paris Masters title",
+   "level": "B1",
+   "p": [
+    [
+     "Carlos Alcaraz defeated Ben Shelton in the Paris Masters final on Sunday.",
+     "The Spaniard won the match 7-6, 7-5 to claim his first title at the tournament.",
+     "The final lasted one hour and 57 minutes, and both sets were close."
+    ],
+    [
+     "The result gave Alcaraz his ninth ATP Masters 1000 trophy.",
+     "It was also his fifth title of the 2026 season.",
+     "His success in Paris continued a strong period for him after he won the tournament in Vienna.",
+     "These were his second and third consecutive tournament victories."
+    ],
+    [
+     "The match came after a different result between the two players in September.",
+     "Shelton had beaten Alcaraz in the quarter-final of the US Open.",
+     "However, Alcaraz won their latest meeting in two sets and added another important trophy to his season."
+    ],
+    [
+     "The Paris victory was also important because Alcaraz had recently returned to competition.",
+     "He had been recovering from a wrist injury before his return.",
+     "His next event will be the ATP Finals in Turin, where he will continue his 2026 season after winning two tournaments in a row."
+    ]
+   ],
+   "words": [
+    {
+     "w": "defeated",
+     "d": "won a game or match against someone"
+    },
+    {
+     "w": "claim",
+     "d": "to win or receive something"
+    },
+    {
+     "w": "trophy",
+     "d": "a prize given to the winner of a competition"
+    },
+    {
+     "w": "consecutive",
+     "d": "following one after another without a break"
+    },
+    {
+     "w": "quarter-final",
+     "d": "a match that decides who reaches the last four"
+    },
+    {
+     "w": "recovering",
+     "d": "becoming healthy again after an injury or illness"
+    }
+   ],
+   "quiz": [
+    {
+     "q": "What was the final score of the Paris Masters final?",
+     "o": [
+      "7-5, 7-5",
+      "7-6, 7-5",
+      "6-7, 7-5, 6-4",
+      "6-4, 6-3"
+     ],
+     "a": 1,
+     "why": "Alcaraz defeated Shelton in two sets, 7-6 and 7-5."
+    },
+    {
+     "q": "How many ATP Masters 1000 trophies has Alcaraz won?",
+     "o": [
+      "Five",
+      "Seven",
+      "Eight",
+      "Nine"
+     ],
+     "a": 3,
+     "why": "The Paris victory gave Alcaraz his ninth ATP Masters 1000 trophy."
+    },
+    {
+     "q": "Where did Alcaraz win before the Paris Masters?",
+     "o": [
+      "Turin",
+      "Vienna",
+      "New York",
+      "Madrid"
+     ],
+     "a": 1,
+     "why": "Alcaraz won in Vienna before earning his second consecutive tournament victory in Paris."
+    },
+    {
+     "q": "What is Alcaraz's next event?",
+     "o": [
+      "The US Open",
+      "The Vienna tournament",
+      "The ATP Finals in Turin",
+      "Another Paris tournament"
+     ],
+     "a": 2,
+     "why": "Alcaraz will next play at the ATP Finals in Turin."
+    }
+   ],
+   "sources": [
+    {
+     "t": "Alcaraz beats Shelton in Paris Masters final for his fifth title this year",
+     "u": "https://www.washingtonpost.com/sports/tennis/2026/11/08/paris-masters-alcaraz-shelton-tennis/5b6c8468-db95-11f1-912c-4fbb80d73f7f_story.html"
+    },
+    {
+     "t": "Carlos Alcaraz defeats Ben Shelton to win first Paris title",
+     "u": "https://www.nittoatpfinals.com/en/news/alcaraz-shelton-paris-2026-final-sunday"
+    },
+    {
+     "t": "Carlos Alcaraz beats error-prone Ben Shelton to win Paris Masters",
+     "u": "https://www.theguardian.com/sport/2026/nov/08/carlos-alcaraz-ben-shelton-win-paris-masters-final"
+    },
+    {
+     "t": "Alcaraz, Paris' young prince",
+     "u": "https://www.rolexparismasters.com/en/news/article/final-carlos-alcaraz-victory-ben-shelton"
+    }
+   ]
+  },
+  {
+   "topic": "science",
+   "tag": "GLP-1 drugs",
+   "title": "The FDA adds vision warnings to four medicines.",
+   "level": "B1",
+   "p": [
+    [
+     "The US Food and Drug Administration (FDA) announced a labeling change on Monday, November 9, 2026.",
+     "New warnings will cover Ozempic, Wegovy, Mounjaro and Zepbound.",
+     "The warnings will be added to prescribing information for medical professionals and to materials for patients."
+    ],
+    [
+     "The change concerns a rare condition that affects the optic nerve.",
+     "This nerve carries information from the eye to the brain.",
+     "The condition is called non-arteritic anterior ischemic optic neuropathy.",
+     "It can cause vision loss, and some cases may lead to permanent problems with sight."
+    ],
+    [
+     "The FDA reviewed information from more than 125 clinical trials.",
+     "The evidence mainly concerns medicines containing semaglutide or tirzepatide.",
+     "After one year, about six patients out of every 100,000 developed the optic-nerve condition.",
+     "This means that the condition was uncommon in the trial data."
+    ],
+    [
+     "The new labeling will help patients and medical professionals learn about the possible vision problem.",
+     "Patients who notice sudden changes in their vision should report them promptly.",
+     "They should also report vision that is becoming worse.",
+     "The updated patient materials will include this advice, while the prescribing information will provide the warning to medical professionals."
+    ]
+   ],
+   "words": [
+    {
+     "w": "labeling change",
+     "d": "a change to the official written information about a medicine"
+    },
+    {
+     "w": "optic nerve",
+     "d": "the nerve that carries information from the eye to the brain"
+    },
+    {
+     "w": "vision loss",
+     "d": "the loss of some or all ability to see"
+    },
+    {
+     "w": "permanent",
+     "d": "continuing for a very long time and not expected to change"
+    },
+    {
+     "w": "clinical trial",
+     "d": "a study that tests a medicine in people"
+    },
+    {
+     "w": "promptly",
+     "d": "quickly and without delay"
+    }
+   ],
+   "quiz": [
+    {
+     "q": "Which medicines will receive the new warnings?",
+     "o": [
+      "Ozempic, Wegovy, Mounjaro and Zepbound",
+      "Ozempic and Wegovy only",
+      "Mounjaro and Zepbound only",
+      "Semaglutide and tirzepatide only"
+     ],
+     "a": 0,
+     "why": "The FDA said the warnings will cover all four of these medicines."
+    },
+    {
+     "q": "What part of the body does the rare condition affect?",
+     "o": [
+      "The heart",
+      "The liver",
+      "The optic nerve",
+      "The lungs"
+     ],
+     "a": 2,
+     "why": "The condition affects the nerve that carries information from the eye to the brain."
+    },
+    {
+     "q": "How many clinical trials did the FDA review?",
+     "o": [
+      "Fewer than 25",
+      "About 50",
+      "Exactly 100",
+      "More than 125"
+     ],
+     "a": 3,
+     "why": "The FDA reviewed data from over 125 clinical trials."
+    },
+    {
+     "q": "What should patients do if their vision suddenly changes or becomes worse?",
+     "o": [
+      "Wait for one year",
+      "Report it promptly",
+      "Stop reading patient materials",
+      "Ignore it because it is common"
+     ],
+     "a": 1,
+     "why": "Patients are advised to report sudden or worsening vision changes without delay."
+    }
+   ],
+   "sources": [
+    {
+     "t": "FDA adds rare vision-loss warning to popular GLP-1 drugs",
+     "u": "https://apnews.com/article/d85a58ea769bc12cc1989e914a51f248"
+    },
+    {
+     "t": "US FDA orders new eye risk warnings for Ozempic, Zepbound",
+     "u": "https://www.investing.com/news/stock-market-news/us-fda-orders-new-eye-risk-warnings-for-ozempic-zepbound-5012770"
+    }
+   ]
+  }
+ ]
+}
