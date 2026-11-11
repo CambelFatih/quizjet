@@ -306,8 +306,10 @@
     if (n !== page) hideTr(); // the box belongs to the page it was opened on
     page = n;
     text.scrollTo({ left: page * stride, behavior: instant ? "auto" : "smooth" });
-    const t = tools.getBoundingClientRect().top; // keep the toolbar at the top so the page fills the screen
-    if (Math.abs(t - 8) > 2) scrollBy(0, t - 8);
+    // Turning a page keeps the toolbar at the top so the page fills the screen. The first layout (instant) does not:
+    // scrolling then hid the site menu and the title before the reader had seen them.
+    const t = tools.getBoundingClientRect().top;
+    if (!instant && Math.abs(t - 8) > 2) scrollBy(0, t - 8);
     savePos();
   }
   function turn(d) {

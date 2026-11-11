@@ -236,9 +236,13 @@ def render_legal_page(meta: dict[str, object], code: str, page: str, body: str) 
     )
     alternates += f'    <link rel="alternate" hreflang="x-default" href="{legal_url("", page)}">\n'
     switch = "".join(
-        f'<a href="{legal_url(data["route"], page).removeprefix(BASE_URL)}" lang="{other}" hreflang="{other}">{other.upper()}</a>'
+        f'<a href="{legal_url(data["route"], page).removeprefix(BASE_URL)}" lang="{other}" hreflang="{other}">'
+        f'<span class="language-code">{other.upper()}</span>{html.escape(LOCALES_BY_CODE[other]["name"])}</a>'
         for other, data in meta["languages"].items() if other != code
     )
+    pre = f"/{route}" if route else ""
+    main_links = (f'<a href="{pre}/discover/">{html.escape(ui["discAll"])}</a><a href="{pre}/books/">{html.escape(ui["navBooks"])}</a>'
+                  f'<a href="{pre}/news/">{html.escape(ui["navNews"])}</a>')
     links = ""
     for name in meta["pages"]:
         current = ' aria-current="page"' if name == page else ""
@@ -265,6 +269,7 @@ def render_legal_page(meta: dict[str, object], code: str, page: str, body: str) 
         '    <header class="site-header">\n'
         f'      <nav class="navigation page-width" aria-label="{html.escape(ui["navMainLabel"], quote=True)}">\n'
         f'        <a class="brand" href="{home}"><img src="/assets/logo-96.png" alt="" width="44" height="44"><span>quizjet</span></a>\n'
+        f'        <div class="nav-links">{main_links}</div>\n'
         f'        <div class="nav-actions legal-switch">{switch}</div>\n'
         "      </nav>\n"
         "    </header>\n"
