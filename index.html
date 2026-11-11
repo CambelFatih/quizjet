@@ -50,7 +50,7 @@
     <link rel="manifest" href="/manifest.webmanifest">
     <link rel="preload" href="/assets/fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="/assets/fonts/manrope-700-latin.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="stylesheet" href="/styles.css?v=15b00f703ea0">
+    <link rel="stylesheet" href="/styles.css?v=4155779a0910">
   </head>
   <body>
     <a class="skip-link" href="#top">Skip to content</a>
@@ -146,36 +146,35 @@
         </div>
       </section>
 
-      <section class="discover-band page-width" id="discover-band">
-        <div class="discover-band-inner">
-          <div>
+      <div class="bands page-width">
+        <section class="discover-band band-quiz" id="discover-band">
+          <span class="band-icon" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M10 9h28a4 4 0 0 1 4 4v17a4 4 0 0 1-4 4H23l-9 7v-7h-4a4 4 0 0 1-4-4V13a4 4 0 0 1 4-4Z"/><path d="M20 18a4 4 0 1 1 5.6 3.7c-1 .4-1.6 1.3-1.6 2.3v.5"/><path d="M24 28.5v.5"/></svg></span>
+          <div class="band-body">
             <h2>Ready-made quizzes: {count}</h2>
             <p>Browse public quizzes made by the community and start any of them in a private chat or in your Telegram group.</p>
-            <p class="band-stats"><span>Plays</span>: {plays} · <span>Players</span>: {participants}</p>
+            <dl class="band-stats"><div><dt>Plays</dt><dd>{plays}</dd></div><div><dt>Players</dt><dd>{participants}</dd></div></dl>
           </div>
           <a class="button button-dark" href="/discover/"><span>Browse quizzes</span><span class="button-arrow" aria-hidden="true">→</span></a>
-        </div>
-      </section>
+        </section>
 
-      <section class="discover-band page-width" id="books-band">
-        <div class="discover-band-inner">
-          <div>
+        <section class="discover-band band-books" id="books-band">
+          <span class="band-icon" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M6 11c6-2 12-1 18 3 6-4 12-5 18-3v26c-6-2-12-1-18 3-6-4-12-5-18-3Z"/><path d="M24 14v26"/></svg></span>
+          <div class="band-body">
             <h2>Read classics, learn English</h2>
             <p>Read free classic books with read-aloud, tap any word or sentence for a translation, then test yourself with a chapter quiz on Telegram.</p>
           </div>
           <a class="button button-dark" href="/books/"><span>Browse books</span><span class="button-arrow" aria-hidden="true">→</span></a>
-        </div>
-      </section>
+        </section>
 
-      <section class="discover-band page-width" id="news-band">
-        <div class="discover-band-inner">
-          <div>
+        <section class="discover-band band-news" id="news-band">
+          <span class="band-icon" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M8 9h25v28a3 3 0 0 0 3 3H11a3 3 0 0 1-3-3Z"/><path d="M33 17h7v20a3 3 0 0 1-6 .5"/><path d="M14 16h13M14 23h13M14 30h8"/></svg></span>
+          <div class="band-body">
             <h2>Learn English with the news</h2>
             <p>A short, original news text every day at B1 level, with read-aloud, word translation and four questions.</p>
           </div>
           <a class="button button-dark" href="/news/"><span>Read today's news</span><span class="button-arrow" aria-hidden="true">→</span></a>
-        </div>
-      </section>
+        </section>
+      </div>
 
       <section class="how-section">
         <div class="how-grid page-width">

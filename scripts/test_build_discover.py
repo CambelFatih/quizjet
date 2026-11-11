@@ -134,9 +134,9 @@ def run() -> None:
                 html_text = (out / landing).read_text(encoding="utf-8")
                 assert 'id="discover-band"' in html_text and "{count}" not in html_text, landing
             index = (out / "index.html").read_text(encoding="utf-8")
-            assert "Ready-made quizzes: 3" in index and "<span>Plays</span>: 13 · <span>Players</span>: 18" in index and "{plays}" not in index
+            assert "Ready-made quizzes: 3" in index and "<dt>Plays</dt><dd>13</dd></div><div><dt>Players</dt><dd>18</dd>" in index and "{plays}" not in index
             tr_index = (out / "tr" / "index.html").read_text(encoding="utf-8")
-            assert ("Hazır quiz&#x27;ler: 3" in tr_index or "Hazır quiz'ler: 3" in tr_index) and "<span>Oynanma</span>: 13 · <span>Oyuncu</span>: 18" in tr_index
+            assert ("Hazır quiz&#x27;ler: 3" in tr_index or "Hazır quiz'ler: 3" in tr_index) and "<dt>Oynanma</dt><dd>13</dd></div><div><dt>Oyuncu</dt><dd>18</dd>" in tr_index
             assert '<a class="language-chip" href="/tr/" lang="tr"' in index, "the language grid links the language pages"
             assert '"@type":"SoftwareApplication"' in index and '"inLanguage":"tr"' in tr_index, "structured data on every landing page"
             assert (out / "manifest.webmanifest").is_file() and (out / "assets" / "fonts" / "dm-sans-latin.woff2").is_file()
