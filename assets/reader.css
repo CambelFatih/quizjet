@@ -1,6 +1,6 @@
 /* Books shelf + reader (loaded only by /books/ pages). Themes are set on <html data-rd-theme>. */
 .reader [hidden] { display: none !important; } /* .button and .rd-row set display, which would beat [hidden] */
-.book-list { display: grid; gap: 14px; margin: 0 0 18px; padding: 0; list-style: none; }
+.book-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 440px), 1fr)); gap: 14px; margin: 0 0 18px; padding: 0; list-style: none; }
 .book-list a { display: flex; gap: 18px; align-items: center; padding: 16px; border: 1px solid var(--line); border-radius: 16px; background: #fff; transition: border-color .2s, box-shadow .2s; }
 .book-list a:hover, .book-list a:focus-visible { border-color: #b9d6f3; box-shadow: 0 8px 22px #14243b12; }
 .book-cover { flex: none; width: 104px; height: 150px; display: flex; flex-direction: column; justify-content: space-between; padding: 12px 10px; border-radius: 6px 10px 10px 6px; color: #fff; background: linear-gradient(160deg, var(--c1), #0d1b2c 85%); box-shadow: inset 6px 0 0 #0003, 0 8px 18px #14243b2e; font-family: Georgia, serif; }
@@ -17,8 +17,8 @@
 .nw-edition { margin: 22px 0 8px; }
 .nw-edition h2 { margin: 0 0 10px; font-size: 18px; }
 .nw-edition h2 a:hover { color: var(--blue); }
-.nw-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px; margin: 0; padding: 0; list-style: none; }
-.nw-lead .nw-grid { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
+.nw-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; margin: 0; padding: 0; list-style: none; }
+.nw-lead .nw-grid { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
 .nw-card { display: grid; align-content: start; gap: 6px; height: 100%; padding: 14px 16px 16px; border: 1px solid var(--line); border-top: 4px solid var(--desk); border-radius: 14px; background: #fff; transition: border-color .2s, box-shadow .2s; }
 .nw-card:hover, .nw-card:focus-visible { box-shadow: 0 8px 22px #14243b17; }
 .nw-kicker { color: var(--desk); font-size: 12px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
@@ -143,3 +143,23 @@
 .rd-fb { margin: 6px 0 0; color: var(--rd-muted); }
 /* Text in the accent colour (the edge of a highlight is fine at 3:1, text is not): a darker ink per theme. */
 .reader #rd-this, .reader .rd-text.study .sb, .book-info .book-read { color: var(--rd-edge-ink, var(--blue)); }
+
+/* Desktop (1100 px and wider): the shelf and the news cards sized for a monitor, like styles.css. */
+@media (min-width: 1100px) {
+  .book-list { gap: 20px; }
+  .book-list a { gap: 26px; padding: 24px; border-radius: 20px; }
+  .book-cover { width: 120px; height: 172px; }
+  .book-info { gap: 6px; }
+  .book-info strong { font-size: 23px; }
+  .book-info span, .book-info small { font-size: 16px; }
+  .nw-filter { margin-bottom: 12px; }
+  .nw-edition { margin-top: 40px; }
+  .nw-edition h2 { margin-bottom: 16px; font-size: 23px; }
+  .nw-grid { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 18px; }
+  .nw-lead .nw-grid { grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); }
+  .nw-card { gap: 10px; padding: 22px 24px 26px; border-radius: 18px; }
+  .nw-kicker { font-size: 13px; }
+  .nw-card strong { font-size: 19px; }
+  .nw-lead .nw-card strong { font-size: 24px; line-height: 1.3; }
+  .nw-first { font-size: 16px; }
+}
