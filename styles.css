@@ -207,13 +207,23 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
 .quiz-list small, .quiz-facts, .quiz-note { color: var(--muted); font-size: 13px; line-height: 1.6; }
 .quiz-description { color: #3a4a62; font-size: 17px; line-height: 1.65; overflow-wrap: anywhere; }
 .quiz-actions { display: flex; flex-wrap: wrap; gap: 12px; margin: 22px 0 12px; }
-.discover-band { padding-block: 8px 56px; }
-.discover-band-inner { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 26px 30px; border: 1px solid var(--line); border-radius: 18px; background: var(--page); }
-.discover-band h2 { margin: 0 0 6px; font-family: Manrope, "DM Sans", sans-serif; font-size: clamp(22px, 3vw, 28px); letter-spacing: -.03em; }
-.discover-band p { margin: 0; max-width: 560px; color: var(--muted); font-size: 15px; line-height: 1.6; }
-.discover-band .band-stats { margin-top: 8px; color: var(--ink); font-size: 13px; font-weight: 700; }
-.discover-band .button { flex: none; }
-@media (max-width: 640px) { .discover-band-inner { flex-direction: column; align-items: flex-start; padding: 22px 20px; } }
+/* Quizzes, books, news: one card each, side by side from 900 px. A card can be missing (no catalog, no news edition):
+   the columns follow the cards that are there. */
+.bands { display: grid; gap: 16px; padding-block: 8px 72px; }
+.discover-band { --accent: #397fca; --tint: #eaf4ff; --glow: #397fca1a; --band-bg: var(--paper); position: relative; display: flex; flex-direction: column; align-items: flex-start; overflow: hidden; padding: 28px 26px; border: 1px solid var(--line); border-radius: 20px; background: radial-gradient(90% 70% at 100% 0%, var(--glow), transparent 70%), var(--band-bg); box-shadow: 0 8px 24px #1c36520a; transition: border-color .2s, box-shadow .2s; }
+.discover-band:hover { border-color: var(--tint); box-shadow: 0 14px 34px #1c365214; }
+.band-books { --accent: #8961c4; --tint: #f2edfc; --glow: #8961c41a; }
+.band-news { --accent: #0b7a5f; --tint: #e1f4ed; --glow: #0b7a5f1a; }
+.band-icon { width: 52px; height: 52px; display: grid; place-items: center; margin-bottom: 22px; border-radius: 15px; color: var(--accent); background: var(--tint); }
+.band-icon svg { width: 28px; height: 28px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2.3; }
+.band-body { flex: 1; margin-bottom: 26px; }
+.discover-band h2 { margin: 0 0 10px; font-family: Manrope, "DM Sans", sans-serif; font-size: clamp(22px, 2.4vw, 28px); line-height: 1.2; letter-spacing: -.03em; }
+.discover-band p { margin: 0; color: var(--muted); font-size: 15px; line-height: 1.6; }
+.band-stats { display: flex; flex-wrap: wrap; gap: 12px 32px; margin: 22px 0 0; padding-top: 18px; border-top: 1px solid var(--line); }
+.band-stats div { display: flex; flex-direction: column-reverse; gap: 2px; }
+.band-stats dt { color: var(--muted); font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+.band-stats dd { margin: 0; color: var(--ink); font-family: Manrope, "DM Sans", sans-serif; font-size: 26px; font-weight: 700; letter-spacing: -.02em; }
+@media (min-width: 900px) { .bands { grid-auto-flow: column; grid-auto-columns: 1fr; gap: 20px; } }
 
 [dir="rtl"] .hero h1, [dir="rtl"] .hero-lead, [dir="rtl"] .section-heading, [dir="rtl"] .how-copy, [dir="rtl"] .steps-list { text-align: start; }
 [dir="rtl"] .hero-proof, [dir="rtl"] .hero-actions, [dir="rtl"] .feature-card, [dir="rtl"] .steps-list li { direction: rtl; }
@@ -335,11 +345,16 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
   .feature-card h3 { margin-bottom: 12px; font-size: 24px; }
   .feature-card p { max-width: 520px; font-size: 17px; }
   .card-number { right: 28px; bottom: 20px; font-size: 40px; }
-  .discover-band { padding-bottom: 72px; }
-  .discover-band-inner { padding: 44px 52px; border-radius: 24px; }
-  .discover-band h2 { margin-bottom: 10px; font-size: 36px; }
-  .discover-band p { max-width: 760px; font-size: 18px; }
-  .discover-band .band-stats { font-size: 15px; }
+  .bands { gap: 24px; padding-bottom: 96px; }
+  .discover-band { padding: 40px 40px 44px; border-radius: 24px; }
+  .band-icon { width: 60px; height: 60px; margin-bottom: 30px; border-radius: 17px; }
+  .band-icon svg { width: 32px; height: 32px; }
+  .band-body { margin-bottom: 34px; }
+  .discover-band h2 { margin-bottom: 12px; font-size: clamp(26px, 1.9vw, 34px); }
+  .discover-band p { font-size: 17px; }
+  .band-stats { margin-top: 28px; padding-top: 22px; }
+  .band-stats dt { font-size: 13px; }
+  .band-stats dd { font-size: 32px; }
   .how-grid { gap: 120px; padding-block: 136px; }
   .how-copy { max-width: 620px; }
   .how-copy > p { margin-bottom: 36px; }
@@ -415,6 +430,10 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
   :root:not([data-rd-theme]) .book-list a:hover,
   :root:not([data-rd-theme]) .book-list a:focus-visible { border-color: #3d6ba3; box-shadow: 0 8px 22px #0006; }
   :root:not([data-rd-theme]) .how-section { background: #0f1b2e; }
+  :root:not([data-rd-theme]) .discover-band { --tint: #16304f; --accent: #7db6ec; --glow: #7db6ec1f; --band-bg: var(--card); box-shadow: 0 8px 24px #0000004d; }
+  :root:not([data-rd-theme]) .band-books { --tint: #2a2347; --accent: #b9a0f2; --glow: #b9a0f21f; }
+  :root:not([data-rd-theme]) .band-news { --tint: #133a30; --accent: #3ccb9f; --glow: #3ccb9f1f; }
+  :root:not([data-rd-theme]) .discover-band:hover { border-color: #3d6ba3; }
   :root:not([data-rd-theme]) .steps-list li { border-color: var(--line); }
   :root:not([data-rd-theme]) .step-symbol { color: var(--accent); background: #1a2b45; }
   :root:not([data-rd-theme]) .step-index,
