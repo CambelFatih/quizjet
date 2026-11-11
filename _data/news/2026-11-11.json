@@ -1,0 +1,513 @@
+{
+ "date": "2026-11-11",
+ "model": "gpt-5.6-sol",
+ "articles": [
+  {
+   "topic": "politics",
+   "tag": "US-China trade",
+   "title": "China extends a temporary trade truce with the United States.",
+   "level": "B1",
+   "p": [
+    [
+     "China has suspended an additional 24% tariff on imports from the United States for two months.",
+     "However, a 10% Chinese tariff on US goods will remain in place.",
+     "The suspension will continue until January 10, 2027."
+    ],
+    [
+     "China has also suspended special port fees on ships linked to the United States.",
+     "In addition, Beijing has extended sanctions relief for five US-linked units of Hanwha Ocean.",
+     "These steps follow the trade agreement reached by Trump and Xi in September."
+    ],
+    [
+     "The temporary truce lowers the immediate risk that import prices will rise because of new tariffs.",
+     "It also gives businesses more time to prepare before tariffs could increase again.",
+     "Companies that trade between the two countries may welcome the extra time, but the future rules are still not certain."
+    ],
+    [
+     "The measures come as Chinese trade continues to grow.",
+     "China's exports rose by 35% year-on-year in October.",
+     "Its trade surplus was more than $1 trillion for the second year in a row.",
+     "Chinese exports to the United States also increased by 32.9% in October."
+    ],
+    [
+     "Further negotiations between China and the United States will decide whether the temporary truce becomes permanent.",
+     "Until then, some tariffs remain, while the additional tariff and other measures are paused.",
+     "The final result will be important for businesses that depend on trade between the two countries."
+    ]
+   ],
+   "words": [
+    {
+     "w": "tariff",
+     "d": "a tax placed on goods brought into a country"
+    },
+    {
+     "w": "suspended",
+     "d": "stopped for a limited period of time"
+    },
+    {
+     "w": "port fees",
+     "d": "money that ships must pay to use a port"
+    },
+    {
+     "w": "sanctions relief",
+     "d": "a reduction or pause in official economic restrictions"
+    },
+    {
+     "w": "trade surplus",
+     "d": "a situation in which a country exports more than it imports"
+    },
+    {
+     "w": "truce",
+     "d": "a temporary agreement to stop a conflict or dispute"
+    }
+   ],
+   "quiz": [
+    {
+     "q": "How much is the additional Chinese tariff that has been suspended?",
+     "o": [
+      "10%",
+      "24%",
+      "32.9%",
+      "35%"
+     ],
+     "a": 1,
+     "why": "China suspended an additional 24% tariff on US imports."
+    },
+    {
+     "q": "Which Chinese tariff on US goods remains in place?",
+     "o": [
+      "A 5% tariff",
+      "A 10% tariff",
+      "A 24% tariff",
+      "A 35% tariff"
+     ],
+     "a": 1,
+     "why": "The 10% tariff continues even though the additional 24% tariff is paused."
+    },
+    {
+     "q": "What happened to China's exports in October?",
+     "o": [
+      "They fell by 35%.",
+      "They stayed unchanged.",
+      "They rose by 35% year-on-year.",
+      "They rose by 10% year-on-year."
+     ],
+     "a": 2,
+     "why": "The facts state that China's exports increased by 35% compared with the same period a year earlier."
+    },
+    {
+     "q": "What will decide whether the trade truce becomes permanent?",
+     "o": [
+      "Further negotiations",
+      "Port fees",
+      "Hanwha Ocean's exports",
+      "October import prices"
+     ],
+     "a": 0,
+     "why": "China and the United States must hold further negotiations about the future of the truce."
+    }
+   ],
+   "sources": [
+    {
+     "t": "China extends suspension of 24% tariff on US imports for two months",
+     "u": "https://www.investing.com/news/commodities-news/china-extends-suspension-of-24-tariff-on-us-imports-for-two-months-5010427"
+    },
+    {
+     "t": "China's trade surplus surpasses $1 trillion for a 2nd straight year, as exports surge 35%",
+     "u": "https://apnews.com/article/0fc56d7bd8bbff86ce6672bb67691f22"
+    }
+   ]
+  },
+  {
+   "topic": "business",
+   "tag": "Wall Street",
+   "title": "US stocks ended lower on November 10.",
+   "level": "B1",
+   "p": [
+    [
+     "The main US stock indexes, which measure groups of major shares, fell on November 10.",
+     "The S&P 500 lost 0.4% and closed at 7,520.93.",
+     "The Nasdaq dropped 0.7% to 25,065.87, while the Dow Jones declined 0.3% to 52,231.89.",
+     "Technology was the weakest sector, or business group, with a fall of 1.4%.",
+     "Financials led the market with a gain of 0.5%.",
+     "However, the indexes still had weekly gains through November 10.",
+     "The S&P 500 and Nasdaq were both up 2% for the week, and the Dow was up 1.8%."
+    ],
+    [
+     "Inflation and interest-rate expectations were important market drivers.",
+     "The Consumer Price Index, or CPI, measures changes in consumer prices.",
+     "October CPI rose 0.4% from the previous month.",
+     "Core CPI, which leaves out some prices that often change quickly, increased 0.3%.",
+     "The odds of a Federal Reserve rate increase in December climbed from 80% to 98%.",
+     "Treasury yields, which show the return on US government debt, also rose.",
+     "The two-year yield moved from 4.60% to 4.69%, while the ten-year yield increased from 4.89% to 4.95%.",
+     "Separately, payrolls, meaning the number of jobs reported by employers, grew by 165,000 in October.",
+     "Unemployment stayed at 4.1%."
+    ],
+    [
+     "In markets connected with geopolitical risk, Brent crude, an international oil price, fell 2.6% to about $90.10 on November 10.",
+     "Gold also declined.",
+     "It lost 1.5% and finished at $4,078 per ounce, a standard measure of weight for gold.",
+     "Both moves were larger than the percentage declines in the three main US stock indexes."
+    ],
+    [
+     "Measures of risk appetite and fear were mixed but generally weaker.",
+     "Risk appetite means investors' willingness to hold assets whose prices can change sharply.",
+     "The VIX, an index that measures expected stock-market changes and is often used as a fear measure, rose 0.2 points to 20.1.",
+     "Bitcoin, a digital asset, fell 0.9% to about $74,242.",
+     "These moves came as all three major stock indexes declined."
+    ],
+    [
+     "The next day, November 11, has no major US economic release scheduled.",
+     "On November 12, investors will receive jobless claims, which count new requests for unemployment support, and existing-home sales.",
+     "Federal Reserve speakers are also scheduled.",
+     "November 13 will bring October's Producer Price Index, or PPI, which measures price changes for producers.",
+     "Core PPI and manufacturing sales are also due that day.",
+     "These reports may give the market more information about prices, jobs, housing, and business activity."
+    ],
+    [
+     "Overall, higher interest-rate expectations appear to have moved the stock market most on November 10.",
+     "This view is supported by the rise in December Fed-hike odds from 80% to 98% and by higher two-year and ten-year Treasury yields after the CPI data.",
+     "Technology fell more than the wider market, helping explain the Nasdaq's larger decline.",
+     "Oil, gold, Bitcoin, and the VIX also showed caution, but the direct combination of inflation data, rate expectations, and rising yields gives the strongest explanation for the day's stock losses.",
+     "Even so, the indexes remained higher for the week."
+    ]
+   ],
+   "words": [
+    {
+     "w": "stock index",
+     "d": "A number that follows the value of a group of company shares."
+    },
+    {
+     "w": "sector",
+     "d": "A group of companies in the same kind of business."
+    },
+    {
+     "w": "core CPI",
+     "d": "A measure of consumer price changes that leaves out some quickly changing prices."
+    },
+    {
+     "w": "Fed-hike odds",
+     "d": "The estimated chance that the Federal Reserve will raise interest rates."
+    },
+    {
+     "w": "Treasury yield",
+     "d": "The return paid on US government debt."
+    },
+    {
+     "w": "risk appetite",
+     "d": "The willingness to own assets whose prices may change sharply."
+    }
+   ],
+   "quiz": [
+    {
+     "q": "Which major US stock index fell the most on November 10?",
+     "o": [
+      "The S&P 500",
+      "The Nasdaq",
+      "The Dow Jones",
+      "The VIX"
+     ],
+     "a": 1,
+     "why": "The Nasdaq dropped 0.7%, compared with 0.4% for the S&P 500 and 0.3% for the Dow."
+    },
+    {
+     "q": "What happened to the odds of a Federal Reserve rate increase in December?",
+     "o": [
+      "They fell from 98% to 80%.",
+      "They stayed at 80%.",
+      "They rose from 80% to 98%.",
+      "They dropped to 4.1%."
+     ],
+     "a": 2,
+     "why": "The facts show a sharp increase in expectations for a December rate hike."
+    },
+    {
+     "q": "Which market sector gained on November 10?",
+     "o": [
+      "Technology",
+      "Financials",
+      "Manufacturing",
+      "Housing"
+     ],
+     "a": 1,
+     "why": "Financials led the market with a gain of 0.5%, while technology fell 1.4%."
+    },
+    {
+     "q": "What important inflation report is scheduled for November 13?",
+     "o": [
+      "October CPI",
+      "October PPI",
+      "Jobless claims",
+      "Existing-home sales"
+     ],
+     "a": 1,
+     "why": "October PPI, core PPI, and manufacturing sales are due on November 13."
+    }
+   ],
+   "sources": [
+    {
+     "t": "How major US stock indexes fared Tuesday 11/10/2026",
+     "u": "https://apnews.com/article/wall-street-stocks-dow-nasdaq-a97eb31c415811065561f2c2ac552cd7"
+    },
+    {
+     "t": "Trading Day: US rate outlook trumps everything",
+     "u": "https://au.investing.com/news/economy-news/trading-day-us-rate-outlooktrumps-everything-4759925"
+    },
+    {
+     "t": "Global Markets Monitor November 10, 2026",
+     "u": "https://www.imfconnect.org/content/dam/imf/News%20and%20Generic%20Content/GMM/archive/GMM%20November%2010,%202026.pdf"
+    },
+    {
+     "t": "AI stocks bounce back — with one notable exception",
+     "u": "https://www.axios.com/2026/11/10/ai-stocks-nvidia-broadcom"
+    },
+    {
+     "t": "Nvidia and Jensen Huang face shareholder lawsuit alleging investors were misled",
+     "u": "https://apnews.com/article/1f060e52b308cb2c649807518d5081e2"
+    },
+    {
+     "t": "The Magnificent Seven's Market Cap vs. the S&P 500",
+     "u": "https://www.fool.com/research/magnificent-seven-sp-500/"
+    },
+    {
+     "t": "Nvidia leads megacap slide as Amazon gains modestly",
+     "u": "https://www.ieconomy.io/en/us-stocks-today-2026-11-10"
+    }
+   ]
+  },
+  {
+   "topic": "sports",
+   "tag": "Asian Cup",
+   "title": "The 2027 Asian Cup has been postponed",
+   "level": "B1",
+   "p": [
+    [
+     "The Asian Football Confederation has postponed the 2027 Asian Cup in Saudi Arabia.",
+     "Regional conflict has created problems with security, travel and tournament organization.",
+     "The event is Asian football's main championship for national teams."
+    ],
+    [
+     "The tournament was originally planned from January 7 to February 5, 2027.",
+     "Under the new schedule, it will take place from December 23, 2027, to January 21, 2028.",
+     "This means the competition will begin nearly one year later than first planned.",
+     "However, FIFA must approve the revised dates before they become official."
+    ],
+    [
+     "Twenty-four national teams are expected to compete in the tournament.",
+     "Matches are planned in three Saudi Arabian cities: Riyadh, Jeddah and Khobar.",
+     "The new dates give organizers more time to deal with the security, travel and logistical problems caused by the regional conflict."
+    ],
+    [
+     "The postponement will also affect national-team coaches.",
+     "They must change their plans for preparing players and organizing team activities.",
+     "Player-release planning may also become more difficult because clubs need to know when their players will leave for international duty.",
+     "Coaches, clubs and football organizations will now have to prepare for a tournament that crosses from the end of 2027 into the start of 2028."
+    ]
+   ],
+   "words": [
+    {
+     "w": "postponed",
+     "d": "moved to a later time or date"
+    },
+    {
+     "w": "regional conflict",
+     "d": "fighting or serious disagreement in a particular area"
+    },
+    {
+     "w": "logistical problems",
+     "d": "difficulties with organizing travel, people, places or equipment"
+    },
+    {
+     "w": "revised schedule",
+     "d": "a plan of dates and times that has been changed"
+    },
+    {
+     "w": "compete",
+     "d": "to take part in a contest against others"
+    },
+    {
+     "w": "player-release planning",
+     "d": "planning when clubs allow players to join their national teams"
+    }
+   ],
+   "quiz": [
+    {
+     "q": "Why did the Asian Football Confederation postpone the tournament?",
+     "o": [
+      "Because of security, travel and logistical problems",
+      "Because fewer teams wanted to compete",
+      "Because the stadiums were too small",
+      "Because FIFA cancelled the event"
+     ],
+     "a": 0,
+     "why": "Regional conflict created difficulties involving security, travel and tournament organization."
+    },
+    {
+     "q": "When is the Asian Cup now planned to begin?",
+     "o": [
+      "January 7, 2027",
+      "February 5, 2027",
+      "December 23, 2027",
+      "January 21, 2028"
+     ],
+     "a": 2,
+     "why": "The revised schedule runs from December 23, 2027, to January 21, 2028."
+    },
+    {
+     "q": "Which cities are planned to host matches?",
+     "o": [
+      "Riyadh, Jeddah and Khobar",
+      "Riyadh, Dubai and Doha",
+      "Jeddah, Mecca and Medina",
+      "Khobar, Doha and Muscat"
+     ],
+     "a": 0,
+     "why": "Matches are planned in Riyadh, Jeddah and Khobar in Saudi Arabia."
+    },
+    {
+     "q": "What must happen before the revised dates become official?",
+     "o": [
+      "The teams must choose new coaches",
+      "Saudi Arabia must add another city",
+      "FIFA must approve them",
+      "The clubs must reduce player numbers"
+     ],
+     "a": 2,
+     "why": "The revised tournament schedule requires approval from FIFA."
+    }
+   ],
+   "sources": [
+    {
+     "t": "Houthi Missiles Force Postponement of Saudi Asian Cup",
+     "u": "https://newlinesmag.com/spotlight/houthi-missiles-force-postponement-of-saudi-asian-cup/"
+    },
+    {
+     "t": "GULF TIMES SPORT",
+     "u": "https://www.gulf-times.com/gulftimes/uploads/pdf/2026/11/10/sport-20261110-1-1794264876.pdf"
+    }
+   ]
+  },
+  {
+   "topic": "science",
+   "tag": "Stroke medicine",
+   "title": "The FDA approves Sunharbo for some stroke patients.",
+   "level": "B1",
+   "p": [
+    [
+     "The U.S.",
+     "Food and Drug Administration approved Sunharbo on November 9, 2026.",
+     "Sunharbo is Bayer's asundexian blood-thinning medicine.",
+     "It works by targeting Factor XIa, a protein that helps blood to clot.",
+     "The medicine is designed to lower the risk of another stroke in certain patients."
+    ],
+    [
+     "The approval covers adults who have had certain ischemic strokes.",
+     "This type of stroke happens when a blood clot blocks the flow of blood to the brain.",
+     "The approval also includes adults who have had high-risk transient ischemic attacks.",
+     "These attacks are sometimes described as short warning signs of a possible stroke."
+    ],
+    [
+     "Patients must take Sunharbo together with antiplatelet treatment.",
+     "Antiplatelet medicines help stop blood cells called platelets from sticking together and forming clots.",
+     "A trial involving 12,327 people found that patients taking Sunharbo had 26% fewer ischemic strokes."
+    ],
+    [
+     "Overall, the rates of major bleeding were similar between the groups in the trial.",
+     "However, bleeding increased among patients who were older than 75.",
+     "This finding may be important when doctors consider treatment for older adults."
+    ],
+    [
+     "Sunharbo is not approved to prevent strokes caused by atrial fibrillation, a condition that causes an irregular heartbeat.",
+     "The medicine is expected to become available in the United States in mid-to-late November 2026."
+    ]
+   ],
+   "words": [
+    {
+     "w": "blood-thinning",
+     "d": "helping to prevent dangerous blood clots from forming"
+    },
+    {
+     "w": "clot",
+     "d": "a thick mass of blood that can block blood flow"
+    },
+    {
+     "w": "ischemic stroke",
+     "d": "a stroke caused by blocked blood flow to the brain"
+    },
+    {
+     "w": "transient ischemic attack",
+     "d": "a short period of blocked blood flow to the brain that can warn of a stroke"
+    },
+    {
+     "w": "antiplatelet treatment",
+     "d": "medicine that helps stop platelets from forming blood clots"
+    },
+    {
+     "w": "atrial fibrillation",
+     "d": "a medical condition that causes an irregular heartbeat"
+    }
+   ],
+   "quiz": [
+    {
+     "q": "When did the FDA approve Sunharbo?",
+     "o": [
+      "November 9, 2026",
+      "November 19, 2026",
+      "October 9, 2026",
+      "December 9, 2026"
+     ],
+     "a": 0,
+     "why": "The FDA approved the medicine on November 9, 2026."
+    },
+    {
+     "q": "What protein does Sunharbo target?",
+     "o": [
+      "Factor XIa",
+      "Insulin",
+      "Hemoglobin",
+      "Platelets"
+     ],
+     "a": 0,
+     "why": "Sunharbo targets the clotting protein Factor XIa."
+    },
+    {
+     "q": "What did the 12,327-person trial find?",
+     "o": [
+      "There were 26% fewer ischemic strokes.",
+      "There were 26% more ischemic strokes.",
+      "Major bleeding ended completely.",
+      "The medicine prevented all strokes."
+     ],
+     "a": 0,
+     "why": "The trial reported a 26% reduction in ischemic strokes."
+    },
+    {
+     "q": "For which use is Sunharbo not approved?",
+     "o": [
+      "Preventing strokes caused by atrial fibrillation",
+      "Treating certain ischemic stroke patients",
+      "Treating high-risk transient ischemic attack patients",
+      "Use with antiplatelet treatment"
+     ],
+     "a": 0,
+     "why": "The approval does not cover stroke prevention for patients with atrial fibrillation."
+    }
+   ],
+   "sources": [
+    {
+     "t": "US FDA approves Bayer's blood thinner to prevent repeat strokes",
+     "u": "https://d2233.cms.socastsrm.com/2026/11/09/us-fda-approves-bayers-blood-thinner-to-prevent-repeat-strokes/"
+    },
+    {
+     "t": "FDA approves novel Bayer drug to reduce recurrence of stroke",
+     "u": "https://www.statnews.com/2026/11/09/cardiovascular-stroke-recurrence-bayer-drug-fda-approval/"
+    },
+    {
+     "t": "FDA Approves First Factor XIa Inhibitor to Help Prevent Stroke in Certain Adults at High Risk",
+     "u": "https://www.fda.gov/news-events/press-announcements/fda-approves-first-factor-xla-inhibitor-help-prevent-stroke-certain-adults-high-risk"
+    }
+   ]
+  }
+ ]
+}
