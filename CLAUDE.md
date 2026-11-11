@@ -17,7 +17,8 @@ python scripts/build_discover.py --out /tmp/site [--export export.json]   # the 
 
 CI runs the four checks on push to `main` only (owner decision 2026-11-04: a PR triggers nothing), then
 `deploy.yml` publishes. **Merged = deployed** here, unlike the bot. The daily run (02:41 UTC) also pulls
-the Discover catalog and writes the day's news lesson.
+the Discover catalog. **News generation is off** (owner decision 2026-11-11, OpenAI cost): no workflow
+runs `build_news.py --generate`; the committed editions stay published.
 
 ## URL rule — path segments are English, never localized
 
@@ -47,7 +48,7 @@ the Discover catalog and writes the day's news lesson.
 | Legal pages | `_legal/<en\|tr>/*.html` + `_data/legal.json` (bump `updated`) | `privacy.html` etc., committed; other languages link to English |
 | Discover | the bot's `GET /public/discover/export` (secret `QUIZJET_EXPORT_TOKEN`) | built at deploy time, never committed (a quiz taken out of Discover must vanish) |
 | Books | `_data/books.json` + `_data/books/<slug>.json` (`scripts/import_gutenberg.py`, Project Gutenberg) | `/books/`, chapters as `/books/<slug>/<n>.json` |
-| News | `_data/news/<date>.json`, written and **committed by the workflow** (`scripts/build_news.py`, secret `OPENAI_API_KEY`) | `/news/`, `/news/<date>/` |
+| News | `_data/news/<date>.json`; generation **off since 2026-11-11** (owner decision), the committed editions stay (`scripts/build_news.py`) | `/news/`, `/news/<date>/` |
 | Reader | `assets/reader.js`, `assets/reader.css` (books and news share it; copy keys `bk*`, `nw*`) | |
 | Fonts, icons | `assets/fonts/` (DM Sans variable + Manrope 700, SIL OFL; the 18 language flags as a Twemoji Country Flags subset, CC-BY 4.0; declared in `styles.css`; no third-party request), `assets/og-image.png` 1200×630, `assets/apple-touch-icon.png`, `manifest.webmanifest` | |
 | News feed | written by `build_discover.write_news` from the editions | `/news/feed.xml` (Atom, English), linked from every news page |

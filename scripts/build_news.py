@@ -16,8 +16,8 @@ Copyright posture — the code below enforces it, keep the two in step:
   fragments and nothing else, no tools, so the wording of a report never reaches what is published.
 - Every lesson links the reports it was written from (a link is outside the EU press publishers'
   right, DSM Directive art. 15(1)); no photos, no quotations.
-- Generation runs in the deploy workflow once a day, only when OPENAI_API_KEY is set and today's file
-  does not exist yet; without the key the site builds without news. A topic with fewer than 5 facts
+- Generation is OFF (owner decision 2026-11-11, OpenAI cost): no workflow runs --generate any more; it
+  runs only by hand with OPENAI_API_KEY, and the committed editions stay published. A topic with fewer than 5 facts
   or 2 reports (an analysis desk: ANALYSIS_MIN_FACTS from ANALYSIS_MIN_SOURCES) is skipped, never padded.
 
 Selection: every desk in TOPICS carries an editorial brief (what leads it, in order, and what never does;
