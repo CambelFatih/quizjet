@@ -35,6 +35,9 @@
 :root[data-rd-theme="sepia"] body, :root[data-rd-theme="sepia"] .reader { --rd-bg: #f6efe0; --rd-ink: #3b2f22; --rd-muted: #7c6a55; --rd-line: #e3d6bd; --rd-soft: #ece1cb; --rd-on: #f0dcb4; --rd-edge: #a8742b; --rd-edge-ink: #7d5418; --rd-word: #f7c96b; }
 :root[data-rd-theme="dark"] body, :root[data-rd-theme="dark"] .reader { --rd-bg: #1c1d23; --rd-ink: #eef1f5; --rd-muted: #9aa5b4; --rd-line: #3a414d; --rd-soft: #292c34; --rd-on: #00344d; --rd-edge: #20a6f5; --rd-edge-ink: #20a6f5; --rd-word: #7a5b00; }
 :root[data-rd-theme] body { background: var(--rd-bg, var(--paper)); }
+/* The footer sits on the reader's background too: its lines and links follow the reader's colours, not the site's. */
+:root[data-rd-theme] .site-footer { border-color: var(--rd-line, var(--line)); }
+:root[data-rd-theme] .footer-legal, :root[data-rd-theme] .footer-brand { color: var(--rd-muted, var(--muted)); }
 :root[data-rd-theme="dark"] .reader a:not(.button), :root[data-rd-theme="dark"] .reader .quiz-back a { color: #7cc4ff; }
 .reader h1 { margin-bottom: 4px; }
 .rd-meta, .rd-progress, .rd-tip { margin: 4px 0; color: var(--rd-muted); font-size: 14px; }
@@ -77,7 +80,7 @@
 
 .rd-quiz { margin: 26px 0; padding: 22px; border: 1px solid var(--rd-line); border-radius: 16px; background: var(--rd-soft); }
 .rd-quiz h2 { margin: 0 0 6px; font-size: 22px; }
-.rd-quiz p { margin: 0; color: var(--rd-muted); }
+.rd-quiz p { margin: 0; color: var(--rd-ink); } /* muted on the soft box was 4.2:1 */
 
 .rd-bar { position: sticky; bottom: 0; z-index: 2; display: grid; gap: 8px; margin: 0 -12px; padding: 10px 12px calc(10px + env(safe-area-inset-bottom)); border-top: 1px solid var(--rd-line); background: var(--rd-bg); }
 .rd-row { display: grid; grid-template-columns: 48px 1fr 1fr 48px; gap: 8px; }
@@ -85,6 +88,7 @@
 #rd-this { color: var(--rd-edge); font-weight: 700; }
 .rd-player { grid-template-columns: 48px 1fr auto 56px; align-items: center; }
 .rd-player input { width: 100%; accent-color: var(--rd-edge); }
+@media (pointer: coarse) { .rd-player input { height: 36px; } } /* a finger-sized seek bar */
 .rd-pos { color: var(--rd-muted); font-size: 12px; font-variant-numeric: tabular-nums; }
 .rd-novoice { margin: 0; color: var(--rd-muted); font-size: 12px; }
 
@@ -146,6 +150,8 @@
 
 /* Desktop (1100 px and wider): the shelf and the news cards sized for a monitor, like styles.css. */
 @media (min-width: 1100px) {
+  .rd-meta, .rd-progress, .rd-tip { font-size: 15px; }
+  .rd-pos { font-size: 14px; }
   .book-list { gap: 20px; }
   .book-list a { gap: 26px; padding: 24px; border-radius: 20px; }
   .book-cover { width: 120px; height: 172px; }

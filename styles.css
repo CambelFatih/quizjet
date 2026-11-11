@@ -65,8 +65,8 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
 .button:hover { transform: translateY(-2px); }
 .button-light { color: #14243b; background: #fff; }
 .button-light:hover { background: #eaf2ff; }
-.button-primary { color: #fff; background: #438fe0; box-shadow: 0 10px 28px #347fc74a; }
-.button-primary:hover { background: #5b9feb; box-shadow: 0 13px 32px #347fc75e; }
+.button-primary { color: #fff; background: #2a76c6; box-shadow: 0 10px 28px #2a76c64a; } /* white on it: 4.66:1 (WCAG AA) */
+.button-primary:hover { background: #2468b0; box-shadow: 0 13px 32px #2a76c65e; }
 .button-arrow { font-size: 17px; }
 
 .hero { position: relative; overflow: hidden; color: #fff; background: var(--navy); }
@@ -146,6 +146,8 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
 
 .languages-section { padding-top: 94px; padding-bottom: 90px; }
 .language-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 11px; }
+/* 18 languages: 6, 3 or 2 columns, so the last row is always full (4 left two alone, 6 below 1100 px squeezed the names). */
+@media (max-width: 1099px) { .language-grid { grid-template-columns: repeat(3, 1fr); } }
 .language-chip { min-height: 54px; display: flex; align-items: center; gap: 10px; padding: 0 14px; border: 1px solid var(--line); border-radius: 12px; background: #fff; box-shadow: 0 3px 12px #1c365207; font-size: 12px; font-weight: 600; transition: border-color .2s, transform .2s; }
 .language-chip:hover { border-color: #b4d5f7; transform: translateY(-2px); }
 .language-chip[aria-current="page"] { border-color: #8fbff0; background: #eef5fd; }
@@ -172,7 +174,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
 .footer-telegram { display: inline-flex; align-items: center; gap: 7px; padding-block: 6px; color: var(--blue); font-size: 13px; font-weight: 700; }
 .footer-inner { flex-wrap: wrap; }
 .footer-legal { display: flex; flex-wrap: wrap; justify-content: center; gap: 0 18px; flex-basis: 100%; padding-bottom: 12px; color: var(--muted); font-size: 13px; font-weight: 600; }
-.footer-legal a { display: inline-block; padding: 6px 2px; }
+.footer-legal a { display: inline-flex; align-items: center; padding: 6px 2px; }
 /* Generated pages have no tagline in the footer: the links then share the row with the brand instead of sitting alone below it. */
 .footer-inner:not(:has(> p)) .footer-legal { flex-basis: auto; padding-bottom: 0; }
 .footer-legal a:hover, .footer-legal a[aria-current="page"] { color: var(--ink); }
@@ -184,8 +186,8 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
 .legal a { color: var(--blue); text-decoration: underline; text-underline-offset: 2px; }
 .legal code { padding: 1px 5px; border-radius: 5px; background: var(--page); font-size: .92em; }
 .legal-updated { margin: 0; color: var(--muted); font-size: 13px; }
-.legal-switch a { padding: 6px 4px; color: #d6deeb; font-size: 13px; font-weight: 700; }
-.legal-switch a:hover { color: #fff; }
+.legal-switch a { display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 16px; border: 1px solid #ffffff2e; border-radius: 99px; color: #d6deeb; font-size: 14px; font-weight: 700; transition: color .2s, border-color .2s; }
+.legal-switch a:hover { color: #fff; border-color: #ffffff5c; }
 .discover { max-width: 860px; padding-block: 36px 64px; }
 /* List pages (quizzes, books, news) use the full page width; a single quiz, a reader and the 404 keep the reading width. */
 .discover:has(.quiz-list, .book-list, .nw-grid) { max-width: none; }
@@ -237,6 +239,10 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
 [dir="rtl"] .card-number { right: auto; left: 19px; }
 [dir="rtl"] .closing-decoration { right: auto; left: 13%; }
 
+/* From 801 px the menu's Features link and the scroll mouse already lead to #features: the hero's "more" link would only
+   push "browse quizzes" onto a line of its own. Phones keep it (their menu is behind the ☰ button). */
+@media (min-width: 801px) { .hero-actions .text-link[href="#features"] { display: none; } }
+
 /* Under 800 px the links move into a full-screen menu: a <details> whose summary is the ☰ button and, once open, the ✕
    in the top-right corner. The header and the menu keep one arrangement in every language (brand left, button right,
    panel from the right), the page itself stays right-to-left where it is. Opening needs no script. */
@@ -270,7 +276,12 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
   .pill-telegram { left: max(3%, calc(50% - 225px)); }
   .how-grid { grid-template-columns: 1fr; gap: 30px; padding-block: 70px; }
   .how-copy { max-width: 570px; }
-  .language-grid { grid-template-columns: repeat(4, 1fr); }
+}
+
+/* Phones and tablets: small links get a 44 px tall target. */
+@media (max-width: 800px) {
+  .language-menu summary, .text-link, .footer-telegram, .footer-legal a, .legal-switch a { min-height: 44px; }
+  .nw-edition h2 a { display: inline-block; padding-block: 10px; }
 }
 
 @media (max-width: 560px) {
@@ -325,6 +336,10 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
   .nav-links { gap: clamp(24px, 2.3vw, 48px); }
   .nav-links a, .language-menu summary { font-size: clamp(17px, 1.05vw, 20px); letter-spacing: .01em; }
   .language-code { font-size: 14px; }
+  .language-picker { width: 500px; max-width: calc(100vw - 32px); gap: 4px; padding: 12px; }
+  .language-picker a { gap: 10px; padding: 10px 12px; font-size: 15px; }
+  .language-picker .language-code { min-width: 34px; font-size: 13px; }
+  .legal-switch a { min-height: 44px; font-size: 15px; }
   .hero-grid { min-height: calc(100vh - 96px); min-height: calc(100svh - 96px); grid-template-columns: 1.1fr .9fr; gap: 64px; padding-block: 72px 120px; }
   .hero-copy { max-width: 800px; }
   .eyebrow, .section-kicker, .closing-kicker { font-size: 14px; }
