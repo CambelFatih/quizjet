@@ -49,7 +49,7 @@ the Discover catalog and writes the day's news lesson.
 | Books | `_data/books.json` + `_data/books/<slug>.json` (`scripts/import_gutenberg.py`, Project Gutenberg) | `/books/`, chapters as `/books/<slug>/<n>.json` |
 | News | `_data/news/<date>.json`, written and **committed by the workflow** (`scripts/build_news.py`, secret `OPENAI_API_KEY`) | `/news/`, `/news/<date>/` |
 | Reader | `assets/reader.js`, `assets/reader.css` (books and news share it; copy keys `bk*`, `nw*`) | |
-| Fonts, icons | `assets/fonts/` (DM Sans variable + Manrope 700, SIL OFL, declared in `styles.css`; no third-party request), `assets/og-image.png` 1200×630, `assets/apple-touch-icon.png`, `manifest.webmanifest` | |
+| Fonts, icons | `assets/fonts/` (DM Sans variable + Manrope 700, SIL OFL; the 18 language flags as a Twemoji Country Flags subset, CC-BY 4.0; declared in `styles.css`; no third-party request), `assets/og-image.png` 1200×630, `assets/apple-touch-icon.png`, `manifest.webmanifest` | |
 | News feed | written by `build_discover.write_news` from the editions | `/news/feed.xml` (Atom, English), linked from every news page |
 
 ## Rules that the checks enforce

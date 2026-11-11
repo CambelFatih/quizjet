@@ -186,8 +186,10 @@ def language_grid(locales: list[dict[str, object]], current: str) -> str:
         href = f'/{locale["route"]}/' if locale["route"] else "/"
         active = ' aria-current="page"' if locale["code"] == current else ""
         chips.append(
-            f'<a class="language-chip" href="{href}" lang="{code}" hreflang="{code}" dir="{locale["dir"]}"{active}>'
-            f'<span class="language-flag" aria-hidden="true">{locale["flag"]}</span><span>{html.escape(locale["name"])}</span></a>'
+            # dir on the name only: every chip follows the page's direction, so an Arabic chip on a left-to-right page
+            # lines up with the others instead of hugging the right edge.
+            f'<a class="language-chip" href="{href}" lang="{code}" hreflang="{code}"{active}>'
+            f'<span class="language-flag" aria-hidden="true">{locale["flag"]}</span><span dir="{locale["dir"]}">{html.escape(locale["name"])}</span></a>'
         )
     return "\n          ".join(chips)
 
