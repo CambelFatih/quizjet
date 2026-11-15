@@ -208,7 +208,20 @@
       "lbFinish": "Finish",
       "lbResult": "Result",
       "lbScore": "{0}/{1} correct",
-      "lbRetry": "Play again"
+      "lbRetry": "Play again",
+      "lbTimeLeft": "{0} s",
+      "lbTimedOut": "Time's up",
+      "lbPrev": "Previous",
+      "lbSkipped": "Skipped",
+      "lbReviewing": "Earlier question: your answer and the right one",
+      "lbResultTime": "in {0} seconds",
+      "lbBack": "Go back",
+      "lbNote": "Practice mode: the result is not saved and does not count toward statistics.",
+      "lbFoot": "Tap an option; when time runs out the question is skipped.",
+      "lbPackCount": "{0} quizzes",
+      "lbAll": "All",
+      "lbNoneHere": "No packs match this selection.",
+      "lbPlayHere": "Play here"
     }
   },
   {
@@ -420,7 +433,20 @@
       "lbFinish": "Bitir",
       "lbResult": "Sonuç",
       "lbScore": "{0}/{1} doğru",
-      "lbRetry": "Yeniden çöz"
+      "lbRetry": "Yeniden çöz",
+      "lbTimeLeft": "{0} sn",
+      "lbTimedOut": "Süre doldu",
+      "lbPrev": "Önceki",
+      "lbSkipped": "Atlandı",
+      "lbReviewing": "Geçmiş soru: cevabın ve doğrusu",
+      "lbResultTime": "{0} saniyede",
+      "lbBack": "Geri dön",
+      "lbNote": "Alıştırma modu: sonuç kaydedilmez, istatistiklere girmez.",
+      "lbFoot": "Şıkka dokun; süre dolunca soru cevapsız geçer.",
+      "lbPackCount": "{0} quiz",
+      "lbAll": "Tümü",
+      "lbNoneHere": "Bu seçimde paket yok.",
+      "lbPlayHere": "Burada çöz"
     }
   },
   {
@@ -632,7 +658,20 @@
       "lbFinish": "Acaba",
       "lbResult": "Resultat",
       "lbScore": "{0}/{1} correctes",
-      "lbRetry": "Torna a jugar"
+      "lbRetry": "Torna a jugar",
+      "lbTimeLeft": "{0} s",
+      "lbTimedOut": "S'ha acabat el temps",
+      "lbPrev": "Anterior",
+      "lbSkipped": "Omesa",
+      "lbReviewing": "Pregunta anterior: la teva resposta i la correcta",
+      "lbResultTime": "en {0} segons",
+      "lbBack": "Torna",
+      "lbNote": "Mode pràctica: el resultat no es desa ni compta per a les estadístiques.",
+      "lbFoot": "Toca una opció; si s'acaba el temps, la pregunta s'omet.",
+      "lbPackCount": "{0} tests",
+      "lbAll": "Tots",
+      "lbNoneHere": "No hi ha paquets per a aquesta selecció.",
+      "lbPlayHere": "Juga aquí"
     }
   },
   {
@@ -844,7 +883,20 @@
       "lbFinish": "Beenden",
       "lbResult": "Ergebnis",
       "lbScore": "{0}/{1} richtig",
-      "lbRetry": "Nochmal spielen"
+      "lbRetry": "Nochmal spielen",
+      "lbTimeLeft": "{0} s",
+      "lbTimedOut": "Zeit abgelaufen",
+      "lbPrev": "Vorherige",
+      "lbSkipped": "Übersprungen",
+      "lbReviewing": "Frühere Frage: deine Antwort und die richtige",
+      "lbResultTime": "in {0} Sekunden",
+      "lbBack": "Zurück",
+      "lbNote": "Übungsmodus: Das Ergebnis wird nicht gespeichert und zählt nicht für die Statistik.",
+      "lbFoot": "Tippe auf eine Option; läuft die Zeit ab, wird die Frage übersprungen.",
+      "lbPackCount": "{0} Quizze",
+      "lbAll": "Alle",
+      "lbNoneHere": "Für diese Auswahl gibt es keine Pakete.",
+      "lbPlayHere": "Hier spielen"
     }
   },
   {
@@ -1056,7 +1108,20 @@
       "lbFinish": "Termina",
       "lbResult": "Risultato",
       "lbScore": "{0}/{1} corrette",
-      "lbRetry": "Rigioca"
+      "lbRetry": "Rigioca",
+      "lbTimeLeft": "{0} s",
+      "lbTimedOut": "Tempo scaduto",
+      "lbPrev": "Precedente",
+      "lbSkipped": "Saltata",
+      "lbReviewing": "Domanda precedente: la tua risposta e quella giusta",
+      "lbResultTime": "in {0} secondi",
+      "lbBack": "Indietro",
+      "lbNote": "Modalità allenamento: il risultato non viene salvato e non conta nelle statistiche.",
+      "lbFoot": "Tocca un'opzione; allo scadere del tempo la domanda viene saltata.",
+      "lbPackCount": "{0} quiz",
+      "lbAll": "Tutti",
+      "lbNoneHere": "Nessun pacchetto per questa selezione.",
+      "lbPlayHere": "Gioca qui"
     }
   },
   {
@@ -1268,7 +1333,20 @@
       "lbFinish": "Tamat",
       "lbResult": "Keputusan",
       "lbScore": "{0}/{1} betul",
-      "lbRetry": "Main lagi"
+      "lbRetry": "Main lagi",
+      "lbTimeLeft": "{0} s",
+      "lbTimedOut": "Masa tamat",
+      "lbPrev": "Sebelumnya",
+      "lbSkipped": "Dilangkau",
+      "lbReviewing": "Soalan sebelumnya: jawapan anda dan yang betul",
+      "lbResultTime": "dalam {0} saat",
+      "lbBack": "Kembali",
+      "lbNote": "Mod latihan: keputusan tidak disimpan dan tidak dikira dalam statistik.",
+      "lbFoot": "Ketik pilihan; apabila masa tamat, soalan dilangkau.",
+      "lbPackCount": "{0} kuiz",
+      "lbAll": "Semua",
+      "lbNoneHere": "Tiada set untuk pilihan ini.",
+      "lbPlayHere": "Main di sini"
     }
   },
   {
@@ -1480,7 +1558,20 @@
       "lbFinish": "Zakończ",
       "lbResult": "Wynik",
       "lbScore": "{0}/{1} poprawnych",
-      "lbRetry": "Zagraj ponownie"
+      "lbRetry": "Zagraj ponownie",
+      "lbTimeLeft": "{0} s",
+      "lbTimedOut": "Czas minął",
+      "lbPrev": "Poprzednie",
+      "lbSkipped": "Pominięte",
+      "lbReviewing": "Wcześniejsze pytanie: twoja odpowiedź i poprawna",
+      "lbResultTime": "w {0} s",
+      "lbBack": "Wróć",
+      "lbNote": "Tryb treningu: wynik nie jest zapisywany i nie liczy się do statystyk.",
+      "lbFoot": "Dotknij odpowiedzi; gdy czas minie, pytanie zostanie pominięte.",
+      "lbPackCount": "Quizy: {0}",
+      "lbAll": "Wszystkie",
+      "lbNoneHere": "Brak pakietów dla tego wyboru.",
+      "lbPlayHere": "Graj tutaj"
     }
   },
   {
@@ -1692,7 +1783,20 @@
       "lbFinish": "Завершить",
       "lbResult": "Результат",
       "lbScore": "{0}/{1} верно",
-      "lbRetry": "Пройти ещё раз"
+      "lbRetry": "Пройти ещё раз",
+      "lbTimeLeft": "{0} с",
+      "lbTimedOut": "Время вышло",
+      "lbPrev": "Предыдущий",
+      "lbSkipped": "Пропущено",
+      "lbReviewing": "Предыдущий вопрос: ваш ответ и правильный",
+      "lbResultTime": "за {0} с",
+      "lbBack": "Назад",
+      "lbNote": "Режим тренировки: результат не сохраняется и не учитывается в статистике.",
+      "lbFoot": "Нажмите вариант; когда время выйдет, вопрос будет пропущен.",
+      "lbPackCount": "Тестов: {0}",
+      "lbAll": "Все",
+      "lbNoneHere": "Для этого выбора наборов нет.",
+      "lbPlayHere": "Играть здесь"
     }
   },
   {
@@ -1904,7 +2008,20 @@
       "lbFinish": "Завершити",
       "lbResult": "Результат",
       "lbScore": "{0}/{1} правильно",
-      "lbRetry": "Пройти ще раз"
+      "lbRetry": "Пройти ще раз",
+      "lbTimeLeft": "{0} с",
+      "lbTimedOut": "Час вийшов",
+      "lbPrev": "Попереднє",
+      "lbSkipped": "Пропущено",
+      "lbReviewing": "Попереднє питання: ваша відповідь і правильна",
+      "lbResultTime": "за {0} с",
+      "lbBack": "Назад",
+      "lbNote": "Режим тренування: результат не зберігається й не враховується в статистиці.",
+      "lbFoot": "Торкніться варіанта; коли час вийде, питання буде пропущено.",
+      "lbPackCount": "Тестів: {0}",
+      "lbAll": "Усі",
+      "lbNoneHere": "Для цього вибору наборів немає.",
+      "lbPlayHere": "Грати тут"
     }
   },
   {
@@ -2116,7 +2233,20 @@
       "lbFinish": "إنهاء",
       "lbResult": "النتيجة",
       "lbScore": "{0}/{1} صحيحة",
-      "lbRetry": "إعادة الحل"
+      "lbRetry": "إعادة الحل",
+      "lbTimeLeft": "{0} ث",
+      "lbTimedOut": "انتهى الوقت",
+      "lbPrev": "السابق",
+      "lbSkipped": "تم التخطي",
+      "lbReviewing": "سؤال سابق: إجابتك والإجابة الصحيحة",
+      "lbResultTime": "خلال {0} ثانية",
+      "lbBack": "رجوع",
+      "lbNote": "وضع التدريب: لا تُحفظ النتيجة ولا تُحتسب في الإحصاءات.",
+      "lbFoot": "المس خيارًا؛ عند انتهاء الوقت يُتخطى السؤال.",
+      "lbPackCount": "الاختبارات: {0}",
+      "lbAll": "الكل",
+      "lbNoneHere": "لا توجد حزم لهذا الاختيار.",
+      "lbPlayHere": "العب هنا"
     }
   },
   {
@@ -2328,7 +2458,20 @@
       "lbFinish": "Afronden",
       "lbResult": "Resultaat",
       "lbScore": "{0}/{1} goed",
-      "lbRetry": "Opnieuw spelen"
+      "lbRetry": "Opnieuw spelen",
+      "lbTimeLeft": "{0} s",
+      "lbTimedOut": "Tijd is om",
+      "lbPrev": "Vorige",
+      "lbSkipped": "Overgeslagen",
+      "lbReviewing": "Eerdere vraag: jouw antwoord en het juiste",
+      "lbResultTime": "in {0} seconden",
+      "lbBack": "Terug",
+      "lbNote": "Oefenmodus: het resultaat wordt niet opgeslagen en telt niet mee in de statistieken.",
+      "lbFoot": "Tik op een optie; is de tijd om, dan wordt de vraag overgeslagen.",
+      "lbPackCount": "{0} quizzen",
+      "lbAll": "Alle",
+      "lbNoneHere": "Geen pakketten voor deze selectie.",
+      "lbPlayHere": "Hier spelen"
     }
   },
   {
@@ -2540,7 +2683,20 @@
       "lbFinish": "Terminer",
       "lbResult": "Résultat",
       "lbScore": "{0}/{1} correctes",
-      "lbRetry": "Rejouer"
+      "lbRetry": "Rejouer",
+      "lbTimeLeft": "{0} s",
+      "lbTimedOut": "Temps écoulé",
+      "lbPrev": "Précédent",
+      "lbSkipped": "Passée",
+      "lbReviewing": "Question précédente : ta réponse et la bonne",
+      "lbResultTime": "en {0} secondes",
+      "lbBack": "Retour",
+      "lbNote": "Mode entraînement : le résultat n'est pas enregistré et ne compte pas dans les statistiques.",
+      "lbFoot": "Touche une option ; si le temps est écoulé, la question est passée.",
+      "lbPackCount": "{0} quiz",
+      "lbAll": "Tous",
+      "lbNoneHere": "Aucune série pour cette sélection.",
+      "lbPlayHere": "Jouer ici"
     }
   },
   {
@@ -2752,7 +2908,20 @@
       "lbFinish": "Selesai",
       "lbResult": "Hasil",
       "lbScore": "{0}/{1} benar",
-      "lbRetry": "Main lagi"
+      "lbRetry": "Main lagi",
+      "lbTimeLeft": "{0} dtk",
+      "lbTimedOut": "Waktu habis",
+      "lbPrev": "Sebelumnya",
+      "lbSkipped": "Dilewati",
+      "lbReviewing": "Soal sebelumnya: jawabanmu dan yang benar",
+      "lbResultTime": "dalam {0} detik",
+      "lbBack": "Kembali",
+      "lbNote": "Mode latihan: hasil tidak disimpan dan tidak masuk statistik.",
+      "lbFoot": "Ketuk pilihan; jika waktu habis, soal dilewati.",
+      "lbPackCount": "{0} kuis",
+      "lbAll": "Semua",
+      "lbNoneHere": "Tidak ada paket untuk pilihan ini.",
+      "lbPlayHere": "Main di sini"
     }
   },
   {
@@ -2964,7 +3133,20 @@
       "lbFinish": "마치기",
       "lbResult": "결과",
       "lbScore": "{0}/{1} 정답",
-      "lbRetry": "다시 풀기"
+      "lbRetry": "다시 풀기",
+      "lbTimeLeft": "{0}초",
+      "lbTimedOut": "시간 종료",
+      "lbPrev": "이전",
+      "lbSkipped": "건너뜀",
+      "lbReviewing": "이전 문제: 내 답과 정답",
+      "lbResultTime": "{0}초 소요",
+      "lbBack": "돌아가기",
+      "lbNote": "연습 모드: 결과는 저장되지 않고 통계에 들어가지 않아요.",
+      "lbFoot": "보기를 누르세요. 시간이 끝나면 문제를 건너뛰어요.",
+      "lbPackCount": "퀴즈 {0}개",
+      "lbAll": "전체",
+      "lbNoneHere": "이 조건에 맞는 세트가 없습니다.",
+      "lbPlayHere": "여기서 풀기"
     }
   },
   {
@@ -3176,7 +3358,20 @@
       "lbFinish": "پایان",
       "lbResult": "نتیجه",
       "lbScore": "{0}/{1} درست",
-      "lbRetry": "دوباره حل کن"
+      "lbRetry": "دوباره حل کن",
+      "lbTimeLeft": "{0} ثانیه",
+      "lbTimedOut": "وقت تمام شد",
+      "lbPrev": "قبلی",
+      "lbSkipped": "رد شد",
+      "lbReviewing": "سؤال قبلی: پاسخ تو و پاسخ درست",
+      "lbResultTime": "در {0} ثانیه",
+      "lbBack": "بازگشت",
+      "lbNote": "حالت تمرین: نتیجه ذخیره نمی‌شود و در آمار حساب نمی‌شود.",
+      "lbFoot": "روی یک گزینه بزنید؛ با پایان وقت، سؤال رد می‌شود.",
+      "lbPackCount": "{0} آزمون",
+      "lbAll": "همه",
+      "lbNoneHere": "برای این انتخاب بسته‌ای نیست.",
+      "lbPlayHere": "همین‌جا بازی کن"
     }
   },
   {
@@ -3388,7 +3583,20 @@
       "lbFinish": "Concluir",
       "lbResult": "Resultado",
       "lbScore": "{0}/{1} corretas",
-      "lbRetry": "Jogar de novo"
+      "lbRetry": "Jogar de novo",
+      "lbTimeLeft": "{0} s",
+      "lbTimedOut": "Tempo esgotado",
+      "lbPrev": "Anterior",
+      "lbSkipped": "Pulada",
+      "lbReviewing": "Pergunta anterior: sua resposta e a certa",
+      "lbResultTime": "em {0} segundos",
+      "lbBack": "Voltar",
+      "lbNote": "Modo treino: o resultado não é salvo e não conta nas estatísticas.",
+      "lbFoot": "Toque em uma opção; quando o tempo acabar, a pergunta é pulada.",
+      "lbPackCount": "{0} testes",
+      "lbAll": "Todos",
+      "lbNoneHere": "Nenhum pacote para esta seleção.",
+      "lbPlayHere": "Jogar aqui"
     }
   },
   {
@@ -3600,7 +3808,20 @@
       "lbFinish": "Terminar",
       "lbResult": "Resultado",
       "lbScore": "{0}/{1} correctas",
-      "lbRetry": "Jugar de nuevo"
+      "lbRetry": "Jugar de nuevo",
+      "lbTimeLeft": "{0} s",
+      "lbTimedOut": "Se acabó el tiempo",
+      "lbPrev": "Anterior",
+      "lbSkipped": "Omitida",
+      "lbReviewing": "Pregunta anterior: tu respuesta y la correcta",
+      "lbResultTime": "en {0} segundos",
+      "lbBack": "Volver",
+      "lbNote": "Modo práctica: el resultado no se guarda ni cuenta para las estadísticas.",
+      "lbFoot": "Toca una opción; si se acaba el tiempo, la pregunta se omite.",
+      "lbPackCount": "{0} tests",
+      "lbAll": "Todos",
+      "lbNoneHere": "No hay paquetes para esta selección.",
+      "lbPlayHere": "Jugar aquí"
     }
   },
   {
@@ -3812,7 +4033,20 @@
       "lbFinish": "Tugatish",
       "lbResult": "Natija",
       "lbScore": "{0}/{1} to‘g‘ri",
-      "lbRetry": "Qayta yechish"
+      "lbRetry": "Qayta yechish",
+      "lbTimeLeft": "{0} s",
+      "lbTimedOut": "Vaqt tugadi",
+      "lbPrev": "Oldingi",
+      "lbSkipped": "O'tkazib yuborildi",
+      "lbReviewing": "Oldingi savol: sizning javobingiz va to'g'risi",
+      "lbResultTime": "{0} soniyada",
+      "lbBack": "Orqaga",
+      "lbNote": "Mashq rejimi: natija saqlanmaydi va statistikaga kirmaydi.",
+      "lbFoot": "Variantga bosing; vaqt tugasa savol o‘tkazib yuboriladi.",
+      "lbPackCount": "{0} ta test",
+      "lbAll": "Hammasi",
+      "lbNoneHere": "Bu tanlov uchun to'plam yo'q.",
+      "lbPlayHere": "Shu yerda o‘ynash"
     }
   }
 ]

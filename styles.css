@@ -214,11 +214,22 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
 .quiz-description { color: #3a4a62; font-size: 17px; line-height: 1.65; overflow-wrap: anywhere; }
 .quiz-actions { display: flex; flex-wrap: wrap; gap: 12px; margin: 22px 0 12px; }
 /* Library: shelves of packs, and the player on a pack page (assets/library.js). */
-.lb-shelf h2 { margin: 30px 0 12px; font-family: Manrope, "DM Sans", sans-serif; font-size: 22px; letter-spacing: -.02em; }
+.discover [hidden] { display: none !important; }
+.lb-shelves { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr)); gap: 10px; margin: 8px 0 0; padding: 0; list-style: none; }
+.lb-shelves a { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 2px 14px; padding: 16px 18px; border: 1px solid var(--line); border-radius: 14px; background: #fff; transition: border-color .2s, box-shadow .2s; }
+.lb-shelves a:hover, .lb-shelves a:focus-visible { border-color: #b9d6f3; box-shadow: 0 8px 22px #14243b12; }
+.lb-icon { grid-row: span 2; font-size: 30px; line-height: 1; }
+.lb-shelves strong { font-size: 17px; }
+.lb-shelves small { color: var(--muted); font-size: 13px; }
+.lb-shelf h2 { margin: 18px 0 12px; font-family: Manrope, "DM Sans", sans-serif; font-size: 24px; letter-spacing: -.02em; }
+.lb-chips { margin: 0 0 12px; }
 .lb-player { margin: 24px 0; padding: 22px; border: 1px solid var(--line); border-radius: 18px; background: var(--paper); }
 .lb-progress { margin: 0; color: var(--muted); font-size: 13px; font-weight: 600; }
-.lb-player [hidden] { display: none; }
-.lb-player .lb-q { margin: 8px 0 18px; font-size: 20px; line-height: 1.45; overflow-wrap: anywhere; outline: none; }
+.lb-review { margin: 6px 0 0; color: var(--blue); font-size: 13px; font-weight: 600; }
+.lb-player .lb-q { margin: 8px 0 14px; font-size: 20px; line-height: 1.45; overflow-wrap: anywhere; outline: none; }
+.lb-timer { height: 6px; overflow: hidden; border-radius: 3px; background: var(--line); }
+.lb-timer i { display: block; height: 100%; width: 100%; border-radius: 3px; background: #2a76c6; transition: width .25s linear; }
+.lb-time { min-height: 1.4em; margin: 4px 0 10px; color: var(--muted); font-size: 13px; text-align: end; }
 .lb-options { display: grid; gap: 10px; }
 .lb-options button { min-height: 48px; padding: 10px 16px; border: 1px solid var(--line); border-radius: 12px; color: var(--ink); background: var(--page); font: inherit; font-size: 16px; text-align: start; overflow-wrap: anywhere; cursor: pointer; transition: border-color .2s; }
 .lb-options button:hover:enabled { border-color: #8ec0f3; }
@@ -229,8 +240,13 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
 .lb-feedback { min-height: 1.6em; margin: 14px 0 6px; font-weight: 700; }
 .lb-feedback.lb-right { color: #1a7a50; }
 .lb-feedback.lb-wrong { color: #b3362f; }
+.lb-nav { display: flex; justify-content: space-between; gap: 10px; margin: 6px 0 4px; }
+.lb-nav button { min-height: 44px; padding: 0 18px; border: 1px solid var(--line); border-radius: 12px; color: var(--ink); background: var(--page); font: inherit; font-size: 15px; font-weight: 700; cursor: pointer; }
+.lb-nav button:disabled { opacity: .45; cursor: default; }
 .lb-score { font-size: 28px; font-weight: 800; margin: 4px 0 0; }
 .lb-player h2 { margin: 0; }
+.lb-rows { margin: 14px 0 0; padding: 0; list-style: none; line-height: 1.5; font-size: 14px; }
+.lb-rows li { padding: 6px 0; border-top: 1px solid var(--line); overflow-wrap: anywhere; }
 .lb-static { padding-inline-start: 22px; line-height: 1.6; }
 .lb-static ul { margin: 4px 0 14px; color: var(--muted); }
 /* Quizzes, books, news: one card each, side by side from 900 px. A card can be missing (no catalog, no news edition):
@@ -502,7 +518,9 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
   :root:not([data-rd-theme]) .footer-inner > p,
   :root:not([data-rd-theme]) .footer-legal { color: var(--muted); }
   :root:not([data-rd-theme]) .discover-search:focus-visible { outline-color: #4f93d6; }
-  :root:not([data-rd-theme]) .lb-player { background: var(--card); }
+  :root:not([data-rd-theme]) .lb-player,
+  :root:not([data-rd-theme]) .lb-shelves a { background: var(--card); }
+  :root:not([data-rd-theme]) .lb-timer i { background: var(--accent); }
   :root:not([data-rd-theme]) .lb-options button.lb-right { border-color: #3ccb9f; background: #133a30; color: #b9f0dc; }
   :root:not([data-rd-theme]) .lb-options button.lb-wrong { border-color: #f08a84; background: #3d1d1c; color: #ffd0cd; }
   :root:not([data-rd-theme]) .lb-feedback.lb-right { color: #3ccb9f; }
