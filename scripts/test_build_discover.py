@@ -266,23 +266,34 @@ def check_by_language(tmp: Path) -> None:
 
 
 def check_library(out: Path) -> None:
-    """Shelves in every language; a pack page once, in its own language, playable, its source credited."""
+    """Shelves in every language; a pack page once, in its own language: its home with three ways to play, the player,
+    the questions in the HTML, its source credited."""
+    # the bot's start code for an imported pack; the value was computed by .NET (ShelfImportService.QuizIdFor →
+    # ExternalKeyGenerator.Generate) for all 139 packs on 2026-11-15 and matched this function for every one
+    assert build_library.telegram_key("en-the-beatles-pink-floyd-and-rock-s-early-days") == "B7cB0Xvm"
     assert sum(1 for _ in out.rglob("library/index.html")) == 18
     en = (out / "library" / "index.html").read_text(encoding="utf-8")
-    assert "<h2>Science &amp; Nature</h2>" in en and 'href="/library/planets-and-moons/"' in en and "Questions: 20 · Easy" in en
+    assert '<li data-shelf="science"><a href="#science">' in en and '<section class="lb-shelf" id="science">' in en, "shelves, then a section each"
+    assert '<h2><span aria-hidden="true">🔬</span> Science &amp; Nature</h2>' in en and "Questions: 20 · Easy" in en
+    assert 'data-level="easy" data-topic="Science &amp; Nature"' in en and 'href="/library/planets-and-moons/"' in en
+    assert 'data-f="level"' not in en, "one level on a shelf: no level filter"
     assert 'href="/tr/library/web-sayfalari/"' in en and 'id="lb-lang"' in en, "two quiz languages: the picker"
     assert '<option value="en" selected>English (1)</option>' in en
     tr = (out / "tr" / "library" / "index.html").read_text(encoding="utf-8")
     assert '<option value="tr" selected>Türkçe (1)</option>' in tr and "<h1>Kütüphane</h1>" in tr, "own language first"
     assert 'href="https://creativecommons.org/licenses/by-sa/4.0/"' in tr
     pack = (out / "library" / "planets-and-moons" / "index.html").read_text(encoding="utf-8")
+    key = build_library.telegram_key("en-planets-and-moons")
+    assert f'href="https://t.me/QuizJetBot?start={key}"' in pack and f'href="https://t.me/QuizJetBot?startgroup={key}"' in pack
+    assert 'id="lb-start" hidden>Play here' in pack and 'href="/library/#science"' in pack, "home: play here, back to the shelf"
+    assert '"seconds":30' in pack and 'id="lb-prev"' in pack and 'id="lb-next"' in pack and 'id="lb-tm"' in pack
     assert '<html lang="en"' in pack and "hreflang=" not in pack and "/assets/library.js?v=" in pack
     assert "<li><p>Which planet is red?</p><ul><li>Venus</li><li>Mars</li></ul></li>" in pack, "questions in the HTML too"
     assert 'href="/de/library/"' in pack, "the language menu leads to the shelves"
     assert '"@type":"Quiz"' in pack and '"license":"https://creativecommons.org/licenses/by-sa/4.0/"' in pack
     tr_pack = (out / "tr" / "library" / "web-sayfalari" / "index.html").read_text(encoding="utf-8")
     assert '<html lang="tr"' in tr_pack and "&lt;marquee&gt;&lt;/marquee&gt;" in tr_pack and "<li><marquee>" not in tr_pack
-    assert "Web </script> Sayfaları" not in tr_pack and 'href="/tr/library/"' in tr_pack
+    assert "Web </script> Sayfaları" not in tr_pack and 'href="/tr/library/#general"' in tr_pack and "Burada çöz" in tr_pack
     assert not (out / "library" / "web-sayfalari").exists() and not (out / "tr" / "library" / "planets-and-moons").exists()
     sitemap = (out / "sitemap.xml").read_text(encoding="utf-8")
     assert "https://quizjet.app/tr/library/web-sayfalari/" in sitemap and sitemap.count("/library/</loc>") == 18

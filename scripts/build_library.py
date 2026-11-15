@@ -1,19 +1,29 @@
-"""Library pages: /library/ (the shelves, in all 18 languages) and one playable page per pack, in the pack's language.
+"""Library pages: /library/ (the shelves, in all 18 languages) and one page per pack, in the pack's language.
 
 build_discover.build() calls this and wraps each page in the site frame. The data is _data/library.json, the same
 bundle the bot embeds (quizjet-bot Presentation/WebHook/Shelves/shelves.json), written by quizjet-sentetik-veri:
 
     python scripts/build_packs.py --export ../quizjet/_data/library.json
 
-A pack page exists ONCE, like a Discover quiz: /library/<slug>/ for English, /<route>/library/<slug>/ for another
-language (slug = the pack id without its "<language>-" prefix). A pack retired there disappears here with the next
-export. The questions are in the page as plain HTML (search engines, readers without JavaScript; no answer marked)
-and as JSON for assets/library.js, which turns them into a player: one question at a time, the right answer shown
-after each pick, the score at the end. Nothing is sent anywhere. Questions are never reworded (CC BY-SA, as is);
-the attribution of each pack's source is on its page and under the shelves.
+The pages follow the miniapp's Library (quizjet-bot wwwroot/miniapp/kutuphane.html and oyna.html):
+- /library/ shows the shelves; a shelf (/library/#history) lists its packs with a level filter and, when the shelf
+  has several, a topic filter. Without JavaScript every shelf is one long list.
+- A pack page exists ONCE, like a Discover quiz: /library/<slug>/ for English, /<route>/library/<slug>/ for another
+  language (slug = the pack id without its "<language>-" prefix). It is the quiz's home: description, facts and three
+  ways to play — here in the browser, privately in Telegram, in a group.
+- The browser player (assets/library.js) is the miniapp's practice run without a server: 30 s per question (the bot
+  imports every pack with 30 s), a timed-out question passes unanswered, the right answer shows after each pick and
+  the next question follows by itself, Previous/Next review earlier questions or skip, the result lists every
+  question. Nothing is sent or stored.
+- The Telegram buttons use the key the bot's import gives the pack's quiz (ShelfImportService.QuizIdFor →
+  ExternalKeyGenerator.Generate); they open the quiz once the admin has imported the pack.
+The questions are in the page as plain HTML too (search engines, readers without JavaScript; no answer marked).
+Questions are never reworded (CC BY-SA, as is); each source is credited on its pages.
 """
 from __future__ import annotations
 
+import base64
+import hashlib
 import json
 import re
 from pathlib import Path
@@ -23,12 +33,23 @@ from build_books import asset_version, e, script_json
 ROOT = Path(__file__).resolve().parents[1]
 LIBRARY_PATH = ROOT / "_data" / "library.json"
 BASE_URL = "https://quizjet.app"
+BOT = "QuizJetBot"
+QUESTION_SECONDS = 30  # ShelfImportService creates every pack's quiz with 30 s per question
 LOCALES = json.loads((ROOT / "_data" / "locales.json").read_text(encoding="utf-8"))
-# quizjet-sentetik-veri scripts/check_data.py SHELVES, in display order; each has an "lbShelf_<key>" copy key.
-SHELVES = ["general", "history", "geography", "science", "sports", "arts", "pop-culture"]
+# quizjet-sentetik-veri scripts/check_data.py SHELVES, in the bot's order (ShelfBundle.ShelfOrder) with the miniapp's
+# icons; each has an "lbShelf_<key>" copy key.
+SHELVES = {"general": "🌍", "history": "🏛️", "geography": "🗺️", "science": "🔬", "sports": "⚽", "arts": "🎨", "pop-culture": "🎮"}
 LEVELS = {"easy": "lbEasy", "medium": "lbMedium", "hard": "lbHard"}
 SLUG_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 LOCALE_BY_CODE = {str(l["code"]).lower(): l for l in LOCALES}
+
+
+def telegram_key(pack_id: str) -> str:
+    """The bot's start code for an imported pack: the quiz id is the first 16 bytes of SHA-256("quizjet-shelf:" + id),
+    the key the first 8 base64 characters of those bytes with + and / folded to _ (a .NET Guid built from bytes gives
+    the same bytes back from ToByteArray, so no byte reordering)."""
+    quiz_id = hashlib.sha256(("quizjet-shelf:" + pack_id).encode("utf-8")).digest()[:16]
+    return base64.b64encode(quiz_id).decode("ascii")[:8].replace("+", "_").replace("/", "_")
 
 
 def load_library(path: Path | None = None) -> tuple[dict[str, dict], list[dict]]:
@@ -51,7 +72,7 @@ def load_library(path: Path | None = None) -> tuple[dict[str, dict], list[dict]]
         if any(problems):
             raise ValueError(f"library pack {pid!r}: " + "; ".join(x for x in problems if x))
         seen.add((language, slug))
-        packs.append({**p, "language": language, "slug": slug})
+        packs.append({**p, "language": language, "slug": slug, "key": telegram_key(pid)})
     return sources, packs
 
 
@@ -77,30 +98,20 @@ def attribution(sources: dict, keys: list[str], c: dict) -> str:
     return e(c["lbSource"]).replace("{0}", links)
 
 
-LANG_SCRIPT = """      <script>
-(function () {
-  var pick = document.getElementById("lb-lang"), shelves = [].slice.call(document.querySelectorAll(".lb-shelf"));
-  function apply() {
-    shelves.forEach(function (s) {
-      var shown = 0;
-      [].forEach.call(s.querySelectorAll("li"), function (li) { li.hidden = li.getAttribute("data-lang") !== pick.value; shown += !li.hidden; });
-      s.hidden = !shown;
-    });
-    try { localStorage.setItem("lb-lang", pick.value); } catch (x) {}
-  }
-  try { var saved = localStorage.getItem("lb-lang"); if (saved && pick.querySelector('option[value="' + saved + '"]')) pick.value = saved; } catch (x) {}
-  pick.addEventListener("change", apply);
-  document.getElementById("lb-langs").hidden = false;
-  apply();
-})();
-      </script>
-"""
+def chips(name: str, values: list[tuple[str, str]], c: dict) -> str:
+    """A filter row (All + values), like the miniapp's; a row with one value filters nothing and is left out."""
+    if len(values) < 2:
+        return ""
+    buttons = "".join(f'<button type="button" data-v="{e(v)}" aria-pressed="false">{e(label)}</button>' for v, label in values)
+    return (f'        <div class="discover-filter lb-chips" data-f="{name}" role="group"><button type="button" data-v="" aria-pressed="true">'
+            f'{e(c["lbAll"])}</button>{buttons}</div>\n')
 
 
 def list_page(locale: dict, pre: str, sources: dict, packs: list[dict]) -> tuple[str, str, str]:
-    """(title, description, body) of /library/. With packs in several languages a picker shows one language at a time:
-    the page's own if it has packs, else the one with the most (the miniapp's rule); without script all are listed."""
-    c = locale["copy"]
+    """(title, description, body) of /library/: the shelves, then one section per shelf. assets/library.js shows one
+    of them at a time (the URL hash names the shelf) with its level and topic filters; with packs in several languages a
+    picker shows one language: the page's own if it has packs, else the one with the most (the miniapp's rule)."""
+    c, back = locale["copy"], "→" if locale["dir"] == "rtl" else "←"
     counts: dict[str, int] = {}
     for p in packs:
         counts[p["language"]] = counts.get(p["language"], 0) + 1
@@ -112,61 +123,98 @@ def list_page(locale: dict, pre: str, sources: dict, packs: list[dict]) -> tuple
                           for k, n in sorted(counts.items(), key=lambda kv: -kv[1]))
         picker = (f'      <div class="discover-controls" id="lb-langs" hidden><label for="lb-lang">{e(c["lbQuizLang"])} '
                   f'<select id="lb-lang">{options}</select></label></div>\n')
-    sections = ""
-    for shelf in SHELVES:
+    cards, sections = "", ""
+    for shelf, icon in SHELVES.items():
         mine = [p for p in packs if p["shelf"] == shelf]
         if not mine:
             continue
+        name = c["lbShelf_" + shelf]
+        cards += (f'        <li data-shelf="{shelf}"><a href="#{shelf}"><span class="lb-icon" aria-hidden="true">{icon}</span>'
+                  f'<strong>{e(name)}</strong><small>{e(c["lbPackCount"]).replace("{0}", f"<span>{len(mine)}</span>")}</small></a></li>\n')
+        levels = [(lv, c[LEVELS[lv]]) for lv in LEVELS if any(p["difficulty"] == lv for p in mine)]
+        topics = list(dict.fromkeys(p["topic"] for p in mine))
         rows = "".join(
-            f'          <li data-lang="{e(p["language"])}"><a href="{pack_path(p)}" lang="{e(pack_locale(p)["code"])}" dir="{e(pack_locale(p)["dir"])}">'
-            f'<strong>{e(p["title"])}</strong><span>{e(p["description"])}</span>'
-            f'<small lang="{e(locale["code"])}" dir="{e(locale["dir"])}">{e(facts(p, c))}</small></a></li>\n'
+            f'          <li data-lang="{e(p["language"])}" data-level="{e(p["difficulty"])}" data-topic="{e(p["topic"])}">'
+            f'<a href="{pack_path(p)}"><strong lang="{e(pack_locale(p)["code"])}" dir="{e(pack_locale(p)["dir"])}">{e(p["title"])}</strong>'
+            f'<span lang="{e(pack_locale(p)["code"])}" dir="{e(pack_locale(p)["dir"])}">{e(p["description"])}</span>'
+            f'<small>{e(facts(p, c))}</small></a></li>\n'
             for p in mine
         )
-        sections += (f'      <section class="lb-shelf"><h2>{e(c["lbShelf_" + shelf])}</h2>\n'
-                     f'        <ul class="quiz-list">\n{rows}        </ul>\n      </section>\n')
+        sections += (
+            f'      <section class="lb-shelf" id="{shelf}">\n'
+            f'        <p class="quiz-back lb-up" hidden><a href="#">{back} {e(c["navLibrary"])}</a></p>\n'
+            f'        <h2><span aria-hidden="true">{icon}</span> {e(name)}</h2>\n'
+            f'{chips("level", levels, c)}{chips("topic", [(t, t) for t in topics], c)}'
+            f'        <ul class="quiz-list">\n{rows}        </ul>\n'
+            f'        <p class="discover-empty" hidden>{e(c["lbNoneHere"])}</p>\n'
+            "      </section>\n"
+        )
     body = (
         f'      <h1>{e(c["navLibrary"])}</h1>\n'
         f'      <p class="discover-lead">{e(c["lbLead"])}</p>\n'
-        f"{picker}{sections}"
+        f"{picker}"
+        f'      <ul class="lb-shelves" id="lb-shelves">\n{cards}      </ul>\n'
+        f"{sections}"
         f'      <p class="quiz-note">{attribution(sources, [p["source"] for p in packs], c)}</p>\n'
-        + (LANG_SCRIPT if picker else "")
+        f'      <script src="/assets/library.js?v={asset_version("library.js")}" defer></script>\n'
     )
     shelf_names = ", ".join(c["lbShelf_" + s] for s in SHELVES if any(p["shelf"] == s for p in packs))
     return f'{c["navLibrary"]} — QuizJet', f'{c["lbLead"]}: {shelf_names}.', body
 
 
 def pack_page(sources: dict, pack: dict) -> tuple[str, str, str, str]:
-    """(title, description, body, jsonld) of a pack page, in the pack's own language."""
+    """(title, description, body, jsonld) of a pack page, in the pack's own language: the quiz's home with its three
+    ways to play, the player and the result (assets/library.js), and the questions as plain HTML."""
     locale = pack_locale(pack)
     c, route = locale["copy"], locale["route"]
     pre = f"/{route}" if route else ""
     back = "→" if locale["dir"] == "rtl" else "←"
+    start, group = f"https://t.me/{BOT}?start={pack['key']}", f"https://t.me/{BOT}?startgroup={pack['key']}"
+    note = e(c["discGroupNote"]).replace("{bot}", f'<bdi dir="ltr">@{BOT}</bdi>')
     static = "".join(
         f'          <li><p>{e(q["q"])}</p><ul>{"".join(f"<li>{e(o)}</li>" for o in q["o"])}</ul></li>\n'
         for q in pack["questions"]
     )
     data = {
+        "seconds": QUESTION_SECONDS,
         "questions": [{"q": q["q"], "o": q["o"], "a": q["a"]} for q in pack["questions"]],
-        "copy": {k: c[k] for k in ("lbQuestionOf", "lbCorrect", "lbWrong", "lbNext", "lbFinish", "lbScore")},
+        "copy": {k: c[k] for k in ("lbQuestionOf", "lbCorrect", "lbWrong", "lbNext", "lbFinish", "lbScore", "lbTimeLeft",
+                                   "lbTimedOut", "lbSkipped", "lbResultTime")},
     }
-    body = f"""      <p class="quiz-back"><a href="{pre}/library/">{back} {e(c["navLibrary"])}</a></p>
+    body = f"""      <p class="quiz-back"><a href="{pre}/library/#{pack["shelf"]}">{back} {e(c["lbShelf_" + pack["shelf"]])}</a></p>
       <h1>{e(pack["title"])}</h1>
       <p class="quiz-description">{e(pack["description"])}</p>
-      <p class="quiz-facts">{e(facts(pack, c))} · {e(c["lbShelf_" + pack["shelf"]])}</p>
+      <p class="quiz-facts">{e(facts(pack, c))} · <span aria-hidden="true">{SHELVES[pack["shelf"]]}</span> {e(c["lbShelf_" + pack["shelf"]])} · {e(pack["topic"])}</p>
+      <div id="lb-home">
+        <div class="quiz-actions">
+          <button type="button" class="button button-primary" id="lb-start" hidden>{e(c["lbPlayHere"])} <span aria-hidden="true">▶</span></button>
+          <a class="button button-dark" href="{e(start)}">{e(c["discStartPrivate"])} <span aria-hidden="true">↗</span></a>
+          <a class="button button-dark" href="{e(group)}">{e(c["discStartGroup"])} <span aria-hidden="true">↗</span></a>
+        </div>
+        <p class="quiz-note">{note}</p>
+      </div>
       <div class="lb-player" id="lb-player" hidden>
         <p class="lb-progress" id="lb-pos"></p>
+        <p class="lb-review" id="lb-rv" hidden>{e(c["lbReviewing"])}</p>
         <h2 class="lb-q" id="lb-q" tabindex="-1"></h2>
+        <div class="lb-timer" id="lb-tm"><i id="lb-tmb"></i></div>
+        <p class="lb-time" id="lb-tmt" aria-hidden="true"></p>
         <div class="lb-options" id="lb-o"></div>
         <p class="lb-feedback" id="lb-fb" aria-live="polite"></p>
-        <button type="button" class="button button-primary" id="lb-next" hidden></button>
+        <div class="lb-nav" dir="ltr">
+          <button type="button" id="lb-prev">‹ {e(c["lbPrev"])}</button>
+          <button type="button" id="lb-next">{e(c["lbNext"])} ›</button>
+        </div>
+        <p class="quiz-note">{e(c["lbFoot"])} {e(c["lbNote"])}</p>
       </div>
       <div class="lb-player" id="lb-done" hidden>
         <h2>{e(c["lbResult"])}</h2>
         <p class="lb-score" id="lb-score" aria-live="polite"></p>
+        <p class="quiz-facts" id="lb-time"></p>
+        <ol class="lb-rows" id="lb-rows"></ol>
         <div class="quiz-actions">
           <button type="button" class="button button-primary" id="lb-retry">{e(c["lbRetry"])}</button>
-          <a class="button button-dark" href="https://t.me/QuizJetBot">{e(c["playNow"])} <span aria-hidden="true">↗</span></a>
+          <button type="button" class="button button-light" id="lb-back">{e(c["lbBack"])}</button>
         </div>
       </div>
       <ol class="lb-static" id="lb-static">
@@ -184,6 +232,7 @@ def pack_page(sources: dict, pack: dict) -> tuple[str, str, str, str]:
         "url": BASE_URL + pack_path(pack),
         "inLanguage": locale["code"],
         "educationalLevel": pack["difficulty"],
+        "about": pack["topic"],
         "isAccessibleForFree": True,
         "license": source["licenseUrl"],
         "isBasedOn": source["url"],
