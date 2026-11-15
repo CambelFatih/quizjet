@@ -213,6 +213,26 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
 .quiz-list small, .quiz-facts, .quiz-note { color: var(--muted); font-size: 13px; line-height: 1.6; }
 .quiz-description { color: #3a4a62; font-size: 17px; line-height: 1.65; overflow-wrap: anywhere; }
 .quiz-actions { display: flex; flex-wrap: wrap; gap: 12px; margin: 22px 0 12px; }
+/* Library: shelves of packs, and the player on a pack page (assets/library.js). */
+.lb-shelf h2 { margin: 30px 0 12px; font-family: Manrope, "DM Sans", sans-serif; font-size: 22px; letter-spacing: -.02em; }
+.lb-player { margin: 24px 0; padding: 22px; border: 1px solid var(--line); border-radius: 18px; background: var(--paper); }
+.lb-progress { margin: 0; color: var(--muted); font-size: 13px; font-weight: 600; }
+.lb-player [hidden] { display: none; }
+.lb-player .lb-q { margin: 8px 0 18px; font-size: 20px; line-height: 1.45; overflow-wrap: anywhere; outline: none; }
+.lb-options { display: grid; gap: 10px; }
+.lb-options button { min-height: 48px; padding: 10px 16px; border: 1px solid var(--line); border-radius: 12px; color: var(--ink); background: var(--page); font: inherit; font-size: 16px; text-align: start; overflow-wrap: anywhere; cursor: pointer; transition: border-color .2s; }
+.lb-options button:hover:enabled { border-color: #8ec0f3; }
+.lb-options button:disabled { cursor: default; opacity: .7; }
+.lb-options button.lb-right, .lb-options button.lb-wrong { opacity: 1; font-weight: 700; }
+.lb-options button.lb-right { border-color: #1d8a5a; background: #e3f5ec; color: #0f5235; }
+.lb-options button.lb-wrong { border-color: #c2413b; background: #fcebea; color: #8a1f1a; }
+.lb-feedback { min-height: 1.6em; margin: 14px 0 6px; font-weight: 700; }
+.lb-feedback.lb-right { color: #1a7a50; }
+.lb-feedback.lb-wrong { color: #b3362f; }
+.lb-score { font-size: 28px; font-weight: 800; margin: 4px 0 0; }
+.lb-player h2 { margin: 0; }
+.lb-static { padding-inline-start: 22px; line-height: 1.6; }
+.lb-static ul { margin: 4px 0 14px; color: var(--muted); }
 /* Quizzes, books, news: one card each, side by side from 900 px. A card can be missing (no catalog, no news edition):
    the columns follow the cards that are there. */
 .bands { display: grid; gap: 16px; padding-block: 8px 72px; }
@@ -482,4 +502,9 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
   :root:not([data-rd-theme]) .footer-inner > p,
   :root:not([data-rd-theme]) .footer-legal { color: var(--muted); }
   :root:not([data-rd-theme]) .discover-search:focus-visible { outline-color: #4f93d6; }
+  :root:not([data-rd-theme]) .lb-player { background: var(--card); }
+  :root:not([data-rd-theme]) .lb-options button.lb-right { border-color: #3ccb9f; background: #133a30; color: #b9f0dc; }
+  :root:not([data-rd-theme]) .lb-options button.lb-wrong { border-color: #f08a84; background: #3d1d1c; color: #ffd0cd; }
+  :root:not([data-rd-theme]) .lb-feedback.lb-right { color: #3ccb9f; }
+  :root:not([data-rd-theme]) .lb-feedback.lb-wrong { color: #f08a84; }
 }

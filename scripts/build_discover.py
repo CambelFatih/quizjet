@@ -29,6 +29,7 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 
 import build_books
+import build_library
 import build_news
 from build_locales import NAV_MENU_SCRIPT, head_links, language_menu, legacy_redirect_page, legal_url, stylesheet_version
 
@@ -48,7 +49,7 @@ SITEMAP_NS = "http://www.sitemaps.org/schemas/sitemap/0.9"
 # URL segments are English and never localized: UI text comes from _data/locales.json, the address of a page
 # is the same in every language apart from its /<route>/ prefix (the way /q/<key>/ always was). A new section
 # gets one English name here and nowhere else; test_build_discover pins the built tree against this set.
-ROUTES = {"discover", "books", "news", "q"}
+ROUTES = {"discover", "books", "news", "q", "library"}
 # The site launched with Turkish names. Every page that had one keeps a redirect there (search engines and
 # shared links); never reuse these names for anything new and never drop the redirects.
 LEGACY_ROUTES = {"kesfet": "discover", "kitaplar": "books", "haberler": "news"}
@@ -126,7 +127,8 @@ def shell(locale: dict[str, object], title: str, description: str, suffix: str, 
     """Page frame in ``locale``; ``suffix`` is the path after the language prefix (e.g. "discover/").
 
     ``single``: the page exists in this language only (a quiz page), so it names no other-language alternates and its
-    language menu leads to the catalog in the other language rather than to a page that does not exist."""
+    language menu leads to its section (a quiz page: the catalog) in the other language rather than to a page that does
+    not exist."""
     c = locale["copy"]
     pre = prefix(locale)
     url = f"{BASE_URL}{pre}/{suffix}"
@@ -140,7 +142,8 @@ def shell(locale: dict[str, object], title: str, description: str, suffix: str, 
     robots = '    <meta name="robots" content="noindex">\n' if noindex else ""
     ld = f'    <script type="application/ld+json">{jsonld}</script>\n' if jsonld else ""
     links = (f'<a href="{pre}/discover/">{e(c["discAll"])}</a><a href="{pre}/books/">{e(c["navBooks"])}</a>'
-             f'<a href="{pre}/news/">{e(c["navNews"])}</a>')
+             f'<a href="{pre}/news/">{e(c["navNews"])}</a><a href="{pre}/library/">{e(c["navLibrary"])}</a>')
+    menu = {"q": "discover"}.get(suffix.split("/")[0], suffix.split("/")[0]) + "/" if single else suffix
     return (
         "<!doctype html>\n"
         f'<html lang="{e(locale["code"])}" dir="{e(locale["dir"])}">\n'
@@ -174,7 +177,7 @@ def shell(locale: dict[str, object], title: str, description: str, suffix: str, 
         f'      <nav class="navigation page-width" aria-label="{e(c["navMainLabel"])}">\n'
         f'        <a class="brand" href="{pre}/"><img src="/assets/logo-96.png" alt="" width="44" height="44"><span>quizjet</span></a>\n'
         f'        <div class="nav-links">{links}</div>\n'
-        f'        <div class="nav-actions">{language_menu(locale, LOCALES, "discover/" if single else suffix)}'
+        f'        <div class="nav-actions">{language_menu(locale, LOCALES, menu)}'
         f'<details class="nav-menu"><summary aria-label="{e(c["navMenu"])}"></summary><div class="nav-panel">'
         f'<a class="brand nav-panel-brand" href="{pre}/"><img src="/assets/logo-96.png" alt="" width="44" height="44"><span>quizjet</span></a>'
         f'{links}</div></details></div>\n'
@@ -503,6 +506,23 @@ def write_news(out: Path) -> list[Entry]:
     return entries
 
 
+def write_library(out: Path) -> list[Entry]:
+    """The Library shelves in every language and one playable page per pack, in the pack's language; sitemap entries."""
+    sources, packs = build_library.load_library()
+    entries: list[Entry] = []
+    for locale in LOCALES:
+        title, description, body = build_library.list_page(locale, prefix(locale), sources, packs)
+        write(locale_dir(out, locale) / "library" / "index.html", shell(locale, title, description, "library/", body))
+        entries.append((f"{prefix(locale)}/library/", None))
+    for pack in packs:
+        path = build_library.pack_path(pack)
+        title, description, body, jsonld = build_library.pack_page(sources, pack)
+        write(out / path.strip("/") / "index.html",
+              shell(build_library.pack_locale(pack), title, description, f"library/{pack['slug']}/", body, jsonld=jsonld, single=True))
+        entries.append((path, None))
+    return entries
+
+
 def write_legacy_redirects(out: Path, new_paths: list[str]) -> None:
     """A redirect page at the Turkish-named address of every page that had one (LEGACY_ROUTES)."""
     for new in new_paths:
@@ -523,7 +543,7 @@ def build(out: Path, export: Path | None) -> str:
             target.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(path, target)
 
-    book_entries = write_books(out) + write_news(out)
+    book_entries = write_books(out) + write_news(out) + write_library(out)
     # /discover/ and /news/ exist in every build (placeholder or not), so their old names always forward.
     write_legacy_redirects(out, [f"{prefix(l)}/discover/" for l in LOCALES] + [f"{prefix(l)}/news/" for l in LOCALES]
                            + [path for path, _ in book_entries])

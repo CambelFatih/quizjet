@@ -22,7 +22,7 @@ runs `build_news.py --generate`; the committed editions stay published.
 
 ## URL rule — path segments are English, never localized
 
-- Every section has one English name: `/discover/`, `/books/<slug>/`, `/news/<date>/`, `/q/<key>/`,
+- Every section has one English name: `/discover/`, `/books/<slug>/`, `/news/<date>/`, `/q/<key>/`, `/library/<slug>/`,
   `privacy.html`, `terms.html`, `support.html`. The language is only a prefix (`/tr/`, `/pt-br/`); the
   rest of the address is identical in all 18 languages. **UI text is localized through
   `_data/locales.json`; paths are not.**
@@ -51,6 +51,7 @@ runs `build_news.py --generate`; the committed editions stay published.
 | News | `_data/news/<date>.json`; generation **off since 2026-11-11** (owner decision), the committed editions stay (`scripts/build_news.py`) | `/news/`, `/news/<date>/` |
 | Reader | `assets/reader.js`, `assets/reader.css` (books and news share it; copy keys `bk*`, `nw*`) | |
 | Fonts, icons | `assets/fonts/` (DM Sans variable + Manrope 700, SIL OFL; the 18 language flags as a Twemoji Country Flags subset, CC-BY 4.0; declared in `styles.css`; no third-party request), `assets/og-image.png` 1200×630, `assets/apple-touch-icon.png`, `manifest.webmanifest` | |
+| Library | `_data/library.json` = the bot's Shelves bundle (`build_packs.py --export ../quizjet/_data/library.json` in `quizjet-sentetik-veri`, the same file as the bot's `Presentation/WebHook/Shelves/shelves.json`) → `scripts/build_library.py`; player `assets/library.js` (copy keys `lb*`, imported from the bot's `miniapp.ui.shelves.*`/`miniapp.ui.play.*`) | `/library/` in 18 languages; a pack page ONCE, in its language (`/library/<slug>/`, `/tr/library/<slug>/`), playable in the browser, nothing sent; built at deploy, a retired pack vanishes with the next export |
 | News feed | written by `build_discover.write_news` from the editions | `/news/feed.xml` (Atom, English), linked from every news page |
 
 ## Rules that the checks enforce
@@ -65,6 +66,8 @@ runs `build_news.py --generate`; the committed editions stay published.
   `build_locales.START_PAYLOADS` (anything else answers "Quiz not found." in the bot; `startgroup` never).
 - The deployed sitemap adds `<lastmod>` only where a date is known (news editions, quiz creation dates) and the six
   legal pages. A creator's description is published without the links in it (`build_discover.URL_RE`).
+- A Library pack page carries its questions as plain HTML too (no answer marked) and credits its source and license
+  (CC BY-SA for OpenTDB); questions are never reworded here.
 - The texts of a book's first chapter and of every news edition are in the HTML (`build_books.static_text`);
   `reader.js` replaces them when it runs. Keep it so: it is what search engines and readers without JavaScript get.
 - News texts are written in a clean room: a research call (hosted web search) returns facts of at most 12

@@ -7,6 +7,7 @@ from pathlib import Path
 
 import build_books
 import build_discover as bd
+import build_library
 import build_news
 import import_gutenberg as ig
 
@@ -31,14 +32,34 @@ EXPORT = {
 }
 
 
+# Two packs: English (the root) and Turkish (/tr/); the second carries the one OpenTDB answer that is literally HTML.
+QUESTIONS = [{"q": "Which planet is red?", "o": ["Venus", "Mars"], "a": 1}] * 20
+LIBRARY = {
+    "version": 1,
+    "sources": {"opentdb": {"name": "Open Trivia Database", "url": "https://opentdb.com", "license": "CC BY-SA 4.0",
+                            "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/"}},
+    "packs": [
+        {"id": "en-planets-and-moons", "language": "en", "shelf": "science", "topic": "Science & Nature", "difficulty": "easy",
+         "number": 1, "title": "Planets and Moons", "description": "The planets of the solar system.", "source": "opentdb",
+         "ai": False, "questions": QUESTIONS},
+        {"id": "tr-web-sayfalari", "language": "tr", "shelf": "general", "topic": "General Knowledge", "difficulty": "hard",
+         "number": 1, "title": "Web </script> Sayfaları", "description": "HTML etiketleri.", "source": "opentdb", "ai": False,
+         "questions": [{"q": "Kayan yazı etiketi?", "o": ["<blink></blink>", "<marquee></marquee>"], "a": 1}] * 20},
+    ],
+}
+
+
 def run() -> None:
-    original_blocklist, original_news = bd.BLOCKLIST_PATH, build_news.NEWS_DIR
+    original_blocklist, original_news, original_library = bd.BLOCKLIST_PATH, build_news.NEWS_DIR, build_library.LIBRARY_PATH
+    build_library.load_library()  # the committed bundle is valid
     with tempfile.TemporaryDirectory() as tmp:
         tmp_path = Path(tmp)
         blocklist = tmp_path / "blocklist.json"
         blocklist.write_text('["blocked1"]', encoding="utf-8")
         bd.BLOCKLIST_PATH = blocklist
         build_news.NEWS_DIR = tmp_path / "no-news"  # the repo carries real editions once the workflow has run; this check counts pages without them
+        build_library.LIBRARY_PATH = tmp_path / "library.json"
+        build_library.LIBRARY_PATH.write_text(json.dumps(LIBRARY), encoding="utf-8")
         try:
             export = tmp_path / "export.json"
             export.write_text(json.dumps(EXPORT), encoding="utf-8")
@@ -124,8 +145,8 @@ def run() -> None:
             assert sum(1 for _ in out.rglob("q/good_key-1/index.html")) == 18
             landing_tr = (out / "tr" / "index.html").read_text(encoding="utf-8")
             assert 'href="/tr/discover/"' in landing_tr and 'href="/discover/"' not in landing_tr
-            assert sitemap.count("<loc>") == 18 + 18 * (1 + 3) + 18 * 3 + len(bd.LEGAL_URLS), \
-                "landing + per language: catalog + 3 quizzes + shelf + 2 books, plus the legal pages"
+            assert sitemap.count("<loc>") == 18 + 18 * (1 + 3) + 18 * 3 + 18 + 2 + len(bd.LEGAL_URLS), \
+                "landing + per language: catalog + 3 quizzes + shelf + 2 books + library, the 2 packs once, plus the legal pages"
             assert "https://quizjet.app/tr/q/good_key-1/" in sitemap and "https://quizjet.app/tr/privacy.html" in sitemap
             assert "<lastmod>2026-10-30</lastmod>" in sitemap and sitemap.count("<lastmod>") == 18 * (1 + 3), "dates only where known"
 
@@ -177,6 +198,7 @@ def run() -> None:
             assert 'href="/tr/books/"' in (bare / "tr" / "index.html").read_text(encoding="utf-8"), "landing links the shelf"
 
             check_by_language(tmp_path)
+            check_library(bare)
 
             # a truncated export is refused
             export.write_text(json.dumps({**EXPORT, "truncated": True}), encoding="utf-8")
@@ -195,6 +217,7 @@ def run() -> None:
         finally:
             bd.BLOCKLIST_PATH = original_blocklist
             build_news.NEWS_DIR = original_news
+            build_library.LIBRARY_PATH = original_library
     check_books(Path(tempfile.mkdtemp()))
     print("build_discover self-check passed.")
 
@@ -240,6 +263,38 @@ def check_by_language(tmp: Path) -> None:
     assert 'id="discover-band"' not in (out / "fr" / "index.html").read_text(encoding="utf-8")
     assert json.loads((out / "discover.json").read_text(encoding="utf-8"))["items"][0]["url"] == "https://quizjet.app/tr/q/good_key-1/"
     assert bd.home_locale({"language": "pt-BR"})["route"] == "pt-br" and bd.home_locale({"language": "zz"}) is None
+
+
+def check_library(out: Path) -> None:
+    """Shelves in every language; a pack page once, in its own language, playable, its source credited."""
+    assert sum(1 for _ in out.rglob("library/index.html")) == 18
+    en = (out / "library" / "index.html").read_text(encoding="utf-8")
+    assert "<h2>Science &amp; Nature</h2>" in en and 'href="/library/planets-and-moons/"' in en and "Questions: 20 · Easy" in en
+    assert 'href="/tr/library/web-sayfalari/"' in en and 'id="lb-lang"' in en, "two quiz languages: the picker"
+    assert '<option value="en" selected>English (1)</option>' in en
+    tr = (out / "tr" / "library" / "index.html").read_text(encoding="utf-8")
+    assert '<option value="tr" selected>Türkçe (1)</option>' in tr and "<h1>Kütüphane</h1>" in tr, "own language first"
+    assert 'href="https://creativecommons.org/licenses/by-sa/4.0/"' in tr
+    pack = (out / "library" / "planets-and-moons" / "index.html").read_text(encoding="utf-8")
+    assert '<html lang="en"' in pack and "hreflang=" not in pack and "/assets/library.js?v=" in pack
+    assert "<li><p>Which planet is red?</p><ul><li>Venus</li><li>Mars</li></ul></li>" in pack, "questions in the HTML too"
+    assert 'href="/de/library/"' in pack, "the language menu leads to the shelves"
+    assert '"@type":"Quiz"' in pack and '"license":"https://creativecommons.org/licenses/by-sa/4.0/"' in pack
+    tr_pack = (out / "tr" / "library" / "web-sayfalari" / "index.html").read_text(encoding="utf-8")
+    assert '<html lang="tr"' in tr_pack and "&lt;marquee&gt;&lt;/marquee&gt;" in tr_pack and "<li><marquee>" not in tr_pack
+    assert "Web </script> Sayfaları" not in tr_pack and 'href="/tr/library/"' in tr_pack
+    assert not (out / "library" / "web-sayfalari").exists() and not (out / "tr" / "library" / "planets-and-moons").exists()
+    sitemap = (out / "sitemap.xml").read_text(encoding="utf-8")
+    assert "https://quizjet.app/tr/library/web-sayfalari/" in sitemap and sitemap.count("/library/</loc>") == 18
+    assert 'href="/library/"' in (out / "index.html").read_text(encoding="utf-8"), "landing menu links the Library"
+    bad = json.loads(json.dumps(LIBRARY))
+    bad["packs"][0]["questions"] = [{"q": "x", "o": ["a", "b"], "a": 2}]
+    build_library.LIBRARY_PATH.write_text(json.dumps(bad), encoding="utf-8")
+    try:
+        build_library.load_library()
+        raise AssertionError("an answer index outside the options must fail the build")
+    except ValueError:
+        pass
 
 
 def check_books(tmp: Path) -> None:

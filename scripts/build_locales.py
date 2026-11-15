@@ -242,7 +242,7 @@ def render_legal_page(meta: dict[str, object], code: str, page: str, body: str) 
     )
     pre = f"/{route}" if route else ""
     main_links = (f'<a href="{pre}/discover/">{html.escape(ui["discAll"])}</a><a href="{pre}/books/">{html.escape(ui["navBooks"])}</a>'
-                  f'<a href="{pre}/news/">{html.escape(ui["navNews"])}</a>')
+                  f'<a href="{pre}/news/">{html.escape(ui["navNews"])}</a><a href="{pre}/library/">{html.escape(ui["navLibrary"])}</a>')
     links = ""
     for name in meta["pages"]:
         current = ' aria-current="page"' if name == page else ""
