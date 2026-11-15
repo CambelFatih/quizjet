@@ -155,9 +155,9 @@ def run() -> None:
                 html_text = (out / landing).read_text(encoding="utf-8")
                 assert 'id="discover-band"' in html_text and "{count}" not in html_text, landing
             index = (out / "index.html").read_text(encoding="utf-8")
-            assert "Ready-made quizzes: 3" in index and "<dt>Plays</dt><dd>13</dd></div><div><dt>Players</dt><dd>18</dd>" in index and "{plays}" not in index
+            assert "Community quizzes: 3" in index and "<dt>Plays</dt><dd>13</dd></div><div><dt>Players</dt><dd>18</dd>" in index and "{plays}" not in index
             tr_index = (out / "tr" / "index.html").read_text(encoding="utf-8")
-            assert ("Hazır quiz&#x27;ler: 3" in tr_index or "Hazır quiz'ler: 3" in tr_index) and "<dt>Oynanma</dt><dd>13</dd></div><div><dt>Oyuncu</dt><dd>18</dd>" in tr_index
+            assert ("Topluluk quiz&#x27;leri: 3" in tr_index or "Topluluk quiz'leri: 3" in tr_index) and "<dt>Oynanma</dt><dd>13</dd></div><div><dt>Oyuncu</dt><dd>18</dd>" in tr_index
             assert '<a class="language-chip" href="/tr/" lang="tr"' in index, "the language grid links the language pages"
             assert '"@type":"SoftwareApplication"' in index and '"inLanguage":"tr"' in tr_index, "structured data on every landing page"
             assert (out / "manifest.webmanifest").is_file() and (out / "assets" / "fonts" / "dm-sans-latin.woff2").is_file()
@@ -258,8 +258,8 @@ def check_by_language(tmp: Path) -> None:
     assert sitemap.count("/q/") == 3 and "https://quizjet.app/tr/q/good_key-1/" in sitemap and "https://quizjet.app/q/good_key-1/" not in sitemap
     assert sitemap.count("/discover/</loc>") == 18
     # the landing band counts the page's language and disappears where there is none
-    assert ("Hazır quiz&#x27;ler: 1" in (out / "tr" / "index.html").read_text(encoding="utf-8")
-            or "Hazır quiz'ler: 1" in (out / "tr" / "index.html").read_text(encoding="utf-8"))
+    assert ("Topluluk quiz&#x27;leri: 1" in (out / "tr" / "index.html").read_text(encoding="utf-8")
+            or "Topluluk quiz'leri: 1" in (out / "tr" / "index.html").read_text(encoding="utf-8"))
     assert 'id="discover-band"' not in (out / "fr" / "index.html").read_text(encoding="utf-8")
     assert json.loads((out / "discover.json").read_text(encoding="utf-8"))["items"][0]["url"] == "https://quizjet.app/tr/q/good_key-1/"
     assert bd.home_locale({"language": "pt-BR"})["route"] == "pt-br" and bd.home_locale({"language": "zz"}) is None
@@ -300,6 +300,14 @@ def check_library(out: Path) -> None:
     landing = (out / "tr" / "index.html").read_text(encoding="utf-8")
     assert '<section class="discover-band band-library" id="library-band">' in landing and 'href="/tr/library/"' in landing
     assert "Kütüphaneyi aç" in landing, "the landing page has a Library card, like quizzes, books and news"
+    # the Library comes first (owner decision 2026-11-15): menu, hero link, first card; the user catalog follows
+    nav = landing.split('<div class="nav-links">')[1].split("</div>")[0]
+    assert nav.index('href="/tr/library/"') < nav.index('href="/tr/discover/"')
+    assert ">Topluluk</a>" in nav, "a one-word menu label: the long one wrapped at 1100 px in es, de, fr"
+    assert '<a class="text-link" href="/tr/library/">' in landing
+    assert landing.index('id="library-band"') < landing.index('id="books-band"')
+    page = (out / "tr" / "library" / "index.html").read_text(encoding="utf-8").split('<div class="nav-links">')[1]
+    assert page.index('href="/tr/library/"') < page.index('href="/tr/discover/"'), "generated pages: the same order"
     bad = json.loads(json.dumps(LIBRARY))
     bad["packs"][0]["questions"] = [{"q": "x", "o": ["a", "b"], "a": 2}]
     build_library.LIBRARY_PATH.write_text(json.dumps(bad), encoding="utf-8")

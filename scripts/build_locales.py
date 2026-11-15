@@ -241,8 +241,8 @@ def render_legal_page(meta: dict[str, object], code: str, page: str, body: str) 
         for other, data in meta["languages"].items() if other != code
     )
     pre = f"/{route}" if route else ""
-    main_links = (f'<a href="{pre}/discover/">{html.escape(ui["discAll"])}</a><a href="{pre}/books/">{html.escape(ui["navBooks"])}</a>'
-                  f'<a href="{pre}/news/">{html.escape(ui["navNews"])}</a><a href="{pre}/library/">{html.escape(ui["navLibrary"])}</a>')
+    main_links = (f'<a href="{pre}/library/">{html.escape(ui["navLibrary"])}</a><a href="{pre}/discover/">{html.escape(ui["navCommunity"])}</a>'
+                  f'<a href="{pre}/books/">{html.escape(ui["navBooks"])}</a><a href="{pre}/news/">{html.escape(ui["navNews"])}</a>')
     links = ""
     for name in meta["pages"]:
         current = ' aria-current="page"' if name == page else ""
@@ -477,10 +477,10 @@ def not_found_page(locales: list[dict[str, object]]) -> str:
         f'      <h1 id="nf-title">{e(c["nfTitle"])}</h1>\n'
         f'      <p class="discover-lead" id="nf-body">{e(c["nfBody"])}</p>\n'
         '      <div class="quiz-actions">\n'
-        f'        <a class="button button-dark" id="nf-quizzes" href="/discover/">{e(c["browseQuizzes"])}</a>\n'
+        f'        <a class="button button-dark" id="nf-library" href="/library/">{e(c["navLibrary"])}</a>\n'
+        f'        <a class="button button-light" id="nf-quizzes" href="/discover/">{e(c["browseQuizzes"])}</a>\n'
         f'        <a class="button button-light" id="nf-books" href="/books/">{e(c["bkBrowse"])}</a>\n'
         f'        <a class="button button-light" id="nf-news" href="/news/">{e(c["navNews"])}</a>\n'
-        f'        <a class="button button-light" id="nf-library" href="/library/">{e(c["navLibrary"])}</a>\n'
         "      </div>\n"
         "    </main>\n"
         f'    <script type="application/json" id="nf-i18n">{blob}</script>\n'
