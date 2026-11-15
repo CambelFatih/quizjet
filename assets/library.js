@@ -13,6 +13,8 @@
 
   function shelves() {
     var grid = $("lb-shelves"), pick = $("lb-lang"), sections = document.querySelectorAll(".lb-shelf"), filters = {};
+    // The filters outlive a visit to a pack and back (the miniapp keeps them for the session too).
+    try { filters = JSON.parse(sessionStorage.getItem("lb-filters") || "{}") || {}; } catch (x) {}
     if (pick) {
       try { var saved = localStorage.getItem("lb-lang"); if (saved && pick.querySelector('option[value="' + saved + '"]')) pick.value = saved; } catch (x) {}
       pick.addEventListener("change", function () {
@@ -43,12 +45,19 @@
       grid.hidden = found;
     }
     each(sections, function (s) {
-      each(s.querySelectorAll("[data-f] button"), function (b) {
-        b.addEventListener("click", function () {
-          var row = b.parentNode;
-          filters[s.id][row.getAttribute("data-f")] = b.getAttribute("data-v");
-          each(row.children, function (x) { x.setAttribute("aria-pressed", String(x === b)); });
-          apply();
+      var f = filters[s.id] || (filters[s.id] = { level: "", topic: "" });
+      ["level", "topic"].forEach(function (n) { if (!s.querySelector('[data-f="' + n + '"]')) f[n] = ""; });
+      each(s.querySelectorAll("[data-f]"), function (row) {
+        var name = row.getAttribute("data-f");
+        if (![].some.call(row.children, function (b) { return b.getAttribute("data-v") === f[name]; })) f[name] = "";
+        each(row.children, function (b) {
+          b.setAttribute("aria-pressed", String(b.getAttribute("data-v") === f[name]));
+          b.addEventListener("click", function () {
+            f[name] = b.getAttribute("data-v");
+            each(row.children, function (x) { x.setAttribute("aria-pressed", String(x === b)); });
+            try { sessionStorage.setItem("lb-filters", JSON.stringify(filters)); } catch (x) {}
+            apply();
+          });
         });
       });
     });
@@ -78,9 +87,13 @@
       $("lb-q").textContent = q.q;
       opts.textContent = "";
       q.o.forEach(function (text, k) {
-        var b = document.createElement("button");
+        var b = document.createElement("button"), letter = document.createElement("span"), label = document.createElement("span");
         b.type = "button";
-        b.textContent = text;
+        letter.className = "lb-k";
+        letter.textContent = String.fromCharCode(65 + k);  // A, B, C… as in the miniapp
+        label.textContent = text;
+        b.appendChild(letter);
+        b.appendChild(label);
         if (live) b.addEventListener("click", function () { answer(k, ""); });
         else {
           b.disabled = true;
