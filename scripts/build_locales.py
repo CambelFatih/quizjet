@@ -372,10 +372,9 @@ def render_page(template: str, locale: dict[str, object], locales: list[dict[str
     # Root too: a relative favicon breaks wherever the home page is read from another base (crawlers, /index.html).
     page = re.sub(r'((?:href|src)=")(assets/|styles\.css)', r"\1/\2", page)
     if route:
-        # Discover and Books pages exist in every language; keep the visitor in the language they chose.
-        page = page.replace('href="/discover/"', f'href="/{route}/discover/"')
-        page = page.replace('href="/books/"', f'href="/{route}/books/"')
-        page = page.replace('href="/news/"', f'href="/{route}/news/"')
+        # Discover, Books, News and the Library exist in every language; keep the visitor in the language they chose.
+        for section in ("discover", "books", "news", "library"):
+            page = page.replace(f'href="/{section}/"', f'href="/{route}/{section}/"')
     if route in legal_routes:
         page = re.sub(r'href="/(privacy|terms|support)\.html"', rf'href="/{route}/\1.html"', page)
     elif route:
@@ -434,7 +433,7 @@ NOT_FOUND_SCRIPT = """(function () {
   root.lang = t.lang; root.dir = t.dir; document.title = t.title + " — QuizJet";
   document.getElementById("nf-title").textContent = t.title;
   document.getElementById("nf-body").textContent = t.body;
-  [["nf-quizzes", "quizzes", "/discover/"], ["nf-books", "books", "/books/"], ["nf-news", "news", "/news/"]].forEach(function (x) {
+  [["nf-quizzes", "quizzes", "/discover/"], ["nf-books", "books", "/books/"], ["nf-news", "news", "/news/"], ["nf-library", "library", "/library/"]].forEach(function (x) {
     var a = document.getElementById(x[0]); a.textContent = t[x[1]]; a.href = pre + x[2];
   });
 })();"""
@@ -451,7 +450,8 @@ def not_found_page(locales: list[dict[str, object]]) -> str:
     i18n = {
         str(locale["route"]): {"lang": locale["code"], "dir": locale["dir"], "title": locale["copy"]["nfTitle"],
                                "body": locale["copy"]["nfBody"], "quizzes": locale["copy"]["browseQuizzes"],
-                               "books": locale["copy"]["bkBrowse"], "news": locale["copy"]["navNews"]}
+                               "books": locale["copy"]["bkBrowse"], "news": locale["copy"]["navNews"],
+                               "library": locale["copy"]["navLibrary"]}
         for locale in locales if locale["route"]
     }
     blob = json.dumps(i18n, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
@@ -480,6 +480,7 @@ def not_found_page(locales: list[dict[str, object]]) -> str:
         f'        <a class="button button-dark" id="nf-quizzes" href="/discover/">{e(c["browseQuizzes"])}</a>\n'
         f'        <a class="button button-light" id="nf-books" href="/books/">{e(c["bkBrowse"])}</a>\n'
         f'        <a class="button button-light" id="nf-news" href="/news/">{e(c["navNews"])}</a>\n'
+        f'        <a class="button button-light" id="nf-library" href="/library/">{e(c["navLibrary"])}</a>\n'
         "      </div>\n"
         "    </main>\n"
         f'    <script type="application/json" id="nf-i18n">{blob}</script>\n'

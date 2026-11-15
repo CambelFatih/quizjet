@@ -297,7 +297,9 @@ def check_library(out: Path) -> None:
     assert not (out / "library" / "web-sayfalari").exists() and not (out / "tr" / "library" / "planets-and-moons").exists()
     sitemap = (out / "sitemap.xml").read_text(encoding="utf-8")
     assert "https://quizjet.app/tr/library/web-sayfalari/" in sitemap and sitemap.count("/library/</loc>") == 18
-    assert 'href="/library/"' in (out / "index.html").read_text(encoding="utf-8"), "landing menu links the Library"
+    landing = (out / "tr" / "index.html").read_text(encoding="utf-8")
+    assert '<section class="discover-band band-library" id="library-band">' in landing and 'href="/tr/library/"' in landing
+    assert "Kütüphaneyi aç" in landing, "the landing page has a Library card, like quizzes, books and news"
     bad = json.loads(json.dumps(LIBRARY))
     bad["packs"][0]["questions"] = [{"q": "x", "o": ["a", "b"], "a": 2}]
     build_library.LIBRARY_PATH.write_text(json.dumps(bad), encoding="utf-8")

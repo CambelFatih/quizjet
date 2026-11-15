@@ -221,7 +221,9 @@
       "lbPackCount": "{0} quizzes",
       "lbAll": "All",
       "lbNoneHere": "No packs match this selection.",
-      "lbPlayHere": "Play here"
+      "lbPlayHere": "Play here",
+      "lbBandBody": "Quizzes picked by QuizJet on seven shelves, from history to pop culture. Play them right here in your browser or start them on Telegram.",
+      "lbBrowse": "Open the Library"
     }
   },
   {
@@ -446,7 +448,9 @@
       "lbPackCount": "{0} quiz",
       "lbAll": "Tümü",
       "lbNoneHere": "Bu seçimde paket yok.",
-      "lbPlayHere": "Burada çöz"
+      "lbPlayHere": "Burada çöz",
+      "lbBandBody": "QuizJet'in seçtiği quiz'ler yedi rafta: tarihten popüler kültüre. Burada tarayıcında çöz ya da Telegram'da başlat.",
+      "lbBrowse": "Kütüphaneyi aç"
     }
   },
   {
@@ -671,7 +675,9 @@
       "lbPackCount": "{0} tests",
       "lbAll": "Tots",
       "lbNoneHere": "No hi ha paquets per a aquesta selecció.",
-      "lbPlayHere": "Juga aquí"
+      "lbPlayHere": "Juga aquí",
+      "lbBandBody": "Qüestionaris triats per QuizJet en set prestatges, de la història a la cultura popular. Juga-hi aquí mateix al navegador o comença'ls a Telegram.",
+      "lbBrowse": "Obre la biblioteca"
     }
   },
   {
@@ -896,7 +902,9 @@
       "lbPackCount": "{0} Quizze",
       "lbAll": "Alle",
       "lbNoneHere": "Für diese Auswahl gibt es keine Pakete.",
-      "lbPlayHere": "Hier spielen"
+      "lbPlayHere": "Hier spielen",
+      "lbBandBody": "Von QuizJet ausgewählte Quizze in sieben Regalen, von Geschichte bis Popkultur. Spiel sie direkt hier im Browser oder starte sie in Telegram.",
+      "lbBrowse": "Bibliothek öffnen"
     }
   },
   {
@@ -1121,7 +1129,9 @@
       "lbPackCount": "{0} quiz",
       "lbAll": "Tutti",
       "lbNoneHere": "Nessun pacchetto per questa selezione.",
-      "lbPlayHere": "Gioca qui"
+      "lbPlayHere": "Gioca qui",
+      "lbBandBody": "Quiz scelti da QuizJet su sette scaffali, dalla storia alla cultura pop. Giocali qui nel browser o avviali su Telegram.",
+      "lbBrowse": "Apri la biblioteca"
     }
   },
   {
@@ -1346,7 +1356,9 @@
       "lbPackCount": "{0} kuiz",
       "lbAll": "Semua",
       "lbNoneHere": "Tiada set untuk pilihan ini.",
-      "lbPlayHere": "Main di sini"
+      "lbPlayHere": "Main di sini",
+      "lbBandBody": "Kuiz pilihan QuizJet di tujuh rak, daripada sejarah hingga budaya pop. Main terus di sini dalam pelayar atau mulakan di Telegram.",
+      "lbBrowse": "Buka perpustakaan"
     }
   },
   {
@@ -1571,7 +1583,9 @@
       "lbPackCount": "Quizy: {0}",
       "lbAll": "Wszystkie",
       "lbNoneHere": "Brak pakietów dla tego wyboru.",
-      "lbPlayHere": "Graj tutaj"
+      "lbPlayHere": "Graj tutaj",
+      "lbBandBody": "Quizy wybrane przez QuizJet na siedmiu półkach, od historii po popkulturę. Graj tutaj w przeglądarce albo uruchom je w Telegramie.",
+      "lbBrowse": "Otwórz bibliotekę"
     }
   },
   {
@@ -1796,7 +1810,9 @@
       "lbPackCount": "Тестов: {0}",
       "lbAll": "Все",
       "lbNoneHere": "Для этого выбора наборов нет.",
-      "lbPlayHere": "Играть здесь"
+      "lbPlayHere": "Играть здесь",
+      "lbBandBody": "Квизы, отобранные QuizJet, на семи полках — от истории до поп-культуры. Играй прямо здесь в браузере или запускай в Telegram.",
+      "lbBrowse": "Открыть библиотеку"
     }
   },
   {
@@ -2021,7 +2037,9 @@
       "lbPackCount": "Тестів: {0}",
       "lbAll": "Усі",
       "lbNoneHere": "Для цього вибору наборів немає.",
-      "lbPlayHere": "Грати тут"
+      "lbPlayHere": "Грати тут",
+      "lbBandBody": "Квізи, дібрані QuizJet, на семи полицях — від історії до поп-культури. Грай просто тут у браузері або запускай у Telegram.",
+      "lbBrowse": "Відкрити бібліотеку"
     }
   },
   {
@@ -2246,7 +2264,9 @@
       "lbPackCount": "الاختبارات: {0}",
       "lbAll": "الكل",
       "lbNoneHere": "لا توجد حزم لهذا الاختيار.",
-      "lbPlayHere": "العب هنا"
+      "lbPlayHere": "العب هنا",
+      "lbBandBody": "اختبارات اختارتها QuizJet على سبعة رفوف، من التاريخ إلى الثقافة الشعبية. العبها هنا في متصفحك أو ابدأها على تيليجرام.",
+      "lbBrowse": "افتح المكتبة"
     }
   },
   {
@@ -2471,7 +2491,9 @@
       "lbPackCount": "{0} quizzen",
       "lbAll": "Alle",
       "lbNoneHere": "Geen pakketten voor deze selectie.",
-      "lbPlayHere": "Hier spelen"
+      "lbPlayHere": "Hier spelen",
+      "lbBandBody": "Door QuizJet gekozen quizzen op zeven planken, van geschiedenis tot popcultuur. Speel ze hier in je browser of start ze in Telegram.",
+      "lbBrowse": "Open de bibliotheek"
     }
   },
   {
@@ -2696,7 +2718,9 @@
       "lbPackCount": "{0} quiz",
       "lbAll": "Tous",
       "lbNoneHere": "Aucune série pour cette sélection.",
-      "lbPlayHere": "Jouer ici"
+      "lbPlayHere": "Jouer ici",
+      "lbBandBody": "Des quiz choisis par QuizJet sur sept étagères, de l'histoire à la culture pop. Joue ici dans ton navigateur ou lance-les sur Telegram.",
+      "lbBrowse": "Ouvrir la bibliothèque"
     }
   },
   {
@@ -2921,7 +2945,9 @@
       "lbPackCount": "{0} kuis",
       "lbAll": "Semua",
       "lbNoneHere": "Tidak ada paket untuk pilihan ini.",
-      "lbPlayHere": "Main di sini"
+      "lbPlayHere": "Main di sini",
+      "lbBandBody": "Kuis pilihan QuizJet di tujuh rak, dari sejarah hingga budaya pop. Mainkan langsung di peramban atau mulai di Telegram.",
+      "lbBrowse": "Buka perpustakaan"
     }
   },
   {
@@ -3146,7 +3172,9 @@
       "lbPackCount": "퀴즈 {0}개",
       "lbAll": "전체",
       "lbNoneHere": "이 조건에 맞는 세트가 없습니다.",
-      "lbPlayHere": "여기서 풀기"
+      "lbPlayHere": "여기서 풀기",
+      "lbBandBody": "QuizJet이 고른 퀴즈가 역사부터 대중문화까지 일곱 개 서가에 있어요. 여기 브라우저에서 바로 풀거나 텔레그램에서 시작해 보세요.",
+      "lbBrowse": "라이브러리 열기"
     }
   },
   {
@@ -3371,7 +3399,9 @@
       "lbPackCount": "{0} آزمون",
       "lbAll": "همه",
       "lbNoneHere": "برای این انتخاب بسته‌ای نیست.",
-      "lbPlayHere": "همین‌جا بازی کن"
+      "lbPlayHere": "همین‌جا بازی کن",
+      "lbBandBody": "آزمون‌های منتخب QuizJet در هفت قفسه، از تاریخ تا فرهنگ عامه. همین‌جا در مرورگر بازی کن یا در تلگرام شروعش کن.",
+      "lbBrowse": "باز کردن کتابخانه"
     }
   },
   {
@@ -3596,7 +3626,9 @@
       "lbPackCount": "{0} testes",
       "lbAll": "Todos",
       "lbNoneHere": "Nenhum pacote para esta seleção.",
-      "lbPlayHere": "Jogar aqui"
+      "lbPlayHere": "Jogar aqui",
+      "lbBandBody": "Quizzes escolhidos pelo QuizJet em sete prateleiras, da história à cultura pop. Jogue aqui mesmo no navegador ou comece no Telegram.",
+      "lbBrowse": "Abrir a biblioteca"
     }
   },
   {
@@ -3821,7 +3853,9 @@
       "lbPackCount": "{0} tests",
       "lbAll": "Todos",
       "lbNoneHere": "No hay paquetes para esta selección.",
-      "lbPlayHere": "Jugar aquí"
+      "lbPlayHere": "Jugar aquí",
+      "lbBandBody": "Cuestionarios elegidos por QuizJet en siete estanterías, de la historia a la cultura pop. Juega aquí mismo en tu navegador o empiézalos en Telegram.",
+      "lbBrowse": "Abrir la biblioteca"
     }
   },
   {
@@ -4046,7 +4080,9 @@
       "lbPackCount": "{0} ta test",
       "lbAll": "Hammasi",
       "lbNoneHere": "Bu tanlov uchun to'plam yo'q.",
-      "lbPlayHere": "Shu yerda o‘ynash"
+      "lbPlayHere": "Shu yerda o‘ynash",
+      "lbBandBody": "QuizJet tanlagan testlar yettita javonda — tarixdan ommaviy madaniyatgacha. Shu yerning o‘zida brauzerda o‘yna yoki Telegramda boshla.",
+      "lbBrowse": "Kutubxonani ochish"
     }
   }
 ]

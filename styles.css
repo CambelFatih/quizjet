@@ -233,6 +233,8 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
 .lb-options { display: grid; gap: 10px; }
 .lb-options button { min-height: 48px; padding: 10px 16px; border: 1px solid var(--line); border-radius: 12px; color: var(--ink); background: var(--page); font: inherit; font-size: 16px; text-align: start; overflow-wrap: anywhere; cursor: pointer; transition: border-color .2s; }
 .lb-options button:hover:enabled { border-color: #8ec0f3; }
+.lb-options button { display: flex; align-items: center; gap: 12px; }
+.lb-k { flex: none; display: grid; place-items: center; width: 28px; height: 28px; border-radius: 8px; background: var(--line); font-size: 13px; font-weight: 700; }
 .lb-options button:disabled { cursor: default; opacity: .7; }
 .lb-options button.lb-right, .lb-options button.lb-wrong { opacity: 1; font-weight: 700; }
 .lb-options button.lb-right { border-color: #1d8a5a; background: #e3f5ec; color: #0f5235; }
@@ -249,13 +251,14 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
 .lb-rows li { padding: 6px 0; border-top: 1px solid var(--line); overflow-wrap: anywhere; }
 .lb-static { padding-inline-start: 22px; line-height: 1.6; }
 .lb-static ul { margin: 4px 0 14px; color: var(--muted); }
-/* Quizzes, books, news: one card each, side by side from 900 px. A card can be missing (no catalog, no news edition):
-   the columns follow the cards that are there. */
+/* Quizzes, books, news, library: one card each; two by two from 900 px, all in a row from 1600 px (four in a row squeeze
+   the buttons below that). A card can be missing (no catalog, no news edition): the cards that are there fill the grid. */
 .bands { display: grid; gap: 16px; padding-block: 8px 72px; }
 .discover-band { --accent: #397fca; --tint: #eaf4ff; --glow: #397fca1a; --band-bg: var(--paper); position: relative; display: flex; flex-direction: column; align-items: flex-start; overflow: hidden; padding: 28px 26px; border: 1px solid var(--line); border-radius: 20px; background: radial-gradient(90% 70% at 100% 0%, var(--glow), transparent 70%), var(--band-bg); box-shadow: 0 8px 24px #1c36520a; transition: border-color .2s, box-shadow .2s; }
 .discover-band:hover { border-color: var(--tint); box-shadow: 0 14px 34px #1c365214; }
 .band-books { --accent: #8961c4; --tint: #f2edfc; --glow: #8961c41a; }
 .band-news { --accent: #0b7a5f; --tint: #e1f4ed; --glow: #0b7a5f1a; }
+.band-library { --accent: #b45a1c; --tint: #fcefe4; --glow: #b45a1c1a; }
 .band-icon { width: 52px; height: 52px; display: grid; place-items: center; margin-bottom: 22px; border-radius: 15px; color: var(--accent); background: var(--tint); }
 .band-icon svg { width: 28px; height: 28px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2.3; }
 .band-body { flex: 1; margin-bottom: 26px; }
@@ -265,7 +268,8 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
 .band-stats div { display: flex; flex-direction: column-reverse; gap: 2px; }
 .band-stats dt { color: var(--muted); font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
 .band-stats dd { margin: 0; color: var(--ink); font-family: Manrope, "DM Sans", sans-serif; font-size: 26px; font-weight: 700; letter-spacing: -.02em; }
-@media (min-width: 900px) { .bands { grid-auto-flow: column; grid-auto-columns: 1fr; gap: 20px; } }
+@media (min-width: 900px) { .bands { grid-template-columns: repeat(2, 1fr); gap: 20px; } }
+@media (min-width: 1600px) { .bands { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: 1fr; } }
 
 [dir="rtl"] .hero h1, [dir="rtl"] .hero-lead, [dir="rtl"] .section-heading, [dir="rtl"] .how-copy, [dir="rtl"] .steps-list { text-align: start; }
 [dir="rtl"] .hero-proof, [dir="rtl"] .hero-actions, [dir="rtl"] .feature-card, [dir="rtl"] .steps-list li { direction: rtl; }
@@ -488,6 +492,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
   :root:not([data-rd-theme]) .discover-band { --tint: #16304f; --accent: #7db6ec; --glow: #7db6ec1f; --band-bg: var(--card); box-shadow: 0 8px 24px #0000004d; }
   :root:not([data-rd-theme]) .band-books { --tint: #2a2347; --accent: #b9a0f2; --glow: #b9a0f21f; }
   :root:not([data-rd-theme]) .band-news { --tint: #133a30; --accent: #3ccb9f; --glow: #3ccb9f1f; }
+  :root:not([data-rd-theme]) .band-library { --tint: #3a2a1a; --accent: #f0aa6c; --glow: #f0aa6c1f; }
   :root:not([data-rd-theme]) .discover-band:hover { border-color: #3d6ba3; }
   :root:not([data-rd-theme]) .steps-list li { border-color: var(--line); }
   :root:not([data-rd-theme]) .step-symbol { color: var(--accent); background: #1a2b45; }
