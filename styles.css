@@ -47,6 +47,8 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
 .nav-links, .nav-actions { display: flex; align-items: center; gap: 28px; }
 .nav-links a, .language-picker { color: #d6deeb; font-size: 13px; font-weight: 600; transition: color .2s; }
 .nav-links a:hover, .language-picker a:hover { color: #fff; }
+/* Just above the phone menu (800 px) six links are tight in de and fr: a narrower gap keeps them on the page. */
+@media (max-width: 900px) { .nav-links { gap: 16px; } }
 .nav-actions { gap: 18px; }
 .language-menu { position: relative; }
 .language-menu summary { display: inline-flex; align-items: center; gap: 7px; padding-block: 6px; color: #d6deeb; font-size: 13px; font-weight: 600; cursor: pointer; list-style: none; }

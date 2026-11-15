@@ -141,8 +141,8 @@ def shell(locale: dict[str, object], title: str, description: str, suffix: str, 
     ) + f'    <link rel="alternate" hreflang="x-default" href="{BASE_URL}/{suffix}">\n'
     robots = '    <meta name="robots" content="noindex">\n' if noindex else ""
     ld = f'    <script type="application/ld+json">{jsonld}</script>\n' if jsonld else ""
-    links = (f'<a href="{pre}/discover/">{e(c["discAll"])}</a><a href="{pre}/books/">{e(c["navBooks"])}</a>'
-             f'<a href="{pre}/news/">{e(c["navNews"])}</a><a href="{pre}/library/">{e(c["navLibrary"])}</a>')
+    links = (f'<a href="{pre}/library/">{e(c["navLibrary"])}</a><a href="{pre}/discover/">{e(c["navCommunity"])}</a>'
+             f'<a href="{pre}/books/">{e(c["navBooks"])}</a><a href="{pre}/news/">{e(c["navNews"])}</a>')
     menu = {"q": "discover"}.get(suffix.split("/")[0], suffix.split("/")[0]) + "/" if single else suffix
     return (
         "<!doctype html>\n"
