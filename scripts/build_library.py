@@ -38,7 +38,15 @@ QUESTION_SECONDS = 30  # ShelfImportService creates every pack's quiz with 30 s 
 LOCALES = json.loads((ROOT / "_data" / "locales.json").read_text(encoding="utf-8"))
 # quizjet-sentetik-veri scripts/check_data.py SHELVES, in the bot's order (ShelfBundle.ShelfOrder) with the miniapp's
 # icons; each has an "lbShelf_<key>" copy key.
-SHELVES = {"general": "🌍", "history": "🏛️", "geography": "🗺️", "science": "🔬", "sports": "⚽", "arts": "🎨", "pop-culture": "🎮"}
+SHELVES = {"general": "🌍", "history": "🏛️", "geography": "🗺️", "science": "🔬", "sports": "⚽", "arts": "🎨", "pop-culture": "🎮",
+           "mkqa": "🔎"}
+# Two tabs, as in the miniapp (owner decision 2026-11-16, option C): "Trivia" holds Open Trivia DB's seven shelves,
+# "Curious Questions" holds MKQA alone and lists its topics where the other tab lists shelves (#mkqa-<topic>).
+CURIOUS = "mkqa"
+# MKQA's topics are English labels in the bundle; each has an icon and an "lbTopic_<id>" copy key.
+TOPICS = {"Songs & Singers": ("songs", "🎤"), "Movies": ("movies", "🎬"), "TV Shows": ("tv", "📺"),
+          "History & Government": ("history", "🏛️"), "General Knowledge": ("general", "💡"),
+          "Books & Authors": ("books", "📚"), "Geography": ("geography", "🗺️"), "Sports": ("sports", "⚽")}
 LEVELS = {"easy": "lbEasy", "medium": "lbMedium", "hard": "lbHard"}
 SLUG_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 LOCALE_BY_CODE = {str(l["code"]).lower(): l for l in LOCALES}
@@ -64,6 +72,7 @@ def load_library(path: Path | None = None) -> tuple[dict[str, dict], list[dict]]
             (slug == pid or not SLUG_RE.match(slug)) and "id is not <language>-<slug>",
             (language, slug) in seen and "duplicate id",
             p["shelf"] not in SHELVES and f"unknown shelf {p['shelf']!r}",
+            p["shelf"] == CURIOUS and p["topic"] not in TOPICS and f"unknown {CURIOUS} topic {p['topic']!r}",
             p["difficulty"] not in LEVELS and f"unknown difficulty {p['difficulty']!r}",
             p["source"] not in sources and f"unknown source {p['source']!r}",
             not p["questions"] and "no questions",
@@ -74,6 +83,23 @@ def load_library(path: Path | None = None) -> tuple[dict[str, dict], list[dict]]
         seen.add((language, slug))
         packs.append({**p, "language": language, "slug": slug, "key": telegram_key(pid)})
     return sources, packs
+
+
+def tab_of(shelf: str) -> str:
+    return "curious" if shelf == CURIOUS else "trivia"
+
+
+def topic_section(topic: str) -> str:
+    """The section id of an MKQA topic, the hash that opens it: #mkqa-songs."""
+    return f"{CURIOUS}-{TOPICS[topic][0]}"
+
+
+def place(pack: dict, c: dict) -> tuple[str, str, str]:
+    """(hash, icon, name) of where a pack sits on /library/: its shelf, or its topic for MKQA."""
+    if pack["shelf"] == CURIOUS:
+        tid, icon = TOPICS[pack["topic"]]
+        return topic_section(pack["topic"]), icon, c["lbTopic_" + tid]
+    return pack["shelf"], SHELVES[pack["shelf"]], c["lbShelf_" + pack["shelf"]]
 
 
 def pack_locale(pack: dict) -> dict:
@@ -123,16 +149,9 @@ def list_page(locale: dict, pre: str, sources: dict, packs: list[dict]) -> tuple
                           for k, n in sorted(counts.items(), key=lambda kv: -kv[1]))
         picker = (f'      <div class="discover-controls" id="lb-langs" hidden><label for="lb-lang">{e(c["lbQuizLang"])} '
                   f'<select id="lb-lang">{options}</select></label></div>\n')
-    cards, sections = "", ""
-    for shelf, icon in SHELVES.items():
-        mine = [p for p in packs if p["shelf"] == shelf]
-        if not mine:
-            continue
-        name = c["lbShelf_" + shelf]
-        cards += (f'        <li data-shelf="{shelf}"><a href="#{shelf}"><span class="lb-icon" aria-hidden="true">{icon}</span>'
-                  f'<strong>{e(name)}</strong><small>{e(c["lbPackCount"]).replace("{0}", f"<span>{len(mine)}</span>")}</small></a></li>\n')
+    def section(sid: str, tab: str, icon: str, name: str, mine: list[dict], up: str, topic_filter: bool) -> tuple[str, str]:
         levels = [(lv, c[LEVELS[lv]]) for lv in LEVELS if any(p["difficulty"] == lv for p in mine)]
-        topics = list(dict.fromkeys(p["topic"] for p in mine))
+        topics = list(dict.fromkeys(p["topic"] for p in mine)) if topic_filter else []
         rows = "".join(
             f'          <li data-lang="{e(p["language"])}" data-level="{e(p["difficulty"])}" data-topic="{e(p["topic"])}">'
             f'<a href="{pack_path(p)}"><strong lang="{e(pack_locale(p)["code"])}" dir="{e(pack_locale(p)["dir"])}">{e(p["title"])}</strong>'
@@ -140,22 +159,49 @@ def list_page(locale: dict, pre: str, sources: dict, packs: list[dict]) -> tuple
             f'<small>{e(facts(p, c))}</small></a></li>\n'
             for p in mine
         )
-        sections += (
-            f'      <section class="lb-shelf" id="{shelf}">\n'
-            f'        <p class="quiz-back lb-up" hidden><a href="#">{back} {e(c["navLibrary"])}</a></p>\n'
+        card = (f'        <li data-shelf="{sid}" data-tab="{tab}"><a href="#{sid}"><span class="lb-icon" aria-hidden="true">{icon}</span>'
+                f'<strong>{e(name)}</strong><small>{e(c["lbPackCount"]).replace("{0}", f"<span>{len(mine)}</span>")}</small></a></li>\n')
+        return card, (
+            f'      <section class="lb-shelf" id="{sid}" data-tab="{tab}">\n'
+            f'        <p class="quiz-back lb-up" hidden><a href="#{up}">{back} {e(c["navLibrary"])}</a></p>\n'
             f'        <h2><span aria-hidden="true">{icon}</span> {e(name)}</h2>\n'
             f'{chips("level", levels, c)}{chips("topic", [(t, t) for t in topics], c)}'
             f'        <ul class="quiz-list">\n{rows}        </ul>\n'
             f'        <p class="discover-empty" hidden>{e(c["lbNoneHere"])}</p>\n'
             "      </section>\n"
         )
+
+    cards, sections = "", ""
+    for shelf, icon in SHELVES.items():
+        mine = [p for p in packs if p["shelf"] == shelf]
+        if not mine:
+            continue
+        if shelf == CURIOUS:
+            for topic, (tid, ticon) in TOPICS.items():
+                theirs = [p for p in mine if p["topic"] == topic]
+                if theirs:
+                    card, sec = section(topic_section(topic), "curious", ticon, c["lbTopic_" + tid], theirs, "curious", False)
+                    cards, sections = cards + card, sections + sec
+        else:
+            card, sec = section(shelf, "trivia", icon, c["lbShelf_" + shelf], mine, "", True)
+            cards, sections = cards + card, sections + sec
+    tabs = ""
+    if {tab_of(p["shelf"]) for p in packs} == {"trivia", "curious"}:
+        tabs = ('      <div class="lb-tabs" id="lb-tabs" role="tablist" hidden>'
+                + "".join(f'<button type="button" role="tab" data-tab="{t}" aria-selected="false">{e(c[k])}<small></small></button>'
+                          for t, k in (("trivia", "lbTabTrivia"), ("curious", "lbShelf_" + CURIOUS)))
+                + "</div>\n")
+    credits = "".join(
+        f'      <p class="quiz-note" data-tab="{t}">{attribution(sources, keys, c)}</p>\n'
+        for t in ("trivia", "curious")
+        if (keys := [p["source"] for p in packs if tab_of(p["shelf"]) == t])
+    )
     body = (
         f'      <h1>{e(c["navLibrary"])}</h1>\n'
         f'      <p class="discover-lead">{e(c["lbLead"])}</p>\n'
-        f"{picker}"
+        f"{picker}{tabs}"
         f'      <ul class="lb-shelves" id="lb-shelves">\n{cards}      </ul>\n'
-        f"{sections}"
-        f'      <p class="quiz-note">{attribution(sources, [p["source"] for p in packs], c)}</p>\n'
+        f"{sections}{credits}"
         f'      <script src="/assets/library.js?v={asset_version("library.js")}" defer></script>\n'
     )
     shelf_names = ", ".join(c["lbShelf_" + s] for s in SHELVES if any(p["shelf"] == s for p in packs))
@@ -170,6 +216,9 @@ def pack_page(sources: dict, pack: dict) -> tuple[str, str, str, str]:
     pre = f"/{route}" if route else ""
     back = "→" if locale["dir"] == "rtl" else "←"
     start, group = f"https://t.me/{BOT}?start={pack['key']}", f"https://t.me/{BOT}?startgroup={pack['key']}"
+    where, icon, where_name = place(pack, c)
+    shelf_name = c["lbShelf_" + pack["shelf"]]
+    topic_name = where_name if pack["shelf"] == CURIOUS else pack["topic"]
     note = e(c["discGroupNote"]).replace("{bot}", f'<bdi dir="ltr">@{BOT}</bdi>')
     static = "".join(
         f'          <li><p>{e(q["q"])}</p><ul>{"".join(f"<li>{e(o)}</li>" for o in q["o"])}</ul></li>\n'
@@ -181,10 +230,10 @@ def pack_page(sources: dict, pack: dict) -> tuple[str, str, str, str]:
         "copy": {k: c[k] for k in ("lbQuestionOf", "lbCorrect", "lbWrong", "lbNext", "lbFinish", "lbScore", "lbTimeLeft",
                                    "lbTimedOut", "lbSkipped", "lbResultTime")},
     }
-    body = f"""      <p class="quiz-back"><a href="{pre}/library/#{pack["shelf"]}">{back} {e(c["lbShelf_" + pack["shelf"]])}</a></p>
+    body = f"""      <p class="quiz-back"><a href="{pre}/library/#{where}">{back} {e(where_name)}</a></p>
       <h1>{e(pack["title"])}</h1>
       <p class="quiz-description">{e(pack["description"])}</p>
-      <p class="quiz-facts">{e(facts(pack, c))} · <span aria-hidden="true">{SHELVES[pack["shelf"]]}</span> {e(c["lbShelf_" + pack["shelf"]])} · {e(pack["topic"])}</p>
+      <p class="quiz-facts">{e(facts(pack, c))} · <span aria-hidden="true">{SHELVES[pack["shelf"]]}</span> {e(shelf_name)} · {e(topic_name)}</p>
       <div id="lb-home">
         <div class="quiz-actions">
           <button type="button" class="button button-primary" id="lb-start" hidden>{e(c["lbPlayHere"])} <span aria-hidden="true">▶</span></button>
