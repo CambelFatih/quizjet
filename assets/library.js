@@ -7,6 +7,8 @@
 // - a pack page: the player. 30 s per question; a timed-out question passes unanswered; after a pick the right answer
 //   shows and the next question follows by itself (1.2 s when right, 2.2 s when wrong); Previous reviews earlier
 //   questions, Next skips (unanswered) or moves on; the result lists every question. Nothing is sent or stored.
+//   Nothing moves when a question is answered (owner, 2026-11-16: the options jumped up as the timer vanished): the
+//   timer stays in place, stopped and dimmed at the time that was left, and the verdict has a reserved line.
 // Text goes in with textContent only: one source answer is literally "<marquee></marquee>".
 (function () {
   var $ = function (id) { return document.getElementById(id); };
@@ -96,13 +98,21 @@
     var D = JSON.parse($("lb-data").textContent), qs = D.questions, c = D.copy, LIMIT = D.seconds * 1000;
     var home = $("lb-home"), play = $("lb-player"), done = $("lb-done"), opts = $("lb-o"), fb = $("lb-fb");
     var prev = $("lb-prev"), next = $("lb-next");
-    var log, askedAt, view, timer, auto, started;   // log[i] = {s: picked option or null, to: timed out, sk: skipped}
+    var log, askedAt, view, timer, auto, started;   // log[i] = {s: picked option or null, to: timed out, sk: skipped, left: ms}
 
     function stop() { clearInterval(timer); clearTimeout(auto); timer = auto = null; }
     function verdict(i) {
-      var r = log[i], right = r.s === qs[i].a;
-      fb.textContent = r.sk ? c.lbSkipped : r.to ? c.lbTimedOut : right ? c.lbCorrect : c.lbWrong;
-      fb.className = "lb-feedback " + (right ? "lb-right" : "lb-wrong");
+      var r = log[i], right = r.s === qs[i].a, missed = r.sk || r.to;
+      fb.textContent = "";
+      if (!missed) {
+        var mark = document.createElement("span");
+        mark.className = "lb-fi";
+        mark.setAttribute("aria-hidden", "true");
+        mark.textContent = right ? "✓" : "✕";
+        fb.appendChild(mark);
+      }
+      fb.appendChild(document.createTextNode(r.sk ? c.lbSkipped : r.to ? c.lbTimedOut : right ? c.lbCorrect : c.lbWrong));
+      fb.className = "lb-feedback " + (missed ? "lb-missed" : right ? "lb-right" : "lb-wrong");
     }
     // Question i: live (not answered yet, its clock runs from the first time it was shown) or answered (marked).
     function draw(i, reviewing) {
@@ -124,13 +134,23 @@
         if (live) b.addEventListener("click", function () { answer(k, ""); });
         else {
           b.disabled = true;
-          if (k === q.a) b.className = "lb-right";
-          else if (k === log[i].s) b.className = "lb-wrong";
+          var state = k === q.a ? "lb-right" : k === log[i].s ? "lb-wrong" : "";
+          if (state) {
+            var mark = document.createElement("span");
+            mark.className = "lb-mark";
+            mark.setAttribute("aria-hidden", "true");
+            mark.textContent = state === "lb-right" ? "✓" : "✕";
+            b.appendChild(mark);
+            b.className = state;
+          }
         }
         opts.appendChild(b);
       });
-      $("lb-tm").hidden = $("lb-tmt").hidden = !live;
+      opts.className = "lb-options" + (live ? "" : " lb-done");
+      // The timer keeps its place: an answered question shows it stopped where it was, dimmed.
+      $("lb-tm").className = "lb-timer" + (live ? "" : " lb-off");
       $("lb-tmt").textContent = "";
+      if (!live) $("lb-tmb").style.width = ((log[i].left || 0) / LIMIT * 100).toFixed(1) + "%";
       if (live) { fb.textContent = ""; fb.className = "lb-feedback"; } else verdict(i);
       prev.disabled = i === 0;
       next.textContent = (!live && i === qs.length - 1 ? c.lbFinish : c.lbNext) + " ›";
@@ -147,7 +167,7 @@
       $("lb-tmt").textContent = fill(c.lbTimeLeft, Math.ceil(left / 1000));
     }
     function answer(k, how) {
-      log.push({ s: k, to: how === "to", sk: how === "sk" });
+      log.push({ s: k, to: how === "to", sk: how === "sk", left: Math.max(0, LIMIT - (Date.now() - askedAt[view])) });
       draw(view, false);
       auto = setTimeout(forward, k === qs[view].a ? 1200 : 2200);
     }
