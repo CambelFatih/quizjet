@@ -136,7 +136,7 @@ def run() -> None:
             assert tr_catalog.count("querySelectorAll('.nav-menu')") == 1
             assert tr_catalog.count('rel="alternate" hreflang=') == 19, "18 languages + x-default"
             tr_quiz = (out / "tr" / "q" / "good_key-1" / "index.html").read_text(encoding="utf-8")
-            assert 'href="/tr/discover/"' in tr_quiz and "Özel sohbette başlat" in tr_quiz
+            assert 'href="/tr/discover/"' in tr_quiz and "Telegram&#x27;da özelden başlat" in tr_quiz and "Telegram grubunda başlat" in tr_quiz
             assert "Soru: 1 · AI ile hazırlandı · Oynanma: 3 · Oyuncu: 12" in tr_quiz
             assert 'href="/tr/privacy.html"' in tr_quiz, "Turkish keeps its own legal pages"
             assert '<bdi dir="ltr">@QuizJetBot</bdi>' in tr_quiz and "{bot}" not in tr_quiz
