@@ -234,21 +234,34 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
 .lb-progress { margin: 0; color: var(--muted); font-size: 13px; font-weight: 600; }
 .lb-review { margin: 6px 0 0; color: var(--blue); font-size: 13px; font-weight: 600; }
 .lb-player .lb-q { margin: 8px 0 14px; font-size: 20px; line-height: 1.45; overflow-wrap: anywhere; outline: none; }
+/* The player marks an answer quietly (owner, 2026-11-16: the strong red and green fills tired the eye): options keep
+   their neutral face, the right one gets a green edge, a tint and a check, a wrong pick a red edge and a cross, the
+   others step back. Nothing moves: the timer stays (stopped, dimmed) and the verdict has its own line. */
 .lb-timer { height: 6px; overflow: hidden; border-radius: 3px; background: var(--line); }
-.lb-timer i { display: block; height: 100%; width: 100%; border-radius: 3px; background: #2a76c6; transition: width .25s linear; }
-.lb-time { min-height: 1.4em; margin: 4px 0 10px; color: var(--muted); font-size: 13px; text-align: end; }
+.lb-timer i { display: block; height: 100%; width: 100%; border-radius: 3px; background: #2a76c6; transition: width .25s linear, background-color .2s; }
+.lb-timer.lb-off i { background: #b7c3d3; transition: none; }
+.lb-time { min-height: 1.4em; margin: 4px 0 10px; color: var(--muted); font-size: 13px; text-align: end; font-variant-numeric: tabular-nums; }
 .lb-options { display: grid; gap: 10px; }
-.lb-options button { min-height: 48px; padding: 10px 16px; border: 1px solid var(--line); border-radius: 12px; color: var(--ink); background: var(--page); font: inherit; font-size: 16px; text-align: start; overflow-wrap: anywhere; cursor: pointer; transition: border-color .2s; }
+.lb-options button { display: flex; align-items: center; gap: 12px; min-height: 52px; padding: 10px 16px; border: 1px solid var(--line); border-radius: 12px; color: var(--ink); background: var(--page); font: inherit; font-size: 16px; text-align: start; overflow-wrap: anywhere; cursor: pointer; transition: border-color .15s, background-color .15s, opacity .15s; }
 .lb-options button:hover:enabled { border-color: #8ec0f3; }
-.lb-options button { display: flex; align-items: center; gap: 12px; }
-.lb-k { flex: none; display: grid; place-items: center; width: 28px; height: 28px; border-radius: 8px; background: var(--line); font-size: 13px; font-weight: 700; }
-.lb-options button:disabled { cursor: default; opacity: .7; }
-.lb-options button.lb-right, .lb-options button.lb-wrong { opacity: 1; font-weight: 700; }
-.lb-options button.lb-right { border-color: #1d8a5a; background: #e3f5ec; color: #0f5235; }
-.lb-options button.lb-wrong { border-color: #c2413b; background: #fcebea; color: #8a1f1a; }
-.lb-feedback { min-height: 1.6em; margin: 14px 0 6px; font-weight: 700; }
-.lb-feedback.lb-right { color: #1a7a50; }
-.lb-feedback.lb-wrong { color: #b3362f; }
+.lb-options button > span:nth-child(2) { flex: 1; min-width: 0; }
+.lb-k { flex: none; display: grid; place-items: center; width: 28px; height: 28px; border-radius: 8px; background: var(--line); color: var(--muted); font-size: 13px; font-weight: 700; }
+.lb-mark { flex: none; font-size: 17px; font-weight: 700; line-height: 1; }
+.lb-options button:disabled { cursor: default; }
+.lb-options.lb-done button:not(.lb-right):not(.lb-wrong) { opacity: .5; }
+.lb-options button.lb-right { border-color: #2f9a6a; background: #2f9a6a14; box-shadow: inset 3px 0 0 #2f9a6a; }
+.lb-options button.lb-right .lb-k { background: #2f9a6a; color: #fff; }
+.lb-options button.lb-right .lb-mark { color: #2f9a6a; }
+.lb-options button.lb-wrong { border-color: #d0574f; background: #d0574f10; box-shadow: inset 3px 0 0 #d0574f; }
+.lb-options button.lb-wrong .lb-k { background: #d0574f; color: #fff; }
+.lb-options button.lb-wrong .lb-mark { color: #d0574f; }
+.lb-feedback { display: flex; align-items: center; gap: 8px; min-height: 28px; margin: 14px 0 6px; font-size: 15px; font-weight: 600; }
+.lb-fi { display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; color: #fff; font-size: 12px; font-weight: 800; }
+.lb-feedback.lb-right { color: #23784f; }
+.lb-feedback.lb-right .lb-fi { background: #2f9a6a; }
+.lb-feedback.lb-wrong { color: #b0433c; }
+.lb-feedback.lb-wrong .lb-fi { background: #d0574f; }
+.lb-feedback.lb-missed { color: var(--muted); }
 .lb-nav { display: flex; justify-content: space-between; gap: 10px; margin: 6px 0 4px; }
 .lb-nav button { min-height: 44px; padding: 0 18px; border: 1px solid var(--line); border-radius: 12px; color: var(--ink); background: var(--page); font: inherit; font-size: 15px; font-weight: 700; cursor: pointer; }
 .lb-nav button:disabled { opacity: .45; cursor: default; }
@@ -535,8 +548,15 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
   :root:not([data-rd-theme]) .lb-tabs { background: var(--page); }
   :root:not([data-rd-theme]) .lb-tabs button[aria-selected="true"] { color: var(--text); background: var(--card); }
   :root:not([data-rd-theme]) .lb-timer i { background: var(--accent); }
-  :root:not([data-rd-theme]) .lb-options button.lb-right { border-color: #3ccb9f; background: #133a30; color: #b9f0dc; }
-  :root:not([data-rd-theme]) .lb-options button.lb-wrong { border-color: #f08a84; background: #3d1d1c; color: #ffd0cd; }
-  :root:not([data-rd-theme]) .lb-feedback.lb-right { color: #3ccb9f; }
-  :root:not([data-rd-theme]) .lb-feedback.lb-wrong { color: #f08a84; }
+  :root:not([data-rd-theme]) .lb-timer.lb-off i { background: #3a4d6b; }
+  :root:not([data-rd-theme]) .lb-options button.lb-right { border-color: #3fb68b; background: #3fb68b17; box-shadow: inset 3px 0 0 #3fb68b; }
+  :root:not([data-rd-theme]) .lb-options button.lb-right .lb-k,
+  :root:not([data-rd-theme]) .lb-feedback.lb-right .lb-fi { background: #2f9a6a; }
+  :root:not([data-rd-theme]) .lb-options button.lb-right .lb-mark,
+  :root:not([data-rd-theme]) .lb-feedback.lb-right { color: #5cc99f; }
+  :root:not([data-rd-theme]) .lb-options button.lb-wrong { border-color: #e06c64; background: #e06c6414; box-shadow: inset 3px 0 0 #e06c64; }
+  :root:not([data-rd-theme]) .lb-options button.lb-wrong .lb-k,
+  :root:not([data-rd-theme]) .lb-feedback.lb-wrong .lb-fi { background: #c9524a; }
+  :root:not([data-rd-theme]) .lb-options button.lb-wrong .lb-mark,
+  :root:not([data-rd-theme]) .lb-feedback.lb-wrong { color: #ee8b84; }
 }
