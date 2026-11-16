@@ -406,37 +406,47 @@ def thousands(n: int) -> str:
     return f"{n:,}".replace(",", "\u202f")
 
 
-Stats = tuple[int, int, int]  # quizzes, plays, players
+STATS_RE = re.compile(r'<dl class="band-stats">.*?</dl>', re.DOTALL)
 
 
-def band_stats(items: list[dict[str, object]], by_language: bool) -> dict[str, Stats]:
-    """The catalog band's numbers per landing route ("" = English): the quizzes in that language, or the whole catalog
-    on every page when the export does not say the language."""
-    stats: dict[str, Stats] = {}
-    for locale in LOCALES:
-        mine = [i for i in items if home_locale(i) is locale] if by_language else items
-        stats[str(locale["route"])] = (len(mine), sum(int(i["plays"]) for i in mine), sum(int(i["participants"]) for i in mine))
-    return stats
+def load_totals(data: dict[str, object]) -> tuple[int, int] | None:
+    """The bot-wide plays and players of the export's ``totals`` (bot ``PublicPlatformTotals``): the numbers of the
+    Mini App dashboard, from the same counter. Not a sum over the cards: a player of two quizzes is one player there
+    and was two here (the band said 23 774 players, 2026-11-16). ``None`` when the bot sent none (older bot, or its
+    counter failed)."""
+    totals = data.get("totals")
+    try:
+        return int(totals["plays"]), int(totals["players"])  # type: ignore[index]
+    except (KeyError, TypeError, ValueError):
+        return None
 
 
-def apply_band(out: Path, stats: dict[str, Stats] | None) -> None:
+def band_counts(items: list[dict[str, object]], by_language: bool) -> dict[str, int]:
+    """The catalog band's quiz count per landing route ("" = English): the quizzes in that language, or the whole
+    catalog on every page when the export does not say the language."""
+    return {str(locale["route"]): len([i for i in items if home_locale(i) is locale] if by_language else items)
+            for locale in LOCALES}
+
+
+def apply_band(out: Path, counts: dict[str, int] | None, totals: tuple[int, int] | None = None) -> None:
     """Fill the landing pages' catalog band with the real numbers, or drop it.
 
     The committed pages carry the band with {count}, {plays} and {participants} placeholders (labels translated per
     language). Only this build knows the catalog, so they are filled here; without a catalog, or with no quiz in the
     page's language, the band is removed rather than shown with a placeholder, a zero or another language's quizzes.
+    Plays and players are the bot's own totals, the same on every page; without them the band shows the count only.
     """
     for page in out.rglob("index.html"):
         text = page.read_text(encoding="utf-8")
         if 'id="discover-band"' not in text:
             continue
-        route = page.parent.relative_to(out).as_posix().strip(".")
-        count, plays, participants = (stats or {}).get(route, (0, 0, 0))
+        count = (counts or {}).get(page.parent.relative_to(out).as_posix().strip("."), 0)
         if not count:
             text = BAND_RE.sub("", text)
         else:
-            text = (text.replace("{count}", str(count)).replace("{plays}", thousands(plays))
-                    .replace("{participants}", thousands(participants)))
+            text = text.replace("{count}", str(count))
+            text = (text.replace("{plays}", thousands(totals[0])).replace("{participants}", thousands(totals[1]))
+                    if totals else STATS_RE.sub("", text))
         write(page, text)
 
 
@@ -555,11 +565,13 @@ def build(out: Path, export: Path | None) -> str:
         return "Built without the Discover catalog (no export given)."
 
     bot, items, skipped = load_catalog(export)
-    generated = str(json.loads(export.read_text(encoding="utf-8")).get("generatedAtUtc") or "")
+    data = json.loads(export.read_text(encoding="utf-8"))
+    generated = str(data.get("generatedAtUtc") or "")
     # ponytail: the old every-page-in-every-language build stays for an export from a bot older than the language field
     # (merged ≠ deployed there); drop it, and this flag, once every export carries "language".
     by_language = any(item["language"] for item in items)
-    apply_band(out, band_stats(items, by_language))
+    totals = load_totals(data)
+    apply_band(out, band_counts(items, by_language), totals)
     entries: list[Entry] = []
     for locale in LOCALES:
         base, pre = locale_dir(out, locale), prefix(locale)
@@ -579,7 +591,8 @@ def build(out: Path, export: Path | None) -> str:
     write(out / "sitemap.xml", sitemap(entries + book_entries))
     note = f" Skipped {len(skipped)} item(s) with an unusable key or empty title." if skipped else ""
     shape = "one page per quiz, in its own language" if by_language else f"{len(LOCALES)} languages"
-    return f"Built the Discover catalog with {len(items)} quizzes ({shape}).{note}"
+    band = f"band: {totals[0]} plays, {totals[1]} players" if totals else "band: no bot totals, count only"
+    return f"Built the Discover catalog with {len(items)} quizzes ({shape}; {band}).{note}"
 
 
 def main() -> int:
