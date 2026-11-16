@@ -37,7 +37,9 @@ QUESTIONS = [{"q": "Which planet is red?", "o": ["Venus", "Mars"], "a": 1}] * 20
 LIBRARY = {
     "version": 1,
     "sources": {"opentdb": {"name": "Open Trivia Database", "url": "https://opentdb.com", "license": "CC BY-SA 4.0",
-                            "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/"}},
+                            "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/"},
+                "mkqa": {"name": "MKQA by Apple", "url": "https://github.com/apple/ml-mkqa", "license": "CC BY-SA 3.0",
+                         "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0/"}},
     "packs": [
         {"id": "en-planets-and-moons", "language": "en", "shelf": "science", "topic": "Science & Nature", "difficulty": "easy",
          "number": 1, "title": "Planets and Moons", "description": "The planets of the solar system.", "source": "opentdb",
@@ -45,6 +47,9 @@ LIBRARY = {
         {"id": "tr-web-sayfalari", "language": "tr", "shelf": "general", "topic": "General Knowledge", "difficulty": "hard",
          "number": 1, "title": "Web </script> Sayfaları", "description": "HTML etiketleri.", "source": "opentdb", "ai": False,
          "questions": [{"q": "Kayan yazı etiketi?", "o": ["<blink></blink>", "<marquee></marquee>"], "a": 1}] * 20},
+        {"id": "en-country-music-hits", "language": "en", "shelf": "mkqa", "topic": "Songs & Singers", "difficulty": "hard",
+         "number": 1, "title": "Country Music Hits", "description": "Who sang the country hits.", "source": "mkqa", "ai": False,
+         "questions": QUESTIONS},
     ],
 }
 
@@ -145,8 +150,8 @@ def run() -> None:
             assert sum(1 for _ in out.rglob("q/good_key-1/index.html")) == 18
             landing_tr = (out / "tr" / "index.html").read_text(encoding="utf-8")
             assert 'href="/tr/discover/"' in landing_tr and 'href="/discover/"' not in landing_tr
-            assert sitemap.count("<loc>") == 18 + 18 * (1 + 3) + 18 * 3 + 18 + 2 + len(bd.LEGAL_URLS), \
-                "landing + per language: catalog + 3 quizzes + shelf + 2 books + library, the 2 packs once, plus the legal pages"
+            assert sitemap.count("<loc>") == 18 + 18 * (1 + 3) + 18 * 3 + 18 + 3 + len(bd.LEGAL_URLS), \
+                "landing + per language: catalog + 3 quizzes + shelf + 2 books + library, the 3 packs once, plus the legal pages"
             assert "https://quizjet.app/tr/q/good_key-1/" in sitemap and "https://quizjet.app/tr/privacy.html" in sitemap
             assert "<lastmod>2026-10-30</lastmod>" in sitemap and sitemap.count("<lastmod>") == 18 * (1 + 3), "dates only where known"
 
@@ -273,12 +278,25 @@ def check_library(out: Path) -> None:
     assert build_library.telegram_key("en-the-beatles-pink-floyd-and-rock-s-early-days") == "B7cB0Xvm"
     assert sum(1 for _ in out.rglob("library/index.html")) == 18
     en = (out / "library" / "index.html").read_text(encoding="utf-8")
-    assert '<li data-shelf="science"><a href="#science">' in en and '<section class="lb-shelf" id="science">' in en, "shelves, then a section each"
+    assert '<li data-shelf="science" data-tab="trivia"><a href="#science">' in en, "shelves, then a section each"
+    assert '<section class="lb-shelf" id="science" data-tab="trivia">' in en
+    # two tabs (owner decision 2026-11-16): Trivia = Open Trivia DB's shelves, Curious Questions = MKQA's topics
+    assert 'id="lb-tabs" role="tablist" hidden><button type="button" role="tab" data-tab="trivia"' in en
+    assert '>Trivia<small></small></button><button type="button" role="tab" data-tab="curious" aria-selected="false">Curious Questions' in en
+    assert '<li data-shelf="mkqa-songs" data-tab="curious"><a href="#mkqa-songs">' in en and '<strong>Songs &amp; Singers</strong>' in en
+    assert '<section class="lb-shelf" id="mkqa-songs" data-tab="curious">' in en and '<a href="#curious">' in en
+    assert '<p class="quiz-note" data-tab="curious">Questions: <a href="https://github.com/apple/ml-mkqa"' in en
+    assert '<p class="quiz-note" data-tab="trivia">Questions: <a href="https://opentdb.com"' in en, "each tab credits its own source"
+    mk = (out / "library" / "country-music-hits" / "index.html").read_text(encoding="utf-8")
+    assert 'href="/library/#mkqa-songs">← Songs &amp; Singers</a>' in mk and "Curious Questions · Songs &amp; Singers" in mk
+    assert 'href="https://creativecommons.org/licenses/by-sa/3.0/"' in mk
+    trmk = (out / "tr" / "library" / "index.html").read_text(encoding="utf-8")
+    assert "Bilgi Yarışması" in trmk and "Merak Edilenler" in trmk and "Şarkılar ve Şarkıcılar" in trmk
     assert '<h2><span aria-hidden="true">🔬</span> Science &amp; Nature</h2>' in en and "Questions: 20 · Easy" in en
     assert 'data-level="easy" data-topic="Science &amp; Nature"' in en and 'href="/library/planets-and-moons/"' in en
     assert 'data-f="level"' not in en, "one level on a shelf: no level filter"
     assert 'href="/tr/library/web-sayfalari/"' in en and 'id="lb-lang"' in en, "two quiz languages: the picker"
-    assert '<option value="en" selected>English (1)</option>' in en
+    assert '<option value="en" selected>English (2)</option>' in en
     tr = (out / "tr" / "library" / "index.html").read_text(encoding="utf-8")
     assert '<option value="tr" selected>Türkçe (1)</option>' in tr and "<h1>Kütüphane</h1>" in tr, "own language first"
     assert 'href="https://creativecommons.org/licenses/by-sa/4.0/"' in tr

@@ -1,7 +1,9 @@
 // Library (scripts/build_library.py), the miniapp's Library on the web (quizjet-bot wwwroot/miniapp/kutuphane.html,
 // oyna.html). Two pages use it:
-// - /library/: the shelves; the URL hash opens one shelf (#history) with its level and topic filters, and the quiz
-//   language picker (when packs exist in several languages) keeps one language on screen.
+// - /library/: two tabs (owner decision 2026-11-16): Trivia (Open Trivia DB's shelves) and Curious Questions (MKQA's
+//   topics); the URL hash opens one shelf or topic (#history, #mkqa-songs) with its filters, #curious opens the second
+//   tab, the last tab is remembered on the device. The quiz language picker (when packs exist in several languages)
+//   keeps one language on screen; a tab with no packs in it is left out and the tab bar with it.
 // - a pack page: the player. 30 s per question; a timed-out question passes unanswered; after a pick the right answer
 //   shows and the next question follows by itself (1.2 s when right, 2.2 s when wrong); Previous reviews earlier
 //   questions, Next skips (unanswered) or moves on; the result lists every question. Nothing is sent or stored.
@@ -13,6 +15,8 @@
 
   function shelves() {
     var grid = $("lb-shelves"), pick = $("lb-lang"), sections = document.querySelectorAll(".lb-shelf"), filters = {};
+    var bar = $("lb-tabs"), credits = document.querySelectorAll(".quiz-note[data-tab]"), tab = "trivia";
+    try { if (localStorage.getItem("lb-tab") === "curious") tab = "curious"; } catch (x) {}
     // The filters outlive a visit to a pack and back (the miniapp keeps them for the session too).
     try { filters = JSON.parse(sessionStorage.getItem("lb-filters") || "{}") || {}; } catch (x) {}
     if (pick) {
@@ -24,7 +28,9 @@
       $("lb-langs").hidden = false;
     }
     function apply() {
-      var open = decodeURIComponent(location.hash.slice(1)), found = false;
+      var open = decodeURIComponent(location.hash.slice(1)), found = false, per = { trivia: 0, curious: 0 };
+      if (open === "curious" || open === "trivia") tab = open;
+      each(sections, function (s) { if (s.id === open) tab = s.getAttribute("data-tab") || tab; });
       each(sections, function (s) {
         var f = filters[s.id] || (filters[s.id] = { level: "", topic: "" }), n = 0, shown = 0;
         each(s.querySelectorAll(".quiz-list li"), function (li) {
@@ -39,11 +45,32 @@
         var card = grid.querySelector('[data-shelf="' + s.id + '"]');
         card.querySelector("small span").textContent = n;
         card.hidden = !n;
+        per[s.getAttribute("data-tab") || "trivia"] += n;
         s.hidden = s.id !== open;
         found = found || s.id === open;
       });
+      if (!per[tab]) tab = per.trivia ? "trivia" : "curious";
+      if (bar) {
+        bar.hidden = !(per.trivia && per.curious);
+        each(bar.children, function (b) {
+          var t = b.getAttribute("data-tab");
+          b.setAttribute("aria-selected", String(t === tab));
+          b.querySelector("small").textContent = per[t];
+        });
+      }
+      each(grid.children, function (li) { if (li.getAttribute("data-tab") !== tab) li.hidden = true; });
+      each(credits, function (p) { p.hidden = p.getAttribute("data-tab") !== tab; });
+      try { localStorage.setItem("lb-tab", tab); } catch (x) {}
       grid.hidden = found;
+      if (bar && found) bar.hidden = true;
     }
+    if (bar) each(bar.children, function (b) {
+      b.addEventListener("click", function () {
+        tab = b.getAttribute("data-tab");
+        if (location.hash.slice(1) === "curious" || location.hash.slice(1) === "trivia") history.replaceState(null, "", "#" + tab);
+        apply();
+      });
+    });
     each(sections, function (s) {
       var f = filters[s.id] || (filters[s.id] = { level: "", topic: "" });
       ["level", "topic"].forEach(function (n) { if (!s.querySelector('[data-f="' + n + '"]')) f[n] = ""; });
