@@ -17,6 +17,7 @@ EXPORT = {
     "botUsername": "QuizJetBot",
     "totalCount": 4,
     "truncated": False,
+    "totals": {"players": 7, "plays": 25},  # the bot's own counter: fewer players than the cards sum (18)
     "items": [
         {"quizId": "a", "externalId": "good_key-1", "title": "Türkiye <b>coğrafyası</b>", "description": "İller & bölgeler",
          "questionCount": 1, "isAiGenerated": True, "createdAtUtc": "2026-10-30T10:00:00Z", "executionCount": 3, "participantCount": 12},
@@ -71,7 +72,7 @@ def run() -> None:
             out = tmp_path / "site"
 
             message = bd.build(out, export)
-            assert "3 quizzes (18 languages)" in message and "Skipped 1" in message, message
+            assert "3 quizzes (18 languages; band: 25 plays, 7 players)" in message and "Skipped 1" in message, message
 
             # URL segments are English: nothing else appears at the top of the tree, and the Turkish names the site
             # launched with hold nothing but redirects to the English address of the same page
@@ -160,9 +161,9 @@ def run() -> None:
                 html_text = (out / landing).read_text(encoding="utf-8")
                 assert 'id="discover-band"' in html_text and "{count}" not in html_text, landing
             index = (out / "index.html").read_text(encoding="utf-8")
-            assert "Community quizzes: 3" in index and "<dt>Plays</dt><dd>13</dd></div><div><dt>Players</dt><dd>18</dd>" in index and "{plays}" not in index
+            assert "Community quizzes: 3" in index and "<dt>Plays</dt><dd>25</dd></div><div><dt>Players</dt><dd>7</dd>" in index and "{plays}" not in index
             tr_index = (out / "tr" / "index.html").read_text(encoding="utf-8")
-            assert ("Topluluk quiz&#x27;leri: 3" in tr_index or "Topluluk quiz'leri: 3" in tr_index) and "<dt>Oynanma</dt><dd>13</dd></div><div><dt>Oyuncu</dt><dd>18</dd>" in tr_index
+            assert ("Topluluk quiz&#x27;leri: 3" in tr_index or "Topluluk quiz'leri: 3" in tr_index) and "<dt>Oynanma</dt><dd>25</dd></div><div><dt>Oyuncu</dt><dd>7</dd>" in tr_index
             assert '<a class="language-chip" href="/tr/" lang="tr"' in index, "the language grid links the language pages"
             assert '"@type":"SoftwareApplication"' in index and '"inLanguage":"tr"' in tr_index, "structured data on every landing page"
             assert (out / "manifest.webmanifest").is_file() and (out / "assets" / "fonts" / "dm-sans-latin.woff2").is_file()
@@ -232,10 +233,11 @@ def check_by_language(tmp: Path) -> None:
     languages = {"good_key-1": "tr", "no_desc": "de-AT", "url_desc": "hi"}  # Turkish · German by its subtag · not a site language
     items = [{**raw, "language": languages.get(raw["externalId"], "")} for raw in EXPORT["items"]]
     export = tmp / "lang-export.json"
-    export.write_text(json.dumps({**EXPORT, "items": items}), encoding="utf-8")
+    # and comes from a bot that sent no totals: the band keeps its count and drops the plays/players it cannot know
+    export.write_text(json.dumps({**{k: v for k, v in EXPORT.items() if k != "totals"}, "items": items}), encoding="utf-8")
     out = tmp / "lang-site"
 
-    assert "3 quizzes (one page per quiz, in its own language)" in bd.build(out, export)
+    assert "3 quizzes (one page per quiz, in its own language; band: no bot totals, count only)" in bd.build(out, export)
     # one page per quiz: Turkish under /tr/, German under /de/, Hindi under the English interface
     assert sum(1 for _ in out.rglob("good_key-1/index.html")) == 2, "the page and the redirect at /q/<key>/"
     tr_quiz = (out / "tr" / "q" / "good_key-1" / "index.html").read_text(encoding="utf-8")
@@ -266,6 +268,7 @@ def check_by_language(tmp: Path) -> None:
     assert ("Topluluk quiz&#x27;leri: 1" in (out / "tr" / "index.html").read_text(encoding="utf-8")
             or "Topluluk quiz'leri: 1" in (out / "tr" / "index.html").read_text(encoding="utf-8"))
     assert 'id="discover-band"' not in (out / "fr" / "index.html").read_text(encoding="utf-8")
+    assert 'class="band-stats"' not in (out / "tr" / "index.html").read_text(encoding="utf-8"), "no totals, no numbers"
     assert json.loads((out / "discover.json").read_text(encoding="utf-8"))["items"][0]["url"] == "https://quizjet.app/tr/q/good_key-1/"
     assert bd.home_locale({"language": "pt-BR"})["route"] == "pt-br" and bd.home_locale({"language": "zz"}) is None
 
