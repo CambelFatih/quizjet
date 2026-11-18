@@ -311,7 +311,7 @@ def check_library(out: Path) -> None:
     assert '<html lang="en"' in pack and "hreflang=" not in pack and "/assets/library.js?v=" in pack
     assert "<li><p>Which planet is red?</p><ul><li>Venus</li><li>Mars</li></ul></li>" in pack, "questions in the HTML too"
     assert 'href="/de/library/"' in pack, "the language menu leads to the shelves"
-    assert '"@type":"Quiz"' in pack and '"license":"https://creativecommons.org/licenses/by-sa/4.0/"' in pack
+    assert '"@type":"Quiz"' in pack and '"@type":"BreadcrumbList"' in pack and '"license":"https://creativecommons.org/licenses/by-sa/4.0/"' in pack
     tr_pack = (out / "tr" / "library" / "web-sayfalari" / "index.html").read_text(encoding="utf-8")
     assert '<html lang="tr"' in tr_pack and "&lt;marquee&gt;&lt;/marquee&gt;" in tr_pack and "<li><marquee>" not in tr_pack
     assert "Web </script> Sayfaları" not in tr_pack and 'href="/tr/library/#general"' in tr_pack and "Burada çöz" in tr_pack
