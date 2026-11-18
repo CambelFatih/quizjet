@@ -205,7 +205,7 @@ def list_page(locale: dict, pre: str, sources: dict, packs: list[dict]) -> tuple
         f'      <script src="/assets/library.js?v={asset_version("library.js")}" defer></script>\n'
     )
     shelf_names = ", ".join(c["lbShelf_" + s] for s in SHELVES if any(p["shelf"] == s for p in packs))
-    return f'{c["navLibrary"]} — QuizJet', f'{c["lbLead"]}: {shelf_names}.', body
+    return f'{c["lbLead"]} — {c["navLibrary"]}', f'{c["lbLead"]}: {shelf_names}.', body
 
 
 def pack_page(sources: dict, pack: dict) -> tuple[str, str, str, str]:
@@ -273,8 +273,8 @@ def pack_page(sources: dict, pack: dict) -> tuple[str, str, str, str]:
       <script src="/assets/library.js?v={asset_version("library.js")}" defer></script>
 """
     source = sources[pack["source"]]
-    jsonld = script_json({
-        "@context": "https://schema.org",
+    home = f"{BASE_URL}{pre}/"
+    jsonld = script_json({"@context": "https://schema.org", "@graph": [{
         "@type": "Quiz",
         "name": pack["title"],
         "description": pack["description"],
@@ -286,5 +286,12 @@ def pack_page(sources: dict, pack: dict) -> tuple[str, str, str, str]:
         "license": source["licenseUrl"],
         "isBasedOn": source["url"],
         "provider": {"@type": "Organization", "name": "QuizJet", "url": BASE_URL + "/"},
-    })
-    return f'{pack["title"]} — {c["navLibrary"]}', pack["description"], body, jsonld
+    }, {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {"@type": "ListItem", "position": 1, "name": "QuizJet", "item": home},
+            {"@type": "ListItem", "position": 2, "name": c["navLibrary"], "item": home + "library/"},
+            {"@type": "ListItem", "position": 3, "name": pack["title"]},
+        ],
+    }]})
+    return f'{pack["title"]} — {c["discQuizSuffix"]}', pack["description"], body, jsonld
